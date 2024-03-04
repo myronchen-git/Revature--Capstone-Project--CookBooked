@@ -1,6 +1,6 @@
 # CookBooked
 
-Welcome to our Recipe Reviewer Social Media Application! This project aims to create a platform where users can explore, review, and share recipes. Whether you're a cooking enthusiast or simply looking for culinary inspiration, this application has something for everyone.
+Welcome to CookBooked! This project aims to create a platform where users can explore, post a review, and comment on recipes. Whether you're a cooking enthusiast or simply looking for culinary inspiration, this application has something for everyone.
 
 
 ### Features
