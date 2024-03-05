@@ -11,12 +11,14 @@ async function createNewAccount(receivedData) {
                 username: receivedData.username,
                 password: receivedData.password, // encrypt this
                 isAdmin: receivedData.isAdmin,
-                
-            })
+                aboutMe: '',
+                imageUrl: ''
+            });
+            return data;
         }
+        return 'username already exists';
     }
-
-    
+    return null;    
 }
 
 
@@ -33,7 +35,7 @@ async function accountDoesExist(username) {
 
 
 function validateFields(data) {
-    if (!data.username || !data.password || typeofdata.isAdmin != 'boolean') {
+    if (!data.username || !data.password || typeof data.isAdmin != 'boolean') {
         return false;
     } else {
         return true;
