@@ -4,6 +4,7 @@ const { logger } = require('./src/util/logger');
 
 //Routers
 //TODO
+const reviewsRouter = require('./src/controller/ReviewsRouter');
 
 //create the server on PORT 3000
 const app = express();
@@ -24,3 +25,4 @@ app.use((req, res, next) => {
 
 //HTTP Routes: 
 //TODO
+app.use('/reviews', reviewsRouter);
