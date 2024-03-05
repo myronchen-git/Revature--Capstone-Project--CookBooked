@@ -4,7 +4,6 @@ const accountsService = require('../service/AccountsService');
 
 // CREATE
 // New User Registration
-// Request body should contain username, password, and isAdmin
 router.post('/register', async (req, res) => {
     const data = await accountsService.createNewAccount(req.body);
 
@@ -22,6 +21,3 @@ router.post('/register', async (req, res) => {
 // UPDATE
 
 // DELETE
-
-
-module.exports = router;
