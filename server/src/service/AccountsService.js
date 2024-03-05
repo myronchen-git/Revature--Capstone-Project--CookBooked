@@ -44,5 +44,7 @@ function validateFields(data) {
 
 
 module.exports = {
-    createNewAccount
+    createNewAccount,
+    accountDoesExist,
+    validateFields
 }

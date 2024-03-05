@@ -15,3 +15,5 @@
 2024-03-05T22:14:44.166Z [info]: Incoming POST: /accounts/register
 2024-03-05T22:17:59.901Z [info]: Started the server on Port 3000
 2024-03-05T22:18:02.296Z [info]: Incoming POST: /accounts/register
+2024-03-05T22:23:22.982Z [info]: Started the server on Port 3000
+2024-03-05T22:23:25.916Z [info]: Incoming POST: /accounts/register
