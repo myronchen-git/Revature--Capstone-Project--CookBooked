@@ -35,14 +35,23 @@ async function accountDoesExist(username) {
 function validateFields(data) {
     if (!data.username || !data.password || typeof data.isAdmin != 'boolean') {
         return false;
+    } else if (containsSpecialCharacters(data.username)) {
+        return false;
     } else {
         return true;
     }
+}
+
+// will allow _ and -
+function containsSpecialCharacters(string) {
+    const specialChars = /[`!@#$%^&*()+=\[\]{};':"\\|,.<>\/?~]/;
+    return specialChars.test(string);
 }
 
 
 module.exports = {
     createNewAccount,
     accountDoesExist,
-    validateFields
+    validateFields,
+    containsSpecialCharacters
 }

@@ -1,7 +1,8 @@
 const {
     createNewAccount,
     accountDoesExist,
-    validateFields
+    validateFields,
+    containsSpecialCharacters
 } = require('../src/service/AccountsService');
 const accountsDao = require('../src/repository/AccountsDAO');
 
@@ -138,5 +139,33 @@ describe('validateFields Tests', () => {
         const expected = true;
 
         expect(result).toBe(expected);
+    })
+
+    test('should return false -- username contains special characters', () => {
+        const data = {username: 'test_u$ern@me^', password: 'password', isAdmin: false};
+
+        const result = validateFields(data);
+        const expected = false;
+
+        expect(result).toBe(expected);
+    })
+})
+
+describe('containsSpecialCharacters Tests', () => {
+
+    test('should return false -- username does not contain special characters', () => {
+        const username1 = 'test_username';
+        const username2 = 'test-username';
+        const username3 = 'testusername';
+
+        expect(containsSpecialCharacters(username1)).toBe(false);
+        expect(containsSpecialCharacters(username2)).toBe(false);
+        expect(containsSpecialCharacters(username3)).toBe(false);
+    })
+
+    test('should return true -- username contains special characters', () => {
+        const username = 'te$t_u$rn@me';
+
+        expect(containsSpecialCharacters(username)).toBe(true);
     })
 })
