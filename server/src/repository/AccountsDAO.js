@@ -8,8 +8,9 @@ const path = require('path');
 const envPath = path.resolve('./.env')
 dotenv.config({path: envPath});
 
+const region = process.env.REGION;
 const client = new DynamoDBClient({
-    region: 'us-west-1',
+    region: region,
     credentials: fromIni({profile: 'cb_account'})
 });
 const documentClient = DynamoDBDocumentClient.from(client);

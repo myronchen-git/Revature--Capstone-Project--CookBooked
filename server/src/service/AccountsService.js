@@ -10,9 +10,7 @@ async function createNewAccount(receivedData) {
             const data = await accountsDao.createNewAccount({
                 username: receivedData.username,
                 password: receivedData.password, // encrypt this
-                isAdmin: receivedData.isAdmin,
-                //aboutMe: '',
-                //imageUrl: ''
+                isAdmin: receivedData.isAdmin
             });
             return data;
         }
