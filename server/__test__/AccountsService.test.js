@@ -14,11 +14,9 @@ describe('createNewAccount Tests', () => {
             password: 'password123',
             isAdmin: false
         };
-        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({
-            Items: []
-        });
+        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({});
         jest.spyOn(accountsDao, 'createNewAccount').mockReturnValueOnce({
-            Items: [{
+            Item: [{
                 username: 'test_username',
                 password: 'password123',
                 isAdmin: false
@@ -27,7 +25,7 @@ describe('createNewAccount Tests', () => {
 
         const result = await createNewAccount(receivedData);
         const expected = {
-            Items: [{
+            Item: [{
                 username: 'test_username',
                 password: 'password123',
                 isAdmin: false
@@ -44,7 +42,7 @@ describe('createNewAccount Tests', () => {
             isAdmin: false
         };
         jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({
-            Items: [{
+            Item: [{
                 username: 'test_username'
             }]
         });
@@ -73,7 +71,7 @@ describe('accountDoesExist Tests', () => {
 
     test('should return false', async () => {
         const username = 'test_username';
-        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({Items: []});
+        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({});
 
         const result = await accountDoesExist(username);
         const expected = false;
@@ -83,7 +81,7 @@ describe('accountDoesExist Tests', () => {
 
     test('should return true', async () => {
         const username = 'test_username';
-        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({Items: [{
+        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({Item: [{
             username: 'test_username'
         }]});
 

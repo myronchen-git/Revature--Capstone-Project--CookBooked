@@ -11,8 +11,8 @@ async function createNewAccount(receivedData) {
                 username: receivedData.username,
                 password: receivedData.password, // encrypt this
                 isAdmin: receivedData.isAdmin,
-                aboutMe: '',
-                imageUrl: ''
+                //aboutMe: '',
+                //imageUrl: ''
             });
             return data;
         }
@@ -25,7 +25,7 @@ async function createNewAccount(receivedData) {
 async function accountDoesExist(username) {
     const data = await accountsDao.getAccountByUsername(username);
 
-    if (data.Items.length > 0) {
+    if (data.Item) {
         // account already exists
         return true;
     } else {
