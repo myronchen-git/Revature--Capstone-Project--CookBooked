@@ -8,17 +8,17 @@ async function createNewReview(receivedData) {
     try {
         //create new review
         const review = {
-            recipeId: receivedData.recipeId,
+            recipeId: receivedData.recipeId, //recipeId passed from MealDB API
             reviewId: uuid.v4(),
-            author: receivedData.username,
-            imageUrl: receivedData.imageUrl,
-            rating: receivedData.rating,
-            content: receivedData.content,
+            author: receivedData.username, //username acquired from JWT
+            imageUrl: receivedData.imageUrl, //passed in by user
+            rating: receivedData.rating, //passed in by user
+            content: receivedData.content, //passed in by user
             createdAt: Date.now()
         }
-
         //create the new post
         const data = await reviewsDao.postReview(review);
+        console.log(data);
         //return the review object to show back
         return data;
     } catch(err) {
@@ -28,39 +28,6 @@ async function createNewReview(receivedData) {
 }
 
 
-function validateFields(data) {
-    logger.info('Calling validateFields method');
-    //validate username is presented when request is sent (should be sent through JWT so it is either empty or there)
-    if (!data.username) {
-        throw new Error('No Username Present');
-    } 
-    //else if no image present
-    else if(!data.imageUrl) {
-        throw new Error('No Image Present');
-    }
-    //else if no rating present
-    else if(!data.rating) {
-        throw new Error('No Rating Present');
-    }
-    //else if no content present
-    else if(!data.content) {
-        throw new Error('No Content Present');
-    }
-    //else if check if rating is between 0-5 
-    else if(!(data.rating >= "1" && data.rating <= "5")) {
-        throw new Error('Rating is outside range of 1-5')
-    }
-    //finally check if any of the images are of extension .png .jpg or .jpeg
-    else if(data.imageUrl.endsWith('.png') || data.imageUrl.endsWith('.jpg') || data.imageUrl.endsWith('.jpeg')) {
-        logger.info('Validated all fields');
-        return true;
-    } else {
-        throw new Error('Image Extension Unapplicable');
-    }
-}
-
-
 module.exports = {
-    createNewReview,
-    validateFields
+    createNewReview
 }

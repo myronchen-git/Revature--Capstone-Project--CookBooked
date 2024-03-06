@@ -37,7 +37,7 @@ async function postReview(Item) {
 
     //try-catch block to send the PutCommand to the database
     try {
-        await documentClient.send(command);
+        const data = await documentClient.send(command);
         const statusCode = data.$metadata.httpStatusCode === 200;
         logger.info(`${statusCode ? "Added Review to DB" : "Failed to Add Review to DB"}.`);
         return statusCode ? Item : null;

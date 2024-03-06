@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const reviewsService = require('../service/ReviewsService');
-const { validateNewReview } = require('../util/ReviewsHelper');
+const { validateNewReview } = require('./ReviewsHelper');
+const { authenticateToken } = require('../util/WebToken');
 
 // CREATE
 // New Review Post
@@ -34,14 +35,15 @@ function validationMiddleware(req, res, next) {
     try {
         if(req.path === '/') {
             if(req.method === 'POST') {
-                req.body.username = req.user.username;
+                //req.body.username = req.user.username;
+                //validate the data from the req.body is valid
                 req.body = validateNewReview(req.body);
             }
         }
 
         next();
     } catch(err) {
-        res.status(err.status).json(err.message);
+        res.json({message: err.message});
     }
 }
 
