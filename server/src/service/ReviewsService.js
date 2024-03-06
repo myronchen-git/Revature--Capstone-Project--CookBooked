@@ -6,11 +6,9 @@ async function createNewReview(receivedData) {
     logger.info('CreateNewReview method called');
     //validate data before posting a new review
     try {
-        validateFields(receivedData);
-        logger.info('Creating new review');
         //create new review
         const review = {
-            recipeId: uuid.v4(),
+            recipeId: receivedData.recipeId,
             reviewId: uuid.v4(),
             author: receivedData.username,
             imageUrl: receivedData.imageUrl,
@@ -22,9 +20,7 @@ async function createNewReview(receivedData) {
         //create the new post
         const data = await reviewsDao.postReview(review);
         //return the review object to show back
-        if(data) {
-            return review;
-        }
+        return data;
     } catch(err) {
         logger.error(err);
         throw Error(err.message);

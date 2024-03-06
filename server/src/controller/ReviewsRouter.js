@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const reviewsService = require('../service/ReviewsService');
+const { validateNewReview } = require('../util/ReviewsHelper');
 
 // CREATE
 // New Review Post
-router.post('/', async (req, res) => {
+router.post('/', validationMiddleware, async (req, res) => {
     //either throws an error or returns the review it stores
     try {
         //add username to body through the jwt tokens username
@@ -27,5 +28,21 @@ router.post('/', async (req, res) => {
 
 // DELETE
 
+
+// Validation Middleware
+function validationMiddleware(req, res, next) {
+    try {
+        if(req.path === '/') {
+            if(req.method === 'POST') {
+                req.body.username = req.user.username;
+                req.body = validateNewReview(req.body);
+            }
+        }
+
+        next();
+    } catch(err) {
+        res.status(err.status).json(err.message);
+    }
+}
 
 module.exports = router;

@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 // Get the path to the .env file
-const envPath = path.resolve(__dirname, '../../../.env');
+const envPath = path.resolve(__dirname, '../../.env');
 
 // Config the .env file
 dotenv.config({ path: envPath });
@@ -38,8 +38,9 @@ async function postReview(Item) {
     //try-catch block to send the PutCommand to the database
     try {
         await documentClient.send(command);
-        logger.info("Successfully added the Review!");
-        return true;
+        const statusCode = data.$metadata.httpStatusCode === 200;
+        logger.info(`${statusCode ? "Added Review to DB" : "Failed to Add Review to DB"}.`);
+        return statusCode ? Item : null;
     } catch(err) {
         logger.error(err);
         throw new Error(err);
