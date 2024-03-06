@@ -15,7 +15,7 @@ router.post('/register', async (req, res) => {
     } else if (data) {
         res.status(201).json({message: 'Account created successfully'}); // return token?
     } else {
-        res.status(400).json({message: 'Account registration failed, missing one or more required fields'});
+        res.status(400).json({message: 'Account registration failed, required fields missing or contain special characters'});
     }
 })
 
