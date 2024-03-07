@@ -1,5 +1,6 @@
 const accountsDao = require('../repository/AccountsDAO');
 const { logger } = require('../util/logger');
+const encryption = require('../util/encryption');
 
 async function createNewAccount(receivedData) {
     logger.info('createNewAccount function called from AccountsService.js');
@@ -9,9 +10,10 @@ async function createNewAccount(receivedData) {
         const doesExist = await accountDoesExist(receivedData.username);
         if (!doesExist) {
             // encrypt password?
+            const hash = await encryption.encryptPassword(receivedData.password);
             const data = await accountsDao.createNewAccount({
                 username: receivedData.username,
-                password: receivedData.password, // encrypt this
+                password: hash,
                 isAdmin: false
             });
             return data;
@@ -27,7 +29,6 @@ async function accountDoesExist(username) {
     const data = await accountsDao.getAccountByUsername(username);
 
     if (data.Item) {
-        // account already exists
         return true;
     } else {
         return false;
@@ -38,8 +39,11 @@ async function login(username, password) {
     logger.info('login function called from AccountsService.js');
     const data = await accountsDao.getAccountByUsername(username);
 
-    if (data.Item && password === data.Item.password) {
-        return data
+    if (data.Item) {
+        if (await encryption.validatePassword(password, data.Item.password)) {
+            return data
+        }
+        return null;
     } else {
         return null;
     }
