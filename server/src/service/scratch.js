@@ -1,9 +1,16 @@
-const str1 = 'hel$o';
-const str2 = 'hell@o';
-const str3 = 'hello1';
+const validChars = 'abcdefghijklmnopqrstuvwxyz1234567890-_'
 
-const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+let str1 = 'hello123'
+let str2 = 'hello%^123'
+let str3 = 'te$t_u$rn@me'
 
-console.log(specialChars.test(str1));
-console.log(specialChars.test(str2));
-console.log(specialChars.test(str3));
+let containsSpecialCharacters = false;
+for (char of str3) {
+    console.log(char);
+    if (!validChars.includes(char)) {
+        containsSpecialCharacters = true
+        break;
+    }
+}
+
+console.log(containsSpecialCharacters);

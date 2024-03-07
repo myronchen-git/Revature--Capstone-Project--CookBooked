@@ -10,10 +10,11 @@ async function createNewAccount(receivedData) {
             const data = await accountsDao.createNewAccount({
                 username: receivedData.username,
                 password: receivedData.password, // encrypt this
-                isAdmin: receivedData.isAdmin
+                isAdmin: false
             });
             return data;
         }
+        // replace with custom error if time permits
         return 'username already exists';
     }
     return null;    
@@ -33,7 +34,7 @@ async function accountDoesExist(username) {
 
 
 function validateFields(data) {
-    if (!data.username || !data.password || typeof data.isAdmin != 'boolean') {
+    if (!data.username || !data.password) {
         return false;
     } else if (containsSpecialCharacters(data.username)) {
         return false;
@@ -42,10 +43,19 @@ function validateFields(data) {
     }
 }
 
-// will allow _ and -
+// will return false if input only contains whitelisted characters
 function containsSpecialCharacters(string) {
-    const specialChars = /[`!@#$%^&*()+=\[\]{};':"\\|,.<>\/?~]/;
-    return specialChars.test(string);
+    const validChars = 'abcdefghijklmnopqrstuvwxyz1234567890-_';
+    let isInvalid = false;
+
+    for (char of string) {
+        if (!validChars.includes(char)) {
+            isInvalid = true;
+            break;
+        }
+    }
+
+    return isInvalid;
 }
 
 

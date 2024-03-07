@@ -3,8 +3,8 @@ const {
     accountDoesExist,
     validateFields,
     containsSpecialCharacters
-} = require('../src/service/AccountsService');
-const accountsDao = require('../src/repository/AccountsDAO');
+} = require('../../src/service/AccountsService');
+const accountsDao = require('../../src/repository/AccountsDAO');
 
 
 describe('createNewAccount Tests', () => {
@@ -12,15 +12,12 @@ describe('createNewAccount Tests', () => {
     test('should return data successfully', async () => {
         const receivedData = {
             username: 'test_username',
-            password: 'password123',
-            isAdmin: false
+            password: 'password123'
         };
-        jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({});
         jest.spyOn(accountsDao, 'createNewAccount').mockReturnValueOnce({
             Item: [{
                 username: 'test_username',
-                password: 'password123',
-                isAdmin: false
+                password: 'password123'
             }]
         });
 
@@ -28,8 +25,7 @@ describe('createNewAccount Tests', () => {
         const expected = {
             Item: [{
                 username: 'test_username',
-                password: 'password123',
-                isAdmin: false
+                password: 'password123'
             }]
         };
 
@@ -39,8 +35,7 @@ describe('createNewAccount Tests', () => {
     test('should return username already exists', async () => {
         const receivedData = {
             username: 'test_username',
-            password: 'password123',
-            isAdmin: false
+            password: 'password123'
         };
         jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({
             Item: [{
@@ -49,16 +44,14 @@ describe('createNewAccount Tests', () => {
         });
 
         const result = await createNewAccount(receivedData);
-        const expected = 'username already exists';
 
-        expect(result).toBe(expected);
+        expect(result).toBe('username already exists');
     });
 
     test('should return null -- missing required fields', async () => {
         const receivedData = {
             username: 'test_username',
-            password: '',
-            isAdmin: ''
+            password: ''
         };
 
         const result = await createNewAccount(receivedData);
@@ -97,7 +90,7 @@ describe('accountDoesExist Tests', () => {
 describe('validateFields Tests', () => {
 
     test('should return false -- missing username', () => {
-        const data = {username: '', password: 'password', isAdmin: false};
+        const data = {username: '', password: 'password'};
 
         const result = validateFields(data);
         const expected = false;
@@ -106,7 +99,7 @@ describe('validateFields Tests', () => {
     });
 
     test('should return false -- missing password', () => {
-        const data = {username: 'test_username', password: '', isAdmin: false};
+        const data = {username: 'test_username', password: ''};
 
         const result = validateFields(data);
         const expected = false;
@@ -114,26 +107,9 @@ describe('validateFields Tests', () => {
         expect(result).toBe(expected);
     });
 
-    test('should return false -- missing isAdmin', () => {
-        const data = {username: 'test_username', password: 'password', isAdmin: ''};
-
-        const result = validateFields(data);
-        const expected = false;
-
-        expect(result).toBe(expected);
-    });
-
-    test('should return false -- isAdmin not bool', () => {
-        const data = {username: 'test_username', password: 'password', isAdmin: 'admin'};
-
-        const result = validateFields(data);
-        const expected = false;
-
-        expect(result).toBe(expected);
-    });
 
     test('should return true -- no missing fields', () => {
-        const data = {username: 'test_username', password: 'password', isAdmin: false};
+        const data = {username: 'test_username', password: 'password'};
 
         const result = validateFields(data);
         const expected = true;
@@ -142,7 +118,7 @@ describe('validateFields Tests', () => {
     })
 
     test('should return false -- username contains special characters', () => {
-        const data = {username: 'test_u$ern@me^', password: 'password', isAdmin: false};
+        const data = {username: 'test_u$ern@me^', password: 'password'};
 
         const result = validateFields(data);
         const expected = false;
