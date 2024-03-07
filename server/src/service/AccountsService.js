@@ -49,6 +49,26 @@ async function login(username, password) {
     }
 }
 
+async function toggleAdmin(username) {
+    logger.info('toggleAdmin function called from AccountsService.js');
+    let isAdmin;
+    const user = await accountsDao.getAccountByUsername(username);
+    if (user.Item) {
+        isAdmin = user.Item.isAdmin;
+    } else {
+        // account does not exist, return null
+        return null;
+    }
+
+    try {
+        const data = await accountsDao.toggleAdmin(username, isAdmin);
+        return data;
+    } catch (err) {
+        logger.error(err);
+        throw Error(err.message);
+    }
+}
+
 function validateFields(data) {
     if (!data.username || !data.password) {
         return false;
@@ -80,5 +100,6 @@ module.exports = {
     accountDoesExist,
     login,
     validateFields,
-    containsSpecialCharacters
+    containsSpecialCharacters,
+    toggleAdmin
 }
