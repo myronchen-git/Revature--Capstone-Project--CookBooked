@@ -2,7 +2,8 @@ const {
     createNewAccount,
     accountDoesExist,
     validateFields,
-    containsSpecialCharacters
+    containsSpecialCharacters,
+    login
 } = require('../../src/service/AccountsService');
 const accountsDao = require('../../src/repository/AccountsDAO');
 
@@ -143,5 +144,35 @@ describe('containsSpecialCharacters Tests', () => {
         const username = 'te$t_u$rn@me';
 
         expect(containsSpecialCharacters(username)).toBe(true);
+    })
+})
+
+describe('login Tests', () => {
+    const username = 'username1';
+    const password = 'password123'
+
+    // afterEach(() => {
+    //     username = 'username1';
+    //     password = 'password123';
+    // })
+
+    test('should successfully call getAccountByUsername and return data', async () => {
+        const data = {Item: {username, password}}
+        const spy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
+
+        result = await login(username, password);
+
+        expect(result).toStrictEqual(data);
+        expect(spy).toHaveBeenCalled();
+    })
+
+    test('should successfully call getAccountByUsername and return null -- account does not exist', async () => {
+        const data = {Item: {}};
+        const spy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
+
+        result = await login(username, password);
+
+        expect(result).toBe(null);
+        expect(spy).toHaveBeenCalled();
     })
 })
