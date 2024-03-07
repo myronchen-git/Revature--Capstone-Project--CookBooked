@@ -88,10 +88,28 @@ function isString(str) {
     }
 }
 
+// Validation Middleware
+function validationMiddleware(req, res, next) {
+    try {
+        if(req.path === '/') {
+            if(req.method === 'POST') {
+                req.body.username = req.user.username;
+                //validate the data from the req.body is valid
+                req.body = validateNewReview(req.body);
+            }
+        }
+
+        next();
+    } catch(err) {
+        res.json({message: err.message});
+    }
+}
+
 module.exports = {
     validateNewReview,
     sanitizeImage,
     sanitizeRating,
     isImage,
-    isString
+    isString,
+    validationMiddleware
 }
