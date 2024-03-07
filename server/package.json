@@ -4,7 +4,7 @@
   "description": "CookBooked Server Side",
   "main": "app.js",
   "scripts": {
-    "start": "node ./src/app.js",
+    "start": "node ./app.js",
     "test": "jest"
   },
   "jest": {
