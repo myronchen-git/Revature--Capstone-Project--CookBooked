@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const reviewsService = require('../service/ReviewsService');
-const { validationMiddleware } = require('./ReviewsHelper');
+const commentsService = require('../service/CommentsService');
+const { validationMiddleware } = require('./CommentsHelper')
 const { authenticateToken } = require('../util/WebToken');
 
 // CREATE
-// New Review Post
+// New Comment Post
+//will add authorization check
 router.post('/', authenticateToken, validationMiddleware, async (req, res) => {
-    //either throws an error or returns the review it stores
+    //either throws an error or returns the comment it stores
     try {
         //add username to body through the jwt tokens username
-        const data = await reviewsService.createNewReview(req.body);
+        const data = await commentsService.createNewComment(req.body);
         res.status(201).json({
-            message: 'Created Review Successfully',
+            message: 'Created Comment Successfully',
             ReviewPost: data
         });
     } catch(err) {

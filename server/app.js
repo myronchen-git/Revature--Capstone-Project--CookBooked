@@ -6,6 +6,7 @@ const { logger } = require('./src/util/logger');
 //TODO
 const accountsRouter = require('./src/controller/AccountsRouter');
 const reviewsRouter = require('./src/controller/ReviewsRouter');
+const commentsRouter = require('./src/controller/CommentsRouter');
 
 //create the server on PORT 3000
 const app = express();
@@ -28,3 +29,7 @@ app.use((req, res, next) => {
 //TODO
 
 app.use('/accounts', accountsRouter);
+
+app.use('/reviews', reviewsRouter);
+
+app.use('/comments', commentsRouter);

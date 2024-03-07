@@ -18,7 +18,6 @@ async function createNewReview(receivedData) {
         }
         //create the new post
         const data = await reviewsDao.postReview(review);
-        console.log(data);
         //return the review object to show back
         return data;
     } catch(err) {

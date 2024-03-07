@@ -15,17 +15,9 @@ const client = new DynamoDBClient({
 
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = process.env.REVIEWS_TABLENAME;
+const TableName = process.env.COMMENTS_TABLENAME;
 
-/**
- * postReview method takes the Review object and then calls the PutCommand from aws-sdk library
- * to put the new Review into the Database, and then will return if the command was executed
- * successfully or ran into an error and returns false
- * 
- * @param Item Review object that will be posted to the DynamoDB dataset
- * @returns boolean value to indicate success or failure of PutCommand
- */
-async function postReview(Item) {
+async function postComment(Item) {
     //define the PutCommand
     const command = new PutCommand({
         TableName, 
@@ -45,5 +37,5 @@ async function postReview(Item) {
 }
 
 module.exports = {
-    postReview
+    postComment
 }
