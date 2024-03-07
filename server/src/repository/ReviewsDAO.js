@@ -8,6 +8,7 @@ const {
   GetCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
+const { buildQueryParamsForGetReviewsByRecipeId } = require("./ReviewsDAOHelpers");
 
 const dotenv = require("dotenv");
 const path = require("path");
@@ -22,6 +23,8 @@ const client = new DynamoDBClient({
 const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = process.env.REVIEWS_TABLENAME;
+
+// ==================================================
 
 /**
  * postReview method takes the Review object and then calls the PutCommand from aws-sdk library
@@ -50,6 +53,36 @@ async function postReview(Item) {
   }
 }
 
+/**
+ * Retrieves reviews belonging to a recipe ID.
+ *
+ * @param {Object} param0 An Object containing String recipeId, Object ExclusiveStartKey, Number Limit.
+ * These are the properties that are going to be passed into the QueryCommand.
+ * @returns {{items, LastEvaluatedKey}} An Object containing Array of Review Objects and LastEvaluatedKey.  LastEvaluatedKey may be empty.
+ * {items, LastEvaluatedKey}.
+ */
+async function getReviewsByRecipeId(props) {
+  logger.info(`ReviewsDAO.getReviewsByRecipeId(${JSON.stringify(props)})`);
+
+  const COMMAND = new QueryCommand(buildQueryParamsForGetReviewsByRecipeId(props));
+
+  let data;
+  try {
+    data = await documentClient.send(COMMAND);
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  }
+
+  const REVIEWS_DATA = { items: data.Items, LastEvaluatedKey: data.LastEvaluatedKey };
+
+  logger.info(`ReviewsDAO.getReviewsByRecipeId: Returning ${JSON.stringify(REVIEWS_DATA)}`);
+  return REVIEWS_DATA;
+}
+
+// ==================================================
+
 module.exports = {
   postReview,
+  getReviewsByRecipeId,
 };
