@@ -6,6 +6,7 @@ const {
     login
 } = require('../../src/service/AccountsService');
 const accountsDao = require('../../src/repository/AccountsDAO');
+const encryption = require('../../src/util/encryption');
 
 
 describe('createNewAccount Tests', () => {
@@ -151,28 +152,37 @@ describe('login Tests', () => {
     const username = 'username1';
     const password = 'password123'
 
-    // afterEach(() => {
-    //     username = 'username1';
-    //     password = 'password123';
-    // })
-
-    test('should successfully call getAccountByUsername and return data', async () => {
+    test('should successfully call getAccountByUsername, call encryption, and return data', async () => {
         const data = {Item: {username, password}}
-        const spy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
+        const daoSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
+        const encryptSpy = jest.spyOn(encryption, 'validatePassword').mockReturnValueOnce(true);
 
         result = await login(username, password);
 
         expect(result).toStrictEqual(data);
-        expect(spy).toHaveBeenCalled();
+        expect(daoSpy).toHaveBeenCalled();
+        expect(encryptSpy).toHaveBeenCalled();
     })
 
     test('should successfully call getAccountByUsername and return null -- account does not exist', async () => {
-        const data = {Item: {}};
+        const data = {};
         const spy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
 
         result = await login(username, password);
 
         expect(result).toBe(null);
         expect(spy).toHaveBeenCalled();
+    })
+
+    test('should successfully call getAccountByUsername, call encryption, and return null -- incorrect password', async () => {
+        const data = {Item: {username, password}}
+        const daoSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
+        const encryptSpy = jest.spyOn(encryption, 'validatePassword').mockReturnValueOnce(false);
+
+        result = await login(username, password);
+
+        expect(result).toBe(null);
+        expect(daoSpy).toHaveBeenCalled();
+        expect(encryptSpy).toHaveBeenCalled();
     })
 })
