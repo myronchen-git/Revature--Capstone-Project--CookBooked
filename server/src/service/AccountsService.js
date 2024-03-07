@@ -1,6 +1,8 @@
 const accountsDao = require('../repository/AccountsDAO');
+const { logger } = require('../util/logger');
 
 async function createNewAccount(receivedData) {
+    logger.info('createNewAccount function called from AccountsService.js');
     // validate required fields
     if (validateFields(receivedData)) {
         // validate account does not already exist
@@ -32,6 +34,16 @@ async function accountDoesExist(username) {
     }
 }
 
+async function login(username, password) {
+    logger.info('login function called from AccountsService.js');
+    const data = await accountsDao.getAccountByUsername(username);
+
+    if (data.Item && password === data.Item.password) {
+        return data
+    } else {
+        return null;
+    }
+}
 
 function validateFields(data) {
     if (!data.username || !data.password) {
@@ -62,6 +74,7 @@ function containsSpecialCharacters(string) {
 module.exports = {
     createNewAccount,
     accountDoesExist,
+    login,
     validateFields,
     containsSpecialCharacters
 }
