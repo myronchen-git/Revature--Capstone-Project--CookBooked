@@ -3,7 +3,7 @@ const {
     generateToken,
     authenticateToken,
     isAdmin
-}  = require('../src/util/WebToken');
+}  = require('../../src/util/WebToken');
 
 
 describe('generateToken Tests', () => {
