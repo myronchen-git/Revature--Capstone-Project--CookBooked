@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const accountsService = require('../service/AccountsService');
-const routerHelpers = require('./RouterHelpers');
+const accountsHelpers = require('./AccountsHelper');
+const webToken = require('../util/WebToken');
 
 // CREATE
 // New User Registration
 // Request body should contain username, password, and isAdmin
 router.post('/register', async (req, res) => {
-    let body = routerHelpers.cleanUsernamePassword(req.body);
+    let body = accountsHelpers.cleanUsernamePassword(req.body);
     const data = await accountsService.createNewAccount(body);
 
     if (data == 'username already exists') {
@@ -16,6 +17,20 @@ router.post('/register', async (req, res) => {
         res.status(201).json({message: 'Account created successfully'}); // return token?
     } else {
         res.status(400).json({message: 'Account registration failed, required fields missing or contain special characters'});
+    }
+})
+
+// User Login
+router.post('/login', async (req, res) => {
+    const body = accountsHelpers.cleanUsernamePassword(req.body);
+    const {username, password} = body;
+    const data = await accountsService.login(username, password);
+
+    if (data) {
+        const token = webToken.generateToken(data.Item);
+        res.status(201).json({message: 'Login successful', token});
+    } else {
+        res.status(400).json({message: 'Invalid login credentials'});
     }
 })
 
