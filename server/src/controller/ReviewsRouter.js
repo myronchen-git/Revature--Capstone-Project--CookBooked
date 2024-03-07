@@ -1,8 +1,13 @@
+const { logger } = require("../util/logger");
 const express = require("express");
 const router = express.Router();
 const reviewsService = require("../service/ReviewsService");
 const { validationMiddleware } = require("./ReviewsHelper");
 const { authenticateToken } = require("../util/WebToken");
+const ReviewsRouterHelpers = require("./ReviewsRouterHelpers");
+const CookBookedError = require("../errors/CookBookedError");
+
+// ==================================================
 
 // CREATE
 // New Review Post
@@ -23,6 +28,27 @@ router.post("/", authenticateToken, validationMiddleware, async (req, res) => {
 });
 
 // READ
+// Retrieves reviews.  URL can contain query parameters recipeId, author, ExclusiveStartKey, or Limit.
+router.get("/", async (req, res) => {
+  try {
+    logger.info(`ReviewsRouter -> GET /: Start`);
+
+    const SANITIZED_REQ_QUERY_PARAMS = ReviewsRouterHelpers.sanitizeGetReviewsQueryParams(
+      req.query
+    );
+    const REVIEWS_DATA = await reviewsService.getReviews(SANITIZED_REQ_QUERY_PARAMS);
+
+    res.status(200).json({ message: `Reviews successfully retrieved.`, ReviewPosts: REVIEWS_DATA });
+  } catch (err) {
+    if (err instanceof CookBookedError) {
+      logger.error(`ReviewsRouter -> /: ${err.message}.`);
+      res.status(err.statusCode).json({ message: err.message });
+    } else {
+      logger.error(`ReviewsRouter -> /: Internal Server Error\n${err}`);
+      res.status(500).json({ message: "Server error." });
+    }
+  }
+});
 
 // UPDATE
 
@@ -45,5 +71,7 @@ router.delete("/:reviewId", authenticateToken, async (req, res) => {
     });
   }
 });
+
+// ==================================================
 
 module.exports = router;
