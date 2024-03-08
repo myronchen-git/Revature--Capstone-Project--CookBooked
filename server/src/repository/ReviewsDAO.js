@@ -6,6 +6,7 @@ const {
   ScanCommand,
   UpdateCommand,
   GetCommand,
+  QueryCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 const { buildQueryParamsForGetReviewsByRecipeId } = require("./ReviewsDAOHelpers");
