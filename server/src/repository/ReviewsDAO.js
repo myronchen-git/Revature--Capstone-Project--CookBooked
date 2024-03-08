@@ -1,4 +1,4 @@
-const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
 const { fromIni } = require("@aws-sdk/credential-provider-ini");
 const {
   DynamoDBDocumentClient,
@@ -6,12 +6,14 @@ const {
   ScanCommand,
   UpdateCommand,
   GetCommand,
+  DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 const { buildQueryParamsForGetReviewsByRecipeId } = require("./ReviewsDAOHelpers");
 
 const dotenv = require("dotenv");
 const path = require("path");
+const { stat } = require("fs");
 const envPath = path.resolve("./.env");
 dotenv.config({ path: envPath });
 
@@ -80,9 +82,74 @@ async function getReviewsByRecipeId(props) {
   return REVIEWS_DATA;
 }
 
+async function deleteReviewById(receivedData) {
+  logger.info("Calling ReviewsDAO.getOneReviewByID");
+  //get the Item to be Deleted so I can return it later
+  const itemToReturn = await getOneReviewById(receivedData);
+
+  //if the item was found then run the delete command else throw an error that the review does not exist
+  if(itemToReturn) {
+    const command = new DeleteCommand({
+      TableName,
+      Key: {
+        "recipeId": receivedData.recipeId,
+        "reviewId": receivedData.reviewId
+      }
+    })
+  
+    //try this Delete Command and if it successful return the Item
+    try {
+      const data = await documentClient.send(command);
+      const statusCode = data.$metadata.httpStatusCode === 200;
+      if(statusCode) {
+        logger.info("Deleted Review from DB");
+        //call helper function to delete all comments under this review
+        //deleteAllCommentsUnderReview(receivedData.reviewId);
+        return itemToReturn;
+      } else {
+        logger.info("Failed to Delete Review from DB");
+        return null;
+      }
+    } catch(err) {
+      logger.error(err);
+      throw new Error(err);
+    }
+  } else {
+    throw new Error("Review does not Exist");
+  }
+}
+
+/**
+ * This is a helper function for gettin one Review by its PK and SK values
+ * 
+ * @param {Object} receivedData 
+ * @returns a review based of the PK and SK provided
+ */
+async function getOneReviewById(receivedData) {
+  logger.info("Calling ReviewsDAO.getOneReviewByID");
+
+  const command = new GetCommand({
+    TableName,
+    Key: {
+      "recipeId": receivedData.recipeId,
+      "reviewId": receivedData.reviewId
+    }
+  })
+
+  try {
+    const data = await documentClient.send(command);
+    logger.info("Got Review");
+    return data.Item;
+  } catch(err) {
+    logger.error(err);
+    throw new Error(err);
+  }
+}
+
 // ==================================================
 
 module.exports = {
   postReview,
   getReviewsByRecipeId,
+  deleteReviewById
 };
