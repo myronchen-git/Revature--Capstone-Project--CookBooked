@@ -27,7 +27,7 @@ router.post("/", authenticateToken, validationMiddleware, async (req, res) => {
 // UPDATE
 
 // DELETE
-router.delete("/:reviewId", async(req, res) => {
+router.delete("/:reviewId", authenticateToken, async(req, res) => {
     //either throws an error or returns the review deleted review
     try {
         //create a body that combines the recipeId with the reviewId

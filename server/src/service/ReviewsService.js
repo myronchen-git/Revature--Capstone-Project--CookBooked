@@ -84,7 +84,7 @@ async function getReviews(requestQueryParams) {
  */
 async function deleteReview(receivedData) {
   //if there was no recipeId to make a composite key then return a Argument Error
-  if(receivedData.recipeId === undefined) {
+  if(receivedData.recipeId === undefined || !receivedData.recipeId) {
     throw new ArgumentError("Recipe Id must be defined in Request Body");
   } else {
     //call the delete method from DAO

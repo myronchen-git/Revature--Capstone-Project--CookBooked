@@ -6,7 +6,6 @@ const {
   ScanCommand,
   UpdateCommand,
   GetCommand,
-  QueryCommand,
   DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
