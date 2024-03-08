@@ -69,6 +69,35 @@ async function toggleAdmin(username) {
     }
 }
 
+// parse req body and call appropriate dao functions to update aboutMe, imageUrl, or both
+// returns an array containing data from dao
+async function updateProfile(username, body) {
+    logger.info(`updateProfile function called from AccountsService.js with params username: ${username}, body: ${body}`);
+    let data = [];
+
+    if (body.aboutMe) {
+        try {
+            const aboutMeData = await accountsDao.updateProfile(username, attributeName = 'aboutMe', body.aboutMe);
+            data.push(aboutMeData);
+        } catch (err) {
+            logger.error(err);
+            throw Error(err.message);
+        }
+    }
+
+    if (body.imageUrl) {
+        try {
+            const imageUrlData = await accountsDao.updateProfile(username, attributeName = 'imageUrl', body.imageUrl);
+            data.push(imageUrlData);
+        } catch (err) {
+            logger.error(err);
+            throw Error(err.message);
+        }
+    }
+
+    return (data.length > 0) ? data : null;
+}
+
 function validateFields(data) {
     if (!data.username || !data.password) {
         return false;
@@ -101,5 +130,6 @@ module.exports = {
     login,
     validateFields,
     containsSpecialCharacters,
-    toggleAdmin
+    toggleAdmin,
+    updateProfile
 }

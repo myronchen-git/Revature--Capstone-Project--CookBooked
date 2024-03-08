@@ -4,7 +4,8 @@ const {
     validateFields,
     containsSpecialCharacters,
     login,
-    toggleAdmin
+    toggleAdmin,
+    updateProfile
 } = require('../../src/service/AccountsService');
 const accountsDao = require('../../src/repository/AccountsDAO');
 const encryption = require('../../src/util/encryption');
@@ -14,12 +15,12 @@ describe('createNewAccount Tests', () => {
 
     test('should return data successfully', async () => {
         const receivedData = {
-            username: 'test_username',
+            username: 'test_username2',
             password: 'password123'
         };
         jest.spyOn(accountsDao, 'createNewAccount').mockReturnValueOnce({
             Item: [{
-                username: 'test_username',
+                username: 'test_username2',
                 password: 'password123'
             }]
         });
@@ -27,7 +28,7 @@ describe('createNewAccount Tests', () => {
         const result = await createNewAccount(receivedData);
         const expected = {
             Item: [{
-                username: 'test_username',
+                username: 'test_username2',
                 password: 'password123'
             }]
         };
@@ -210,4 +211,53 @@ describe('toggleAdmin Tests', () => {
         expect(daoToggleAdminSpy).not.toHaveBeenCalled();
         expect(result).toBe(null);
     })
+})
+
+describe('updateProfile Tests', () => {
+    let body = {
+        aboutMe: 'some aboutMe text',
+        imageUrl: 'some/image/path.png'
+    };
+    const username = 'username';
+
+    afterEach(() => {
+        body.aboutMe = 'some aboutMe text';
+        body.imageUrl = 'some/image/path.png';
+    });
+
+    test('should return array: data with length of 2, should successfully call updateProfile from accountsDao twice with correct params', async () => {
+        const updateProfileSpy = jest.spyOn(accountsDao, 'updateProfile')
+            .mockReturnValueOnce('updated item 1')
+            .mockReturnValueOnce('updated item 2');
+        
+        const result = await updateProfile(username, body);
+
+        expect(result).toHaveLength(2);
+        expect(updateProfileSpy).toHaveBeenCalledTimes(2);
+        expect(updateProfileSpy).toHaveBeenCalledWith(username, 'aboutMe', body.aboutMe);
+        expect(updateProfileSpy).toHaveBeenCalledWith(username, 'imageUrl', body.imageUrl);
+    })
+
+    test('should return array: data with length of 1, should successfully call updateProfile with correct params (aboutMe)', async () => {
+        delete body.imageUrl;
+        const updateProfileSpy = jest.spyOn(accountsDao, 'updateProfile').mockReturnValueOnce('updated item 1');
+
+        const result = await updateProfile(username, body);
+
+        expect(result).toHaveLength(1);
+        expect(updateProfileSpy).toHaveBeenCalledTimes(1);
+        expect(updateProfileSpy).toHaveBeenCalledWith(username, 'aboutMe', body.aboutMe);
+    })
+
+    test('should return array: data with length of 1, should successfully call updateProfile with correct params (imageUrl)', async () => {
+        delete body.aboutMe;
+        const updateProfileSpy = jest.spyOn(accountsDao, 'updateProfile').mockReturnValueOnce('updated item 1');
+
+        const result = await updateProfile(username, body);
+
+        expect(result).toHaveLength(1);
+        expect(updateProfileSpy).toHaveBeenCalledTimes(1);
+        expect(updateProfileSpy).toHaveBeenCalledWith(username, 'imageUrl', body.imageUrl);
+    })
+
 })

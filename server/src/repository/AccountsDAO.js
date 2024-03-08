@@ -69,8 +69,29 @@ async function toggleAdmin(username, isAdmin) {
 }
 
 
+async function updateProfile(username, attributeName, attributeValue) {
+    logger.info(`updateProfile function called from AccountsDAO.js with params username: ${username}, attributeName: ${attributeName}, attributeValue: ${attributeValue}`);
+    const command = new UpdateCommand({
+        TableName,
+        Key: {username: username},
+        UpdateExpression: `SET #attName = :attValue`,
+        ExpressionAttributeNames: {'#attName': attributeName},
+        ExpressionAttributeValues: {':attValue': attributeValue},
+        ReturnValues: 'ALL_NEW'
+    });
+
+    try {
+        const data = await documentClient.send(command);
+        return data;
+    } catch (err) {
+        logger.error(err);
+    }
+    return null;
+}
+
 module.exports = {
     createNewAccount,
     getAccountByUsername,
-    toggleAdmin
+    toggleAdmin,
+    updateProfile
 }
