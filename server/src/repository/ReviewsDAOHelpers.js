@@ -1,8 +1,7 @@
 const { logger } = require("../util/logger");
 const env = require("dotenv").config();
 
-// const TableName = process.env.REVIEWS_TABLE_NAME;
-const TableName = "CookBooked-Reviews";
+const TableName = process.env.REVIEWS_TABLENAME;
 
 // ==================================================
 
