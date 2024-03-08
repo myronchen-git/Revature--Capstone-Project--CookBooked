@@ -75,9 +75,33 @@ async function getReviews(requestQueryParams) {
   return reviewsData;
 }
 
+/**
+ * Delete the Review and return the deleted review item
+ * Will consequently delete all the comments attached to the review as well
+ * 
+ * @param {Object} receivedData 
+ * @returns gets the deleted review and then returns it
+ */
+async function deleteReview(receivedData) {
+  //if there was no recipeId to make a composite key then return a Argument Error
+  if(receivedData.recipeId === undefined || !receivedData.recipeId) {
+    throw new ArgumentError("Recipe Id must be defined in Request Body");
+  } else {
+    //call the delete method from DAO
+    try{
+      //will return the deleted item from the DB
+      const data = await reviewsDao.deleteReviewById(receivedData);
+      return data;
+    } catch(err) {
+      throw Error(err);
+    }
+  }
+}
+
 // ==================================================
 
 module.exports = {
   createNewReview,
   getReviews,
+  deleteReview
 };
