@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const accountsService = require('../service/AccountsService');
 const accountsHelpers = require('./AccountsHelper');
-const webToken = require('../util/WebToken');
+const {generateToken, authenticateToken} = require('../util/WebToken');
 
 // CREATE
 // New User Registration
@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
     const data = await accountsService.login(username, password);
 
     if (data) {
-        const token = webToken.generateToken(data.Item);
+        const token = generateToken(data.Item);
         res.status(201).json({message: 'Login successful', token});
     } else {
         res.status(400).json({message: 'Invalid login credentials'});
@@ -37,6 +37,20 @@ router.post('/login', async (req, res) => {
 // READ
 
 // UPDATE
+router.put('/admin', authenticateToken, async (req, res) => {
+    if (req.user.isAdmin == true) {
+        const username = req.body.username;
+        const data = await accountsService.toggleAdmin(username);
+
+        if (data) {
+            res.status(200).json({message: `Successfully updated admin priveleges for user: ${username}`});
+        } else {
+            res.status(400).json({message: `Failed to update admin priveleges for user: ${username}`});
+        }
+    } else {
+        res.status(403).json({message: 'You must have admin priveleges to access this feature'});
+    }
+})
 
 // DELETE
 

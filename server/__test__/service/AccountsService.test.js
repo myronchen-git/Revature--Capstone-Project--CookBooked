@@ -3,7 +3,8 @@ const {
     accountDoesExist,
     validateFields,
     containsSpecialCharacters,
-    login
+    login,
+    toggleAdmin
 } = require('../../src/service/AccountsService');
 const accountsDao = require('../../src/repository/AccountsDAO');
 const encryption = require('../../src/util/encryption');
@@ -184,5 +185,29 @@ describe('login Tests', () => {
         expect(result).toBe(null);
         expect(daoSpy).toHaveBeenCalled();
         expect(encryptSpy).toHaveBeenCalled();
+    })
+})
+
+describe('toggleAdmin Tests', () => {
+
+    test('should successfully call toggleAdmin and getAccountByUsername from DAO', async () => {
+        const daoToggleAdminSpy = jest.spyOn(accountsDao, 'toggleAdmin').mockReturnValueOnce({});
+        const daoGetAccountByUsernameSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({Item: {username: 'admin', isAdmin: true}});
+
+        await toggleAdmin('username');
+
+        expect(daoToggleAdminSpy).toHaveBeenCalled();
+        expect(daoGetAccountByUsernameSpy).toHaveBeenCalled();
+    })
+
+    test('should succesfully call getAccountsByUsername, should NOT call toggleAdmin, and should return null -- username not in DB', async () => {
+        const daoToggleAdminSpy = jest.spyOn(accountsDao, 'toggleAdmin');
+        const daoGetAccountByUsernameSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({});
+
+        const result = await toggleAdmin('username');
+
+        expect(daoGetAccountByUsernameSpy).toHaveBeenCalled();
+        expect(daoToggleAdminSpy).not.toHaveBeenCalled();
+        expect(result).toBe(null);
     })
 })

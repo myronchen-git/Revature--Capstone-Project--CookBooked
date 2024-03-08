@@ -1,7 +1,7 @@
 const {DynamoDBClient} = require('@aws-sdk/client-dynamodb');
-const {DynamoDBDocumentClient, PutCommand, QueryCommand, GetCommand} = require('@aws-sdk/lib-dynamodb');
+const {DynamoDBDocumentClient, PutCommand, QueryCommand, GetCommand, UpdateCommand} = require('@aws-sdk/lib-dynamodb');
 const {fromIni} = require('@aws-sdk/credential-provider-ini');
-const logger = require('../util/logger');
+const {logger} = require('../util/logger');
 
 const dotenv = require('dotenv');
 const path = require('path');
@@ -17,6 +17,7 @@ const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = process.env.ACCOUNTS_TABLENAME;
 
 async function createNewAccount(Item) {
+    logger.info('createNewAccount function called from AccountsDAO.js');
     const command = new PutCommand({
         TableName,
         Item
@@ -32,6 +33,7 @@ async function createNewAccount(Item) {
 }
 
 async function getAccountByUsername(username) {
+    logger.info('getAccountByUsername function called from AccountsDAO.js');
     const command = new GetCommand({
         TableName,
         Key: {username: username}
@@ -46,8 +48,29 @@ async function getAccountByUsername(username) {
     return null;
 }
 
+async function toggleAdmin(username, isAdmin) {
+    logger.info('toggleAdmin function called from AccountsDAO.js');   
+    const command = new UpdateCommand({
+        TableName,
+        Key: {username: username},
+        UpdateExpression: 'SET #isAdmin = :isAdmin',
+        ExpressionAttributeNames: {'#isAdmin': 'isAdmin'},
+        ExpressionAttributeValues: {':isAdmin': !isAdmin},
+        ReturnValues: 'ALL_NEW'
+    });
+
+    try {
+        const data = await documentClient.send(command);
+        return data;
+    } catch (error) {
+        logger.error(error);
+    }
+    return null;
+}
+
 
 module.exports = {
     createNewAccount,
-    getAccountByUsername
+    getAccountByUsername,
+    toggleAdmin
 }
