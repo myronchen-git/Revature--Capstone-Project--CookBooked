@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
     } else {
         res.status(400).json({message: 'Account registration failed, required fields missing or contain special characters'});
     }
-})
+});
 
 // User Login
 router.post('/login', async (req, res) => {
@@ -32,11 +32,12 @@ router.post('/login', async (req, res) => {
     } else {
         res.status(400).json({message: 'Invalid login credentials'});
     }
-})
+});
 
 // READ
 
 // UPDATE
+// Update admin privileges (must be admin to access this feature)
 router.put('/admin', authenticateToken, async (req, res) => {
     if (req.user.isAdmin == true) {
         const username = req.body.username;
@@ -50,7 +51,24 @@ router.put('/admin', authenticateToken, async (req, res) => {
     } else {
         res.status(403).json({message: 'You must have admin priveleges to access this feature'});
     }
-})
+});
+
+// Update own user profile information
+router.put('/profile', authenticateToken, async (req, res) => {
+    // Check that req body contains appropriate data
+    if (req.body.aboutMe || req.body.imageUrl) {
+        const username = req.user.username;
+        const data = await accountsService.updateProfile(username, req.body)
+        
+        if (data) {
+            res.status(200).json({message: 'Successfully updated profile information'});
+        } else {
+            res.status(400).json({message: 'Failed to update profile information'});
+        }
+    } else {
+        res.status(400).json({message: 'Unable to update profile information, invalid input data'})
+    }
+});
 
 // DELETE
 
