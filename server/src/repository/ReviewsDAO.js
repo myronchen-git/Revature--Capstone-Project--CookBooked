@@ -6,6 +6,7 @@ const {
   ScanCommand,
   UpdateCommand,
   GetCommand,
+  QueryCommand,
   DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
@@ -96,7 +97,7 @@ async function deleteReviewById(receivedData) {
         "reviewId": receivedData.reviewId
       }
     })
-  
+
     //try this Delete Command and if it successful return the Item
     try {
       const data = await documentClient.send(command);
@@ -121,8 +122,8 @@ async function deleteReviewById(receivedData) {
 
 /**
  * This is a helper function for gettin one Review by its PK and SK values
- * 
- * @param {Object} receivedData 
+ *
+ * @param {Object} receivedData
  * @returns a review based of the PK and SK provided
  */
 async function getOneReviewById(receivedData) {
