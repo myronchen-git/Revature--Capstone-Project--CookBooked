@@ -48,7 +48,6 @@ function isAdmin(token) {
 
 module.exports = {
     jwt,
-    secretKey,
     generateToken,
     authenticateToken,
     isAdmin,

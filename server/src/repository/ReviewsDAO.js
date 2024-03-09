@@ -1,4 +1,4 @@
-const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient} = require("@aws-sdk/client-dynamodb");
 const { fromIni } = require("@aws-sdk/credential-provider-ini");
 const {
   DynamoDBDocumentClient,

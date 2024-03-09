@@ -1,5 +1,5 @@
 const {DynamoDBClient} = require('@aws-sdk/client-dynamodb');
-const {DynamoDBDocumentClient, PutCommand, QueryCommand, GetCommand, UpdateCommand} = require('@aws-sdk/lib-dynamodb');
+const {DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand} = require('@aws-sdk/lib-dynamodb');
 const {fromIni} = require('@aws-sdk/credential-provider-ini');
 const {logger} = require('../util/logger');
 
@@ -17,7 +17,7 @@ const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = process.env.ACCOUNTS_TABLENAME;
 
 async function createNewAccount(Item) {
-    logger.info('createNewAccount function called from AccountsDAO.js');
+    logger.info(`createNewAccount function called from AccountsDAO.js with param Item: ${JSON.stringify(Item)}`);
     const command = new PutCommand({
         TableName,
         Item
@@ -33,7 +33,7 @@ async function createNewAccount(Item) {
 }
 
 async function getAccountByUsername(username) {
-    logger.info('getAccountByUsername function called from AccountsDAO.js');
+    logger.info(`getAccountByUsername function called from AccountsDAO.js with param username: ${username}`);
     const command = new GetCommand({
         TableName,
         Key: {username: username}
@@ -49,7 +49,7 @@ async function getAccountByUsername(username) {
 }
 
 async function toggleAdmin(username, isAdmin) {
-    logger.info('toggleAdmin function called from AccountsDAO.js');   
+    logger.info(`toggleAdmin function called from AccountsDAO.js with params username: ${username}, isAdmin: ${isAdmin}`);   
     const command = new UpdateCommand({
         TableName,
         Key: {username: username},
