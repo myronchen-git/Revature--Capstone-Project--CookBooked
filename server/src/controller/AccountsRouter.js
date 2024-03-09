@@ -9,7 +9,7 @@ const {generateToken, authenticateToken} = require('../util/WebToken');
 // Request body should contain username, password, and isAdmin
 router.post('/register', async (req, res) => {
     let body = accountsHelpers.cleanUsernamePassword(req.body);
-    const data = await accountsService.createNewAccount(body);
+    const data = body != null ? await accountsService.createNewAccount(body) : null;
 
     if (data == 'username already exists') {
         res.status(400).json({message: 'An account with this username already exists'});

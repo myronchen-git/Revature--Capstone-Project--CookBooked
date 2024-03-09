@@ -3,13 +3,10 @@ const { logger } = require('../util/logger');
 const encryption = require('../util/encryption');
 
 async function createNewAccount(receivedData) {
-    logger.info('createNewAccount function called from AccountsService.js');
-    // validate required fields
-    if (validateFields(receivedData)) {
-        // validate account does not already exist
+    logger.info(`createNewAccount function called from AccountsService.js with param receivedData: ${JSON.stringify(receivedData)}`);
+    if (!containsSpecialCharacters(receivedData.username)) {
         const doesExist = await accountDoesExist(receivedData.username);
         if (!doesExist) {
-            // encrypt password?
             const hash = await encryption.encryptPassword(receivedData.password);
             const data = await accountsDao.createNewAccount({
                 username: receivedData.username,
@@ -21,7 +18,7 @@ async function createNewAccount(receivedData) {
         // replace with custom error if time permits
         return 'username already exists';
     }
-    return null;    
+    return null;
 }
 
 
@@ -36,7 +33,7 @@ async function accountDoesExist(username) {
 }
 
 async function login(username, password) {
-    logger.info('login function called from AccountsService.js');
+    logger.info(`login function called from AccountsService.js with params username: ${username}, password: ${password}`);
     const data = await accountsDao.getAccountByUsername(username);
 
     if (data.Item) {
@@ -50,7 +47,7 @@ async function login(username, password) {
 }
 
 async function toggleAdmin(username) {
-    logger.info('toggleAdmin function called from AccountsService.js');
+    logger.info(`toggleAdmin function called from AccountsService.js with param username: ${username}`);
     let isAdmin;
     const user = await accountsDao.getAccountByUsername(username);
     if (user.Item) {
@@ -98,16 +95,6 @@ async function updateProfile(username, body) {
     return (data.length > 0) ? data : null;
 }
 
-function validateFields(data) {
-    if (!data.username || !data.password) {
-        return false;
-    } else if (containsSpecialCharacters(data.username)) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
 // will return false if input only contains whitelisted characters
 function containsSpecialCharacters(string) {
     const validChars = 'abcdefghijklmnopqrstuvwxyz1234567890-_';
@@ -128,7 +115,6 @@ module.exports = {
     createNewAccount,
     accountDoesExist,
     login,
-    validateFields,
     containsSpecialCharacters,
     toggleAdmin,
     updateProfile
