@@ -1,6 +1,6 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { fromIni } = require('@aws-sdk/credential-provider-ini');
-const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 const { logger } = require('../util/logger');
 
 const dotenv = require('dotenv');
@@ -17,6 +17,12 @@ const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = process.env.COMMENTS_TABLENAME;
 
+/**
+ * Post a comment to the COMMENTS_TABLE in Dynamo
+ * 
+ * @param {Object} Item contains all info needed to create a Comment
+ * @returns The item that was posted or throws an error
+ */
 async function postComment(Item) {
     //define the PutCommand
     const command = new PutCommand({
@@ -36,6 +42,32 @@ async function postComment(Item) {
     }
 }
 
+async function getCommentsByReviewId(reviewId) {
+    logger.info("CommentsDAO.getCommentsByReviewId Called");
+    //define the QueryCommand
+    const command = new QueryCommand({
+        TableName,
+        IndexName: "createdAt-index",
+        KeyConditionExpression: "reviewId = :val",
+        ExpressionAttributeValues: {
+            ":val": reviewId
+        },
+        ScanIndexForward: false
+    })
+
+    //try catch for the QueryCommand
+    try {
+        const data = await documentClient.send(command);
+        const statusCode = data.$metadata.httpStatusCode === 200;
+        logger.info(`${statusCode ? "Retrived Comments From DB" : "Failed to Retrieve Comments From DB"}.`);
+        return statusCode ? data.Items : null;
+    } catch(err) {
+        logger.error(err);
+        throw new Error(err);
+    }
+}
+
 module.exports = {
-    postComment
+    postComment,
+    getCommentsByReviewId
 }
