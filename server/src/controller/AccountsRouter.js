@@ -7,7 +7,7 @@ const {generateToken, authenticateToken} = require('../util/WebToken');
 // CREATE
 // New User Registration
 // Request body should contain username, password, and isAdmin
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
     let body = accountsHelpers.cleanUsernamePassword(req.body);
     const data = body != null ? await accountsService.createNewAccount(body) : null;
 
@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
 });
 
 // User Login
-router.post('/login', async (req, res) => {
+router.post('/auth', async (req, res) => {
     const body = accountsHelpers.cleanUsernamePassword(req.body);
     const {username, password} = body;
     const data = await accountsService.login(username, password);
