@@ -2,6 +2,13 @@ const accountsDao = require('../repository/AccountsDAO');
 const { logger } = require('../util/logger');
 const encryption = require('../util/encryption');
 
+/**
+ * createNewAccount will check if username contain special characters, then whether or not an account item already exists with input username,
+ * then call the DAO function to add a new account item to accounts table
+ * 
+ * @param {Object} receivedData containing new account username and encrypted password, isAdmin set false by default
+ * @returns dynamoDB data if successful, username already exists if username already exists, and null if username contains special characters
+ */
 async function createNewAccount(receivedData) {
     logger.info(`createNewAccount function called from AccountsService.js with param receivedData: ${JSON.stringify(receivedData)}`);
     if (!containsSpecialCharacters(receivedData.username)) {
@@ -21,7 +28,12 @@ async function createNewAccount(receivedData) {
     return null;
 }
 
-
+/**
+ * accountDoesExist will call DAO function to get account by param username
+ * 
+ * @param {String} username to pass to GetCommand in DAO
+ * @returns true if GetCommand returns an item, false if no item is found
+ */
 async function accountDoesExist(username) {
     const data = await accountsDao.getAccountByUsername(username);
 
@@ -32,6 +44,13 @@ async function accountDoesExist(username) {
     }
 }
 
+/**
+ * login will call DAO function to get account item by username, then compare input password to stored hashed password
+ * 
+ * @param {String} username 
+ * @param {String} password 
+ * @returns dynamoDB data on success and password match, else null
+ */
 async function login(username, password) {
     logger.info(`login function called from AccountsService.js with params username: ${username}, password: ${password}`);
     const data = await accountsDao.getAccountByUsername(username);
@@ -46,6 +65,12 @@ async function login(username, password) {
     }
 }
 
+/**
+ * toggleAdmin will call update function in DAO to update isAdmin attribute of specified username
+ * 
+ * @param {String} username 
+ * @returns null if account does not exist, else returns dynamoDB data with updated isAdmin attribute
+ */
 async function toggleAdmin(username) {
     logger.info(`toggleAdmin function called from AccountsService.js with param username: ${username}`);
     let isAdmin;
@@ -66,8 +91,14 @@ async function toggleAdmin(username) {
     }
 }
 
-// parse req body and call appropriate dao functions to update aboutMe, imageUrl, or both
-// returns an array containing data from dao
+
+/**
+ * updateProfile will call DAO function to update account item with data in the body
+ * 
+ * @param {String} username passed by req.user.body to identify which account item is being updated
+ * @param {Object} body containing either aboutMe, imageUrl, or both
+ * @returns an array containing update data from DynamoDB
+ */
 async function updateProfile(username, body) {
     logger.info(`updateProfile function called from AccountsService.js with params username: ${username}, body: ${body}`);
     let data = [];
@@ -95,7 +126,12 @@ async function updateProfile(username, body) {
     return (data.length > 0) ? data : null;
 }
 
-// will return false if input only contains whitelisted characters
+/**
+ * containsSpecialCharacters will check string input against whitelist of allowed characters
+ * 
+ * @param {String} string to be compared against whitelist
+ * @returns true if string contains any characters not in whitelist, else false
+ */
 function containsSpecialCharacters(string) {
     const validChars = 'abcdefghijklmnopqrstuvwxyz1234567890-_';
     let isInvalid = false;

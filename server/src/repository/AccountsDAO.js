@@ -16,6 +16,12 @@ const client = new DynamoDBClient({
 const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = process.env.ACCOUNTS_TABLENAME;
 
+/**
+ * createNewAccount will PUT a new account item in Accounts table in DynamoDB
+ * 
+ * @param {Object} Item containing username, hashed password, and isAdmin (BOOL) to be added to Accounts table
+ * @returns The item that was added or throws an error
+ */
 async function createNewAccount(Item) {
     logger.info(`createNewAccount function called from AccountsDAO.js with param Item: ${JSON.stringify(Item)}`);
     const command = new PutCommand({
@@ -32,6 +38,12 @@ async function createNewAccount(Item) {
     return null;
 }
 
+/**
+ * getAccountByUsername will GET the account item with matching username
+ * 
+ * @param {String} username used as partition key
+ * @returns data containing account Item or throws an error
+ */
 async function getAccountByUsername(username) {
     logger.info(`getAccountByUsername function called from AccountsDAO.js with param username: ${username}`);
     const command = new GetCommand({
@@ -48,6 +60,13 @@ async function getAccountByUsername(username) {
     return null;
 }
 
+/**
+ * toggleAdmin will UPDATE (toggle) a table item's isAdmin attribute specified by username
+ * 
+ * @param {String} username used as partition key
+ * @param {Boolean} isAdmin as account's current isAdmin attribute
+ * @returns data containing updated account item or throws an error
+ */
 async function toggleAdmin(username, isAdmin) {
     logger.info(`toggleAdmin function called from AccountsDAO.js with params username: ${username}, isAdmin: ${isAdmin}`);   
     const command = new UpdateCommand({
@@ -68,7 +87,14 @@ async function toggleAdmin(username, isAdmin) {
     return null;
 }
 
-
+/**
+ * updateProfile will UPDATE a table item's aboutMe or imageURL based on params username and attributeName
+ * 
+ * @param {String} username to be used as partition key
+ * @param {String} attributeName to specify which attribute to update
+ * @param {String} attributeValue to specify data to be updated
+ * @returns data containing updated account item or throws error
+ */
 async function updateProfile(username, attributeName, attributeValue) {
     logger.info(`updateProfile function called from AccountsDAO.js with params username: ${username}, attributeName: ${attributeName}, attributeValue: ${attributeValue}`);
     const command = new UpdateCommand({
