@@ -2,8 +2,12 @@ const { logger } = require("../util/logger");
 const { URL } = require('url');
 
 
-// HELPERS
-// Input req.body, return an object after cleaning
+/**
+ * cleanUsernamePassword will take request body as input and return it after trimming whitespace and converting input username to lowercase
+ * 
+ * @param {Object} body that contains request body to be cleaned
+ * @returns an object with cleaned username and password if they exist in body, otherwise null
+ */
 function cleanUsernamePassword(body) {
 
     if (typeof body.username == 'string' && typeof body.password == 'string') {
