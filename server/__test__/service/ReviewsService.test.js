@@ -30,7 +30,7 @@ describe("getReviews", () => {
 
       const getReviewsByRecipeIdSpy = jest
         .spyOn(ReviewsDAO, "getReviewsByRecipeId")
-        .mockReturnValue(structuredClone(EXPECTED_RESULT));
+        .mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
       // Act
       const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
@@ -60,7 +60,7 @@ describe("getReviews", () => {
 
       const getReviewsByRecipeIdSpy = jest
         .spyOn(ReviewsDAO, "getReviewsByRecipeId")
-        .mockReturnValue(structuredClone(EXPECTED_RESULT));
+        .mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
       // Act
       const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
