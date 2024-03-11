@@ -42,5 +42,25 @@ router.get("/review/:reviewId/comments", async (req,res) => {
 // UPDATE
 
 // DELETE
+// Delete an Individual Comment
+router.delete("/:commentId", authenticateToken, async (req, res) => {
+    try {
+        //create a body that combines the reviewId with the commentId (add username and isAdmin as well)
+        const body = req.body;
+        body.commentId = req.params.commentId;
+        body.username = req.user.username;
+        body.isAdmin = req.user.isAdmin;
+        const data = await commentsService.deleteComment(body);
+        res.status(200).json({
+            message: "Deleted Comment Successfully",
+            ReviewPost: data,
+          });
+    } catch(err) {
+        res.status(500).json({
+            message: `Error Trying This Request`,
+            error_message: err.message,
+          });
+    }
+})
 
 module.exports = router;
