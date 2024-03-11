@@ -10,18 +10,23 @@ const uuid = require("uuid");
  *
  * @param {Object} requestQueryParams An Object containing recipeId, author, ExclusiveStartKey, or Limit.
  * @returns {Object} An Object that may contain recipeId, author, ExclusiveStartKey, or Limit,
- * but in their valid data types.
+ * but in their valid data types.  If ExclusiveStartKey exists, then it contains either recipeId & reviewId or
+ * recipeId, reviewId, author, & createdAt.
  */
 function sanitizeGetReviewsQueryParams(requestQueryParams) {
   logger.info(
     `ReviewsRouterHelpers.sanitizeGetReviewsQueryParams(${JSON.stringify(requestQueryParams)})`
   );
 
-  const { recipeId, ExclusiveStartKey, Limit } = requestQueryParams;
+  const { recipeId, author, ExclusiveStartKey, Limit } = requestQueryParams;
   const QUERY_PARAMS = {};
 
   if (recipeId) {
     QUERY_PARAMS.recipeId = recipeId;
+  }
+
+  if (author) {
+    QUERY_PARAMS.author = author.toLowerCase().trim();
   }
 
   if (ExclusiveStartKey) {
@@ -36,12 +41,23 @@ function sanitizeGetReviewsQueryParams(requestQueryParams) {
           recipeId: CONVERTED_RECIPE_ID,
           reviewId: CONVERTED_REVIEW_ID,
         };
+
+        if (START_KEY.author && START_KEY.createdAt) {
+          const CONVERTED_AUTHOR = String(START_KEY.author).toLowerCase().trim();
+          const CONVERTED_CREATED_AT = convertNumber(START_KEY.createdAt);
+
+          if (CONVERTED_AUTHOR && CONVERTED_CREATED_AT) {
+            QUERY_PARAMS.ExclusiveStartKey.author = CONVERTED_AUTHOR;
+            QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
+          }
+        }
       }
     }
   }
 
-  if (Limit && !isNaN(Limit)) {
-    QUERY_PARAMS.Limit = Math.round(Number(Limit));
+  const CONVERTED_LIMIT = convertNumber(Limit);
+  if (CONVERTED_LIMIT) {
+    QUERY_PARAMS.Limit = CONVERTED_LIMIT;
   }
 
   logger.info(
@@ -65,6 +81,17 @@ function convertUuid(Uuid) {
   }
 
   return null;
+}
+
+/**
+ * Takes any value that may be a number and converts it to an integer Number, rounding it to the nearest integer.
+ * Else, returns null.
+ *
+ * @param {*} n A value that can be a number.
+ * @returns An integer Number or null.
+ */
+function convertNumber(n) {
+  return !isNaN(n) ? Math.round(Number(n)) : null;
 }
 
 // ==================================================

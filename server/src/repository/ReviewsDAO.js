@@ -1,4 +1,4 @@
-const { DynamoDBClient} = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { fromIni } = require("@aws-sdk/credential-provider-ini");
 const {
   DynamoDBDocumentClient,
@@ -89,20 +89,20 @@ async function deleteReviewById(receivedData) {
   const itemToReturn = await getOneReviewById(receivedData);
 
   //if the item was found then run the delete command else throw an error that the review does not exist
-  if(itemToReturn) {
+  if (itemToReturn) {
     const command = new DeleteCommand({
       TableName,
       Key: {
-        "recipeId": receivedData.recipeId,
-        "reviewId": receivedData.reviewId
-      }
-    })
+        recipeId: receivedData.recipeId,
+        reviewId: receivedData.reviewId,
+      },
+    });
 
     //try this Delete Command and if it successful return the Item
     try {
       const data = await documentClient.send(command);
       const statusCode = data.$metadata.httpStatusCode === 200;
-      if(statusCode) {
+      if (statusCode) {
         logger.info("Deleted Review from DB");
         //call helper function to delete all comments under this review
         //deleteAllCommentsUnderReview(receivedData.reviewId);
@@ -111,7 +111,7 @@ async function deleteReviewById(receivedData) {
         logger.info("Failed to Delete Review from DB");
         return null;
       }
-    } catch(err) {
+    } catch (err) {
       logger.error(err);
       throw new Error(err);
     }
@@ -132,16 +132,16 @@ async function getOneReviewById(receivedData) {
   const command = new GetCommand({
     TableName,
     Key: {
-      "recipeId": receivedData.recipeId,
-      "reviewId": receivedData.reviewId
-    }
-  })
+      recipeId: receivedData.recipeId,
+      reviewId: receivedData.reviewId,
+    },
+  });
 
   try {
     const data = await documentClient.send(command);
     logger.info("Got Review");
     return data.Item;
-  } catch(err) {
+  } catch (err) {
     logger.error(err);
     throw new Error(err);
   }
@@ -152,5 +152,5 @@ async function getOneReviewById(receivedData) {
 module.exports = {
   postReview,
   getReviewsByRecipeId,
-  deleteReviewById
+  deleteReviewById,
 };
