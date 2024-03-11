@@ -36,7 +36,7 @@ describe('createNewAccount Tests', () => {
         expect(result).toStrictEqual(expected);
     });
 
-    test('should return username already exists', async () => {
+    test('should throw error username already exists', async () => {
         const receivedData = {
             username: 'test_username',
             password: 'password123'
@@ -47,9 +47,9 @@ describe('createNewAccount Tests', () => {
             }]
         });
 
-        const result = await createNewAccount(receivedData);
-
-        expect(result).toBe('username already exists');
+        expect(async () => {
+            await createNewAccount(receivedData)
+        }).rejects.toThrow('Username already exists');
     });
 })
 
@@ -114,26 +114,26 @@ describe('login Tests', () => {
         expect(encryptSpy).toHaveBeenCalled();
     })
 
-    test('should successfully call getAccountByUsername and return null -- account does not exist', async () => {
+    test('should successfully call getAccountByUsername and throw error -- account does not exist', async () => {
         const data = {};
         const spy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
 
-        result = await login(username, password);
-
-        expect(result).toBe(null);
+        expect(async () => {
+            await login(username, password)
+        }).rejects.toThrow('No account found with provided username')
         expect(spy).toHaveBeenCalled();
     })
 
-    test('should successfully call getAccountByUsername, call encryption, and return null -- incorrect password', async () => {
+    test('should successfully call getAccountByUsername, call encryption, and throw error -- incorrect password', async () => {
         const data = {Item: {username, password}}
         const daoSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce(data);
-        const encryptSpy = jest.spyOn(encryption, 'validatePassword').mockReturnValueOnce(false);
+        jest.spyOn(encryption, 'validatePassword').mockReturnValueOnce(false);
 
-        result = await login(username, password);
 
-        expect(result).toBe(null);
+        expect(async () => {
+            await login(username, password)
+        }).rejects.toThrow('Invalid password');
         expect(daoSpy).toHaveBeenCalled();
-        expect(encryptSpy).toHaveBeenCalled();
     })
 })
 

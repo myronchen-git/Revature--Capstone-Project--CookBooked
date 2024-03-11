@@ -7,25 +7,30 @@ const encryption = require('../util/encryption');
  * then call the DAO function to add a new account item to accounts table
  * 
  * @param {Object} receivedData containing new account username and encrypted password, isAdmin set false by default
- * @returns dynamoDB data if successful, username already exists if username already exists, and null if username contains special characters
+ * @returns dynamoDB data if successful, otherwise throws error
  */
 async function createNewAccount(receivedData) {
     logger.info(`createNewAccount function called from AccountsService.js with param receivedData: ${JSON.stringify(receivedData)}`);
-    if (!containsSpecialCharacters(receivedData.username)) {
-        const doesExist = await accountDoesExist(receivedData.username);
-        if (!doesExist) {
-            const hash = await encryption.encryptPassword(receivedData.password);
-            const data = await accountsDao.createNewAccount({
-                username: receivedData.username,
-                password: hash,
-                isAdmin: false
-            });
-            return data;
+
+    try {
+        if (!containsSpecialCharacters(receivedData.username)) {
+            const doesExist = await accountDoesExist(receivedData.username);
+            if (!doesExist) {
+                const hash = await encryption.encryptPassword(receivedData.password);
+                const data = await accountsDao.createNewAccount({
+                    username: receivedData.username,
+                    password: hash,
+                    isAdmin: false
+                });
+                return data;
+            }
+            // replace with custom error if time permits
+            throw Error("Username already exists");
         }
-        // replace with custom error if time permits
-        return 'username already exists';
+        throw Error("Username may not contain special characters");
+    } catch (err) {
+        throw Error(err.message);
     }
-    return null;
 }
 
 /**
@@ -49,19 +54,23 @@ async function accountDoesExist(username) {
  * 
  * @param {String} username 
  * @param {String} password 
- * @returns dynamoDB data on success and password match, else null
+ * @returns dynamoDB data on success and password match, else throw error
  */
 async function login(username, password) {
     logger.info(`login function called from AccountsService.js with params username: ${username}, password: ${password}`);
-    const data = await accountsDao.getAccountByUsername(username);
 
-    if (data.Item) {
-        if (await encryption.validatePassword(password, data.Item.password)) {
-            return data
+    try {
+        const data = await accountsDao.getAccountByUsername(username);
+
+        if (data.Item) {
+            if (await encryption.validatePassword(password, data.Item.password)) {
+                return data;
+            }
+            throw Error("Invalid password")
         }
-        return null;
-    } else {
-        return null;
+        throw Error("No account found with provided username") 
+    } catch (err) {
+        throw Error(err.message);
     }
 }
 
@@ -97,7 +106,7 @@ async function toggleAdmin(username) {
  * 
  * @param {String} username passed by req.user.body to identify which account item is being updated
  * @param {Object} body containing either aboutMe, imageUrl, or both
- * @returns an array containing update data from DynamoDB
+ * @returns an array containing update data from DynamoDB, else throws error
  */
 async function updateProfile(username, body) {
     logger.info(`updateProfile function called from AccountsService.js with params username: ${username}, body: ${body}`);
@@ -123,7 +132,11 @@ async function updateProfile(username, body) {
         }
     }
 
-    return (data.length > 0) ? data : null;
+    if (data.length > 0) {
+        return data;
+    } else {
+        throw Error('Failed to update profile information');
+    }
 }
 
 /**
