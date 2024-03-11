@@ -2,45 +2,56 @@ const { logger } = require("../util/logger");
 const env = require("dotenv").config();
 
 const TableName = process.env.REVIEWS_TABLENAME;
+const AuthorIndexName = process.env.REVIEWS_TABLE_AUTHOR_INDEXNAME;
 
 // ==================================================
 
 /**
- * Requires recipe ID.  ExclusiveStartKey and Limit are optional.  Takes in those arguments and creates the
+ * Requires recipe ID or author.  ExclusiveStartKey and Limit are optional.  Takes in those arguments and creates the
  * QueryCommand argument.
  *
- * @param {Object} param0 Object containing String recipeId, and optionally Object ExclusiveStartKey and Number Limit.
+ * @param {Object} param0 Object containing String recipeId or author,
+ * and optionally Object ExclusiveStartKey and Number Limit.
  * @returns The parameter to pass into QueryCommand.
  */
-function buildQueryParamsForGetReviewsByRecipeId({ recipeId, ExclusiveStartKey, Limit }) {
+function buildQueryParamsForGetReviews({ recipeId, author, ExclusiveStartKey, Limit }) {
   logger.info(
-    `ReviewsDAOUtil.buildQueryParamsForGetReviewsByRecipeId(${recipeId}, ${JSON.stringify(
+    `ReviewsDAOUtil.buildQueryParamsForGetReviews(${recipeId}, ${author}, ${JSON.stringify(
       ExclusiveStartKey
     )}, ${Limit})`
   );
 
-  const PARAMS = {
-    TableName,
-    KeyConditionExpression: "recipeId = :recipeId",
-    ExpressionAttributeValues: { ":recipeId": recipeId },
-  };
+  let params;
+  if (recipeId) {
+    params = {
+      TableName,
+      KeyConditionExpression: "recipeId = :recipeId",
+      ExpressionAttributeValues: { ":recipeId": recipeId },
+    };
+  } else if (author) {
+    params = {
+      TableName,
+      IndexName: AuthorIndexName,
+      KeyConditionExpression: "author = :author",
+      ExpressionAttributeValues: { ":author": author },
+      ScanIndexForward: false,
+    };
+  }
 
   if (ExclusiveStartKey) {
-    PARAMS["ExclusiveStartKey"] = ExclusiveStartKey;
+    params["ExclusiveStartKey"] = ExclusiveStartKey;
   }
 
   if (Limit) {
-    PARAMS["Limit"] = Limit;
+    params["Limit"] = Limit;
   }
 
-  logger.info(
-    `ReviewsDAOUtil.buildQueryParamsForGetReviewsByRecipeId: Returning ${JSON.stringify(PARAMS)}`
-  );
-  return PARAMS;
+  logger.info(`ReviewsDAOUtil.buildQueryParamsForGetReviews: Returning ${JSON.stringify(params)}`);
+  return params;
 }
 
 // ==================================================
 
 module.exports = {
-  buildQueryParamsForGetReviewsByRecipeId,
+  buildQueryParamsForGetReviews,
 };

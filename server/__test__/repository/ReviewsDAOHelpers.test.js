@@ -7,20 +7,20 @@ const envPath = path.resolve("./.env");
 // Config the .env file
 dotenv.config({ path: envPath });
 
-const {
-  buildQueryParamsForGetReviewsByRecipeId,
-} = require("../../src/repository/ReviewsDAOHelpers");
+const { buildQueryParamsForGetReviews } = require("../../src/repository/ReviewsDAOHelpers");
 
 // --------------------------------------------------
 
 const RECIPE_ID = "1234";
 const REVIEW_ID = "5678";
+const AUTHOR = "author";
 const LIMIT = 10;
 const REVIEWS_TABLENAME = process.env.REVIEWS_TABLENAME;
+const AUTHOR_INDEX_NAME = process.env.REVIEWS_TABLE_AUTHOR_INDEXNAME;
 
 // ==================================================
 
-describe("buildQueryParamsForGetReviewsByRecipeId", () => {
+describe("buildQueryParamsForGetReviews", () => {
   test("Giving only recipe ID should return a Query Command parameter object with bare minimum properties.", () => {
     const PROPS = { recipeId: RECIPE_ID };
     const EXPECTED_RESULT = {
@@ -29,7 +29,7 @@ describe("buildQueryParamsForGetReviewsByRecipeId", () => {
       ExpressionAttributeValues: { ":recipeId": RECIPE_ID },
     };
 
-    const RESULT = buildQueryParamsForGetReviewsByRecipeId(PROPS);
+    const RESULT = buildQueryParamsForGetReviews(PROPS);
 
     expect(RESULT).toStrictEqual(EXPECTED_RESULT);
   });
@@ -49,7 +49,7 @@ describe("buildQueryParamsForGetReviewsByRecipeId", () => {
         ExpressionAttributeValues: { ":recipeId": RECIPE_ID },
       };
 
-      const RESULT = buildQueryParamsForGetReviewsByRecipeId(PROPS);
+      const RESULT = buildQueryParamsForGetReviews(PROPS);
 
       expect(RESULT).toStrictEqual(EXPECTED_RESULT);
     }
@@ -70,7 +70,7 @@ describe("buildQueryParamsForGetReviewsByRecipeId", () => {
         Limit: LIMIT,
       };
 
-      const RESULT = buildQueryParamsForGetReviewsByRecipeId(PROPS);
+      const RESULT = buildQueryParamsForGetReviews(PROPS);
 
       expect(RESULT).toStrictEqual(EXPECTED_RESULT);
     }
@@ -93,9 +93,26 @@ describe("buildQueryParamsForGetReviewsByRecipeId", () => {
         Limit: LIMIT,
       };
 
-      const RESULT = buildQueryParamsForGetReviewsByRecipeId(PROPS);
+      const RESULT = buildQueryParamsForGetReviews(PROPS);
 
       expect(RESULT).toStrictEqual(EXPECTED_RESULT);
     }
   );
+
+  test("Giving only author should return a Query Command parameter object with bare minimum properties.", () => {
+    const PROPS = {
+      author: AUTHOR,
+    };
+    const EXPECTED_RESULT = {
+      TableName: REVIEWS_TABLENAME,
+      IndexName: AUTHOR_INDEX_NAME,
+      KeyConditionExpression: "author = :author",
+      ExpressionAttributeValues: { ":author": AUTHOR },
+      ScanIndexForward: false,
+    };
+
+    const RESULT = buildQueryParamsForGetReviews(PROPS);
+
+    expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+  });
 });
