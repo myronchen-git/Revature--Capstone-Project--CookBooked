@@ -13,6 +13,12 @@ const MAX_LIMIT = 100;
 // ==================================================
 
 describe("getReviews", () => {
+  let getReviewsByRecipeIdSpy;
+
+  beforeEach(() => {
+    getReviewsByRecipeIdSpy = jest.spyOn(ReviewsDAO, "getReviewsByRecipeId");
+  });
+
   test(
     "When given a recipe ID property, this should call the " +
       "DAO's getReviewsByRecipeId and return a list of reviews.",
@@ -28,9 +34,7 @@ describe("getReviews", () => {
         LastEvaluatedKey: {},
       };
 
-      const getReviewsByRecipeIdSpy = jest
-        .spyOn(ReviewsDAO, "getReviewsByRecipeId")
-        .mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+      getReviewsByRecipeIdSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
       // Act
       const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
@@ -58,9 +62,7 @@ describe("getReviews", () => {
         LastEvaluatedKey: {},
       };
 
-      const getReviewsByRecipeIdSpy = jest
-        .spyOn(ReviewsDAO, "getReviewsByRecipeId")
-        .mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+      getReviewsByRecipeIdSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
       // Act
       const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
@@ -75,7 +77,6 @@ describe("getReviews", () => {
   test("Giving a Limit of less than 1 should throw an error.", () => {
     // Arrange
     const REQUEST_QUERY_PARAMS = { recipeId: RECIPE_ID1, Limit: 0 };
-    const getReviewsByRecipeIdSpy = jest.spyOn(ReviewsDAO, "getReviewsByRecipeId");
 
     // Act
     async function runFunc() {
@@ -90,7 +91,6 @@ describe("getReviews", () => {
   test("Giving a Limit of more than 100 should throw an error.", () => {
     // Arrange
     const REQUEST_QUERY_PARAMS = { recipeId: RECIPE_ID1, Limit: 101 };
-    const getReviewsByRecipeIdSpy = jest.spyOn(ReviewsDAO, "getReviewsByRecipeId");
 
     // Act
     async function runFunc() {
@@ -106,8 +106,6 @@ describe("getReviews", () => {
   test("When not given a recipe ID property, this should throw an error.", async () => {
     // Arrange
     const REQUEST_QUERY_PARAMS = {};
-
-    const getReviewsByRecipeIdSpy = jest.spyOn(ReviewsDAO, "getReviewsByRecipeId");
 
     // Act
     async function runFunc() {
