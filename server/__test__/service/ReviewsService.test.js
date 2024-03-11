@@ -4,24 +4,26 @@ const ReviewsDAO = require("../../src/repository/ReviewsDAO");
 // --------------------------------------------------
 
 const RECIPE_ID1 = "1234";
+const RECIPE_ID2 = "2345";
 const REVIEW_ID1 = "987";
 const REVIEW_ID2 = "654";
 const AUTHOR1 = "author1";
 const AUTHOR2 = "author2";
+const CREATED_AT1 = 3333;
 const MAX_LIMIT = 100;
 
 // ==================================================
 
 describe("getReviews", () => {
-  let getReviewsByRecipeIdSpy;
+  let getReviewsSpy;
 
   beforeEach(() => {
-    getReviewsByRecipeIdSpy = jest.spyOn(ReviewsDAO, "getReviewsByRecipeId");
+    getReviewsSpy = jest.spyOn(ReviewsDAO, "getReviews");
   });
 
   test(
     "When given a recipe ID property, this should call the " +
-      "DAO's getReviewsByRecipeId and return a list of reviews.",
+      "DAO's getReviews and return a list of reviews.",
     async () => {
       // Arrange
       const REQUEST_QUERY_PARAMS = { recipeId: RECIPE_ID1 };
@@ -34,21 +36,21 @@ describe("getReviews", () => {
         LastEvaluatedKey: {},
       };
 
-      getReviewsByRecipeIdSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+      getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
       // Act
       const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
 
       // Assert
       expect(RESULT).toEqual(EXPECTED_RESULT);
-      expect(getReviewsByRecipeIdSpy).toHaveBeenCalledTimes(1);
-      expect(getReviewsByRecipeIdSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+      expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+      expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
     }
   );
 
   test(
     "When given recipe ID, ExclusiveStartKey, and Limit, this should call the " +
-      "DAO's getReviewsByRecipeId with the correct properties and return a list of reviews.",
+      "DAO's getReviews with the correct properties and return a list of reviews.",
     async () => {
       // Arrange
       const REQUEST_QUERY_PARAMS = {
@@ -62,17 +64,185 @@ describe("getReviews", () => {
         LastEvaluatedKey: {},
       };
 
-      getReviewsByRecipeIdSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+      getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
       // Act
       const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
 
       // Assert
       expect(RESULT).toEqual(EXPECTED_RESULT);
-      expect(getReviewsByRecipeIdSpy).toHaveBeenCalledTimes(1);
-      expect(getReviewsByRecipeIdSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+      expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+      expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
     }
   );
+
+  test(
+    "Giving recipe ID and ExclusiveStartKey, but ExclusiveStartKey has extra properties, should not pass the " +
+      "extra properties to the DAO.",
+    async () => {
+      // Arrange
+      const REQUEST_QUERY_PARAMS = {
+        recipeId: RECIPE_ID1,
+        ExclusiveStartKey: {
+          recipeId: RECIPE_ID1,
+          reviewId: REVIEW_ID1,
+          author: AUTHOR1,
+          createdAt: CREATED_AT1,
+        },
+      };
+      const EXPECTED_PASSED_PROPS = {
+        recipeId: RECIPE_ID1,
+        ExclusiveStartKey: {
+          recipeId: RECIPE_ID1,
+          reviewId: REVIEW_ID1,
+        },
+        Limit: MAX_LIMIT,
+      };
+      const EXPECTED_RESULT = {
+        items: [{ recipeId: RECIPE_ID1, reviewId: REVIEW_ID2, author: AUTHOR2 }],
+        LastEvaluatedKey: {},
+      };
+
+      getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+
+      // Act
+      const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+
+      // Assert
+      expect(RESULT).toEqual(EXPECTED_RESULT);
+      expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+      expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+    }
+  );
+
+  test(
+    "When given an author property, this should call the " +
+      "DAO's getReviewsByAuthor and return a list of reviews.",
+    async () => {
+      // Arrange
+      const REQUEST_QUERY_PARAMS = { author: AUTHOR1 };
+      const EXPECTED_PASSED_PROPS = { ...REQUEST_QUERY_PARAMS, Limit: MAX_LIMIT };
+      const EXPECTED_RESULT = {
+        items: [
+          { recipeId: RECIPE_ID1, reviewId: REVIEW_ID1, author: AUTHOR1 },
+          { recipeId: RECIPE_ID2, reviewId: REVIEW_ID1, author: AUTHOR1 },
+        ],
+        LastEvaluatedKey: {},
+      };
+
+      getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+
+      // Act
+      const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+
+      // Assert
+      expect(RESULT).toEqual(EXPECTED_RESULT);
+      expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+      expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+    }
+  );
+
+  test(
+    "When given author, ExclusiveStartKey, and Limit, this should call the " +
+      "DAO's getReviews with the correct properties and return a list of reviews.",
+    async () => {
+      // Arrange
+      const REQUEST_QUERY_PARAMS = {
+        author: AUTHOR1,
+        ExclusiveStartKey: {
+          recipeId: RECIPE_ID1,
+          reviewId: REVIEW_ID1,
+          author: AUTHOR1,
+          createdAt: CREATED_AT1,
+        },
+        Limit: 47,
+      };
+      const EXPECTED_PASSED_PROPS = structuredClone(REQUEST_QUERY_PARAMS);
+      const EXPECTED_RESULT = {
+        items: [{ recipeId: RECIPE_ID1, reviewId: REVIEW_ID2, author: AUTHOR1 }],
+        LastEvaluatedKey: {},
+      };
+
+      getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+
+      // Act
+      const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+
+      // Assert
+      expect(RESULT).toEqual(EXPECTED_RESULT);
+      expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+      expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+    }
+  );
+
+  test(
+    "Giving author and ExclusiveStartKey, but ExclusiveStartKey has too few properties, should not pass the " +
+      "ExclusiveStartKey to the DAO.",
+    async () => {
+      // Arrange
+      const REQUEST_QUERY_PARAMS = {
+        author: AUTHOR1,
+        ExclusiveStartKey: {
+          author: AUTHOR1,
+          createdAt: CREATED_AT1,
+        },
+      };
+      const EXPECTED_PASSED_PROPS = {
+        author: AUTHOR1,
+        Limit: MAX_LIMIT,
+      };
+      const EXPECTED_RESULT = {
+        items: [{ recipeId: RECIPE_ID1, reviewId: REVIEW_ID2, author: AUTHOR2 }],
+        LastEvaluatedKey: {},
+      };
+
+      getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+
+      // Act
+      const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+
+      // Assert
+      expect(RESULT).toEqual(EXPECTED_RESULT);
+      expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+      expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+    }
+  );
+
+  test("Giving multiple properties should have getting reviews default to getting by recipe ID.", async () => {
+    // Arrange
+    const REQUEST_QUERY_PARAMS = {
+      recipeId: RECIPE_ID1,
+      author: AUTHOR1,
+      ExclusiveStartKey: {
+        recipeId: RECIPE_ID1,
+        reviewId: REVIEW_ID1,
+        author: AUTHOR1,
+        createdAt: CREATED_AT1,
+      },
+    };
+    const EXPECTED_PASSED_PROPS = {
+      recipeId: RECIPE_ID1,
+      ExclusiveStartKey: {
+        recipeId: RECIPE_ID1,
+        reviewId: REVIEW_ID1,
+      },
+      Limit: MAX_LIMIT,
+    };
+    const EXPECTED_RESULT = {
+      items: [{ recipeId: RECIPE_ID1, reviewId: REVIEW_ID1, author: AUTHOR1 }],
+      LastEvaluatedKey: {},
+    };
+
+    getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
+
+    // Act
+    const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+
+    // Assert
+    expect(RESULT).toEqual(EXPECTED_RESULT);
+    expect(getReviewsSpy).toHaveBeenCalledTimes(1);
+    expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+  });
 
   test("Giving a Limit of less than 1 should throw an error.", () => {
     // Arrange
@@ -85,7 +255,7 @@ describe("getReviews", () => {
 
     // Assert
     expect(runFunc).rejects.toThrow();
-    expect(getReviewsByRecipeIdSpy).not.toHaveBeenCalled();
+    expect(getReviewsSpy).not.toHaveBeenCalled();
   });
 
   test("Giving a Limit of more than 100 should throw an error.", () => {
@@ -99,11 +269,11 @@ describe("getReviews", () => {
 
     // Assert
     expect(runFunc).rejects.toThrow();
-    expect(getReviewsByRecipeIdSpy).not.toHaveBeenCalled();
+    expect(getReviewsSpy).not.toHaveBeenCalled();
   });
 
   // This test is temporary, until there are GET requests for reviews using the author or createdAt attributes.
-  test("When not given a recipe ID property, this should throw an error.", async () => {
+  test("When not given a recipe ID or author property, this should throw an error.", async () => {
     // Arrange
     const REQUEST_QUERY_PARAMS = {};
 
@@ -114,6 +284,6 @@ describe("getReviews", () => {
 
     // Assert
     expect(runFunc).rejects.toThrow();
-    expect(getReviewsByRecipeIdSpy).not.toHaveBeenCalled();
+    expect(getReviewsSpy).not.toHaveBeenCalled();
   });
 });

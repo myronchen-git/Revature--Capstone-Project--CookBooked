@@ -41,28 +41,43 @@ async function createNewReview(receivedData) {
 async function getReviews(requestQueryParams) {
   logger.info(`ReviewsService.getReviews(${JSON.stringify(requestQueryParams)})`);
 
+  // max limit of 100 is arbitrary
   const MAX_LIMIT = 100;
 
-  let reviewsData;
-  if (requestQueryParams.recipeId) {
-    const { Limit } = requestQueryParams;
+  const PROPS = {};
 
-    // max limit of 100 is arbitrary
-    if (Limit !== undefined && (Limit <= 0 || Limit > MAX_LIMIT)) {
-      throw new ArgumentError("Argument 'Limit' is outside of allowed range.  Range is 1 to 100.");
+  // Adding the Limit property to use in DynamoDB command
+  const { Limit } = requestQueryParams;
+  if (Limit === undefined) {
+    PROPS.Limit = MAX_LIMIT;
+  } else if (Limit <= 0 || Limit > MAX_LIMIT) {
+    throw new ArgumentError("Argument 'Limit' is outside of allowed range.  Range is 1 to 100.");
+  } else {
+    PROPS.Limit = Limit;
+  }
+
+  let reviewsData;
+  // For querying base table
+  if (requestQueryParams.recipeId) {
+    PROPS.recipeId = requestQueryParams.recipeId;
+
+    if (requestQueryParams.ExclusiveStartKey) {
+      const { recipeId, reviewId } = requestQueryParams.ExclusiveStartKey;
+      if (recipeId && reviewId) {
+        PROPS.ExclusiveStartKey = { recipeId, reviewId };
+      }
     }
 
-    // constructing PROPS
-    const PROPS = (({ recipeId, ExclusiveStartKey, Limit }) => ({
-      recipeId,
-      ExclusiveStartKey,
-      Limit,
-    }))(requestQueryParams);
+    // For querying author-createdAt-index table
+  } else if (requestQueryParams.author) {
+    PROPS.author = requestQueryParams.author;
 
-    // checking for a Limit
-    PROPS.Limit = PROPS.Limit || MAX_LIMIT;
-
-    reviewsData = await reviewsDao.getReviewsByRecipeId(PROPS);
+    if (requestQueryParams.ExclusiveStartKey) {
+      const { author, createdAt, recipeId, reviewId } = requestQueryParams.ExclusiveStartKey;
+      if (author && createdAt && recipeId && reviewId) {
+        PROPS.ExclusiveStartKey = { author, createdAt, recipeId, reviewId };
+      }
+    }
   } else {
     // TODO
     // query author-createdAt-index
@@ -70,6 +85,8 @@ async function getReviews(requestQueryParams) {
     logger.error("Getting reviews by other query parameters are not yet supported.");
     throw new Error("Getting reviews by other query parameters are not yet supported.");
   }
+
+  reviewsData = await reviewsDao.getReviews(PROPS);
 
   logger.info(`ReviewsService.getReviews: Returning ${JSON.stringify(reviewsData)}`);
   return reviewsData;
