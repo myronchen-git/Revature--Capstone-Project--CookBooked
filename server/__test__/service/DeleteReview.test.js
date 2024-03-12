@@ -3,35 +3,123 @@ const reviewDao = require("../../src/repository/ReviewsDAO");
 const ArgumentError = require("../../src/errors/ArgumentError");
 
 describe("Test Delete Review", () => {
-    //test for success of the deleteReview Function
-    test("Test Success for deleteReview", async () => {
-        const inputData = { reviewId: "2", recipeId: "1" };
+    //test success of the deleteReview feature
+    test("Test Success for User", async ()=> {
+        const inputData = {
+            username: "Test",
+            isAdmin: false,
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        const expectedComment = {
+            author: "Test",
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        const expectedClone = structuredClone(expectedComment)
+
+        jest.spyOn(reviewDao, "getOneReviewById").mockReturnValueOnce(expectedClone);
+        jest.spyOn(reviewDao, "deleteReviewById").mockReturnValueOnce(true);
+
+        const result = await deleteReview(inputData);
         
-        const daoSpy = jest.spyOn(reviewDao, "deleteReviewById").mockReturnValueOnce(inputData);
+        expect(result).toEqual(expectedComment);
+
+    })
+
+    //test success for Admin
+    test("Test Success for Admin", async () => {
+        const inputData = {
+            username: "Admin_Test",
+            isAdmin: true,
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        const expectedComment = {
+            author: "Test",
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        const expectedClone = structuredClone(expectedComment)
+
+        jest.spyOn(reviewDao, "getOneReviewById").mockReturnValueOnce(expectedClone);
+        jest.spyOn(reviewDao, "deleteReviewById").mockReturnValueOnce(true);
 
         const result = await deleteReview(inputData);
 
-        expect(result).toBe(inputData);
-        expect(daoSpy).toHaveBeenCalled();
-        expect(daoSpy).toHaveBeenCalledWith(inputData);
+        expect(result).toEqual(expectedComment);
     })
 
-    //test to see if there is no recipeId entered
-    test("Test Fail if no RecipeId Given", () => {
-        const inputData = {reviewId: "1"};
+    //test fail if no recipeId given
+    test("Test fail if No recipeId Given", async () => {
+        const inputData = {
+            username: "Test",
+            isAdmin: false,
+            reviewId: "1"
+        }
 
         expect(async () => await deleteReview(inputData)).rejects.toThrow(ArgumentError);
-    })  
+    })
 
-    //test to see if the DAO fails
-    test("Test for DAO Error", () => {
-        const inputData = { reviewId: "2", recipeId: "1" };
+    //test if the getOneReviewById returns undefined
+    test("Test fail if There is No Comment by that ID", async () => {
+        const inputData = {
+            username: "Test",
+            isAdmin: false,
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        jest.spyOn(reviewDao, "getOneReviewById").mockReturnValueOnce(undefined);
+
+        expect(async () => await deleteReview(inputData)).rejects.toThrow();
+    })
+
+    //test fails if the user is not Admin or not the user for the COmment
+    test("Test fail if incorrect user and not Admin", async() => {
+        const inputData = {
+            username: "Test",
+            isAdmin: false,
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        const expectedComment = {
+            author: "Tester",
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        jest.spyOn(reviewDao, "getOneReviewById").mockReturnValueOnce(expectedComment);
+
+        expect(async () => await deleteReview(inputData)).rejects.toThrow();
+    })
+
+    //test fails in the DAO
+    test("Test fail in DAO", async() => {
+        const inputData = {
+            username: "Test",
+            isAdmin: false,
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        const expectedComment = {
+            author: "Test",
+            recipeId: "1",
+            reviewId: "1"
+        }
+
+        jest.spyOn(reviewDao, "getOneReviewById").mockReturnValueOnce(expectedComment);
 
         const err = new Error('Test Error');
 
-        const daoSpy = jest.spyOn(reviewDao, 'deleteReviewById').mockRejectedValueOnce(err);
+        jest.spyOn(reviewDao, 'deleteReviewById').mockRejectedValueOnce(err);
 
-        expect(deleteReview(inputData)).rejects.toThrow();
-        expect(daoSpy).toHaveBeenCalled();
+        expect(async () => await deleteReview(inputData)).rejects.toThrow();
     })
 })
