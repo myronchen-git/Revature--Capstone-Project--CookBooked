@@ -107,19 +107,29 @@ async function getReviews(requestQueryParams) {
  */
 async function deleteReview(receivedData) {
   logger.info("ReviewsService.deleteReview called");
-  //if there was no recipeId to make a composite key then return a Argument Error
-  if (receivedData.recipeId === undefined || !receivedData.recipeId) {
-    throw new ArgumentError("Recipe Id must be defined in Request Body");
-  } else {
-    //call the delete method from DAO
+    //if there is no recipeId then throw an argument error
+    if(!receivedData.recipeId) {
+        throw new ArgumentError("Recipe Id must be defined in Request Body");
+    }
     try {
-      //will return the deleted item from the DB
-      const data = await reviewsDao.deleteReviewById(receivedData);
-      return data;
-    } catch (err) {
+        //next check if the user matches the author of the title or not admin
+        const item = await reviewsDao.getOneReviewById(receivedData);
+        if(!item) {
+            throw new Error("No Review has this ID");
+        }
+        else if(receivedData.username === item.author || receivedData.isAdmin) {
+            //will return the deleted item from the DB or will be caught in try catch
+            await reviewsDao.deleteReviewById(receivedData);
+            logger.info("Successfully Deleted Review")
+            return item;
+        } else {
+            throw new ArgumentError("Cannot Delete Another Users Post");
+        }
+
+    } catch(err) {
+      logger.error("Error Deleting Review")
       throw Error(err);
     }
-  }
 }
 
 // ==================================================

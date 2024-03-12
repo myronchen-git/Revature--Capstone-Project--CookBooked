@@ -59,8 +59,8 @@ router.delete("/:reviewId", authenticateToken, async (req, res) => {
     //create a body that combines the recipeId with the reviewId (add username and isAdmin as well)
     const body = req.body;
     body.reviewId = req.params.reviewId;
-     // body.username = req.user.username;
-        // body.isAdmin = req.user.isAdmin;
+    body.username = req.user.username;
+    body.isAdmin = req.user.isAdmin;
     const data = await reviewsService.deleteReview(body);
     res.status(200).json({
       message: "Deleted Review Successfully",

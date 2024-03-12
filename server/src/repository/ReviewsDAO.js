@@ -83,40 +83,35 @@ async function getReviews(props) {
   return REVIEWS_DATA;
 }
 
+/**
+ * This function calls DynamoDBClient to run a DeleteCommand to delete a specific review
+ * 
+ * @param {Object} receivedData Information received about Review to Delete 
+ */
 async function deleteReviewById(receivedData) {
   logger.info("Calling ReviewsDAO.getOneReviewByID");
-  //get the Item to be Deleted so I can return it later
-  const itemToReturn = await getOneReviewById(receivedData);
 
-  //if the item was found then run the delete command else throw an error that the review does not exist
-  if (itemToReturn) {
-    const command = new DeleteCommand({
-      TableName,
-      Key: {
-        recipeId: receivedData.recipeId,
-        reviewId: receivedData.reviewId,
-      },
-    });
-
-    //try this Delete Command and if it successful return the Item
-    try {
-      const data = await documentClient.send(command);
-      const statusCode = data.$metadata.httpStatusCode === 200;
-      if (statusCode) {
-        logger.info("Deleted Review from DB");
-        //call helper function to delete all comments under this review
-        //deleteAllCommentsUnderReview(receivedData.reviewId);
-        return itemToReturn;
-      } else {
-        logger.info("Failed to Delete Review from DB");
-        return null;
-      }
-    } catch (err) {
-      logger.error(err);
-      throw new Error(err);
+  const command = new DeleteCommand({
+    TableName,
+    Key: {
+      "recipeId": receivedData.recipeId,
+      "reviewId": receivedData.reviewId
     }
-  } else {
-    throw new Error("Review does not Exist");
+  })
+
+  //try this Delete Command and if it successful return true
+  try {
+    const data = await documentClient.send(command);
+    const statusCode = data.$metadata.httpStatusCode === 200;
+    if(!statusCode) {
+      throw new Error("Status Code not OK");
+    } else {
+      // delete the comments under this review as well
+      
+    }
+  } catch(err) {
+    logger.error(err);
+    throw new Error(err);
   }
 }
 
@@ -153,4 +148,5 @@ module.exports = {
   postReview,
   getReviews,
   deleteReviewById,
+  getOneReviewById
 };
