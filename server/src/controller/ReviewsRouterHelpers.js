@@ -50,6 +50,12 @@ function sanitizeGetReviewsQueryParams(requestQueryParams) {
             QUERY_PARAMS.ExclusiveStartKey.author = CONVERTED_AUTHOR;
             QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
           }
+        } else if (START_KEY.createdAt) {
+          const CONVERTED_CREATED_AT = convertNumber(START_KEY.createdAt);
+
+          if (CONVERTED_CREATED_AT) {
+            QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
+          }
         }
       }
     }

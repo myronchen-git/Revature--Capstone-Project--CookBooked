@@ -6,13 +6,18 @@ const {
 // --------------------------------------------------
 
 const UUID = "3e2ce0cf-19fe-4f0c-a9e8-072eddad00b2";
-const RECIPE_ID = "83724";
+const RECIPE_ID = "83724"; // only recipe ID and author needs to be different from start key
 const AUTHOR = "user1";
+const CREATED_AT = 909090;
 const EXCLUSIVE_START_KEY_FOR_BASE_TABLE = { recipeId: "77777", reviewId: UUID };
 const EXCLUSIVE_START_KEY_FOR_AUTHOR_GSI = {
   ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
   author: "user99",
-  createdAt: 773829,
+  createdAt: CREATED_AT,
+};
+const EXCLUSIVE_START_KEY_FOR_CREATEDAT_GSI = {
+  ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
+  createdAt: CREATED_AT,
 };
 const LIMIT = 30;
 
@@ -131,6 +136,18 @@ describe("sanitizeGetReviewsQueryParams", () => {
     expect(RESULT).toStrictEqual(EXPECTED_RESULT);
   });
 
+  test("Giving no query parameters should return an empty Object.", () => {
+    // Arrange
+    const REQUEST_QUERY_PARAMS = {};
+    const EXPECTED_RESULT = {};
+
+    // Act
+    const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+
+    // Assert
+    expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+  });
+
   test(
     "Giving an ExclusiveStartKey without a recipeId " +
       "should return an Object without ExclusiveStartKey.",
@@ -168,18 +185,18 @@ describe("sanitizeGetReviewsQueryParams", () => {
   );
 
   test(
-    "Giving an ExclusiveStartKey with recipe ID and review ID but without an author " +
-      "should return an Object with only recipe ID and review ID.",
+    "Giving an ExclusiveStartKey with recipe ID, review ID, and createdAt " +
+      "should return an Object with recipe ID, review ID, and createdAt.",
     () => {
       // Arrange
       const REQUEST_QUERY_PARAMS = {
         ExclusiveStartKey: JSON.stringify({
           ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
-          createdAt: 773829,
+          createdAt: CREATED_AT,
         }),
       };
       const EXPECTED_RESULT = {
-        ExclusiveStartKey: EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
+        ExclusiveStartKey: EXCLUSIVE_START_KEY_FOR_CREATEDAT_GSI,
       };
 
       // Act
@@ -191,7 +208,7 @@ describe("sanitizeGetReviewsQueryParams", () => {
   );
 
   test(
-    "Giving an ExclusiveStartKey with recipe ID and review ID but without createdAt " +
+    "Giving an ExclusiveStartKey with recipe ID, review ID, and author " +
       "should return an Object with only recipe ID and review ID.",
     () => {
       // Arrange
@@ -222,6 +239,29 @@ describe("sanitizeGetReviewsQueryParams", () => {
         ExclusiveStartKey: JSON.stringify({
           ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
           author: "user99",
+          createdAt: "abcd",
+        }),
+      };
+      const EXPECTED_RESULT = {
+        ExclusiveStartKey: EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
+      };
+
+      // Act
+      const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+
+      // Assert
+      expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+    }
+  );
+
+  test(
+    "Giving an ExclusiveStartKey with recipe ID, review ID, but with invalid createdAt " +
+      "should return an Object with only recipe ID and review ID.",
+    () => {
+      // Arrange
+      const REQUEST_QUERY_PARAMS = {
+        ExclusiveStartKey: JSON.stringify({
+          ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
           createdAt: "abcd",
         }),
       };

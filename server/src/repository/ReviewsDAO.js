@@ -3,14 +3,12 @@ const { fromIni } = require("@aws-sdk/credential-provider-ini");
 const {
   DynamoDBDocumentClient,
   PutCommand,
-  ScanCommand,
   UpdateCommand,
   GetCommand,
-  QueryCommand,
   DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
-const { buildQueryParamsForGetReviews } = require("./ReviewsDAOHelpers");
+const { commandForGetReviewsFactory } = require("./ReviewsDAOHelpers");
 
 const dotenv = require("dotenv");
 const path = require("path");
@@ -57,17 +55,17 @@ async function postReview(Item) {
 }
 
 /**
- * Retrieves reviews belonging to a recipe ID or author.
+ * Retrieves reviews belonging to a recipe ID or author, or retrieves recent reviews.
  *
- * @param {Object} props An Object containing String recipeId, author, Object ExclusiveStartKey, Number Limit.
- * These are the properties that are going to be passed into the QueryCommand.
+ * @param {Object} props An Object containing String recipeId, author, Object ExclusiveStartKey, or Number Limit.
+ * These are the properties that are going to be passed into QueryCommand.
  * @returns {{items, LastEvaluatedKey}} An Object containing Array of Review Objects and LastEvaluatedKey.
- * LastEvaluatedKey may be empty. {items, LastEvaluatedKey}.
+ * LastEvaluatedKey may be empty.
  */
 async function getReviews(props) {
   logger.info(`ReviewsDAO.getReviews(${JSON.stringify(props)})`);
 
-  const COMMAND = new QueryCommand(buildQueryParamsForGetReviews(props));
+  const COMMAND = commandForGetReviewsFactory(props);
 
   let data;
   try {
@@ -85,8 +83,8 @@ async function getReviews(props) {
 
 /**
  * This function calls DynamoDBClient to run a DeleteCommand to delete a specific review
- * 
- * @param {Object} receivedData Information received about Review to Delete 
+ *
+ * @param {Object} receivedData Information received about Review to Delete
  */
 async function deleteReviewById(receivedData) {
   logger.info("Calling ReviewsDAO.getOneReviewByID");
@@ -94,22 +92,21 @@ async function deleteReviewById(receivedData) {
   const command = new DeleteCommand({
     TableName,
     Key: {
-      "recipeId": receivedData.recipeId,
-      "reviewId": receivedData.reviewId
-    }
-  })
+      recipeId: receivedData.recipeId,
+      reviewId: receivedData.reviewId,
+    },
+  });
 
   //try this Delete Command and if it successful return true
   try {
     const data = await documentClient.send(command);
     const statusCode = data.$metadata.httpStatusCode === 200;
-    if(!statusCode) {
+    if (!statusCode) {
       throw new Error("Status Code not OK");
     } else {
       // delete the comments under this review as well
-      
     }
-  } catch(err) {
+  } catch (err) {
     logger.error(err);
     throw new Error(err);
   }
@@ -148,5 +145,5 @@ module.exports = {
   postReview,
   getReviews,
   deleteReviewById,
-  getOneReviewById
+  getOneReviewById,
 };

@@ -43,7 +43,6 @@ async function createNewReview(receivedData) {
  * May contain Object ExclusiveStartKey and Number Limit.
  * @returns {{items, LastEvaluatedKey}} An Object containing an Array of Review Objects and LastEvaluatedKey.
  * LastEvaluatedKey may be empty.
- * @throws Currently, an Error if props argument does not contain String recipeId.
  */
 async function getReviews(requestQueryParams) {
   logger.info(`ReviewsService.getReviews(${JSON.stringify(requestQueryParams)})`);
@@ -85,12 +84,15 @@ async function getReviews(requestQueryParams) {
         PROPS.ExclusiveStartKey = { author, createdAt, recipeId, reviewId };
       }
     }
+
+    // For scanning createdAt-index table
   } else {
-    // TODO
-    // query author-createdAt-index
-    // scan createdAt-index
-    logger.error("Getting reviews by other query parameters are not yet supported.");
-    throw new Error("Getting reviews by other query parameters are not yet supported.");
+    if (requestQueryParams.ExclusiveStartKey) {
+      const { recipeId, reviewId, createdAt } = requestQueryParams.ExclusiveStartKey;
+      if (recipeId && reviewId && createdAt) {
+        PROPS.ExclusiveStartKey = { recipeId, reviewId, isRecent: 1, createdAt };
+      }
+    }
   }
 
   reviewsData = await reviewsDao.getReviews(PROPS);
