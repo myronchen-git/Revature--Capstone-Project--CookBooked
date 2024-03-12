@@ -64,8 +64,8 @@ async function postReview(Item) {
  * @returns {{items, LastEvaluatedKey}} An Object containing Array of Review Objects and LastEvaluatedKey.  LastEvaluatedKey may be empty.
  * {items, LastEvaluatedKey}.
  */
-async function getReviewsByRecipeId(props) {
-  logger.info(`ReviewsDAO.getReviewsByRecipeId(${JSON.stringify(props)})`);
+async function getReviews(props) {
+  logger.info(`ReviewsDAO.getReviews(${JSON.stringify(props)})`);
 
   const COMMAND = new QueryCommand(buildQueryParamsForGetReviewsByRecipeId(props));
 
@@ -79,7 +79,7 @@ async function getReviewsByRecipeId(props) {
 
   const REVIEWS_DATA = { items: data.Items, LastEvaluatedKey: data.LastEvaluatedKey };
 
-  logger.info(`ReviewsDAO.getReviewsByRecipeId: Returning ${JSON.stringify(REVIEWS_DATA)}`);
+  logger.info(`ReviewsDAO.getReviews: Returning ${JSON.stringify(REVIEWS_DATA)}`);
   return REVIEWS_DATA;
 }
 
@@ -151,6 +151,6 @@ async function getOneReviewById(receivedData) {
 
 module.exports = {
   postReview,
-  getReviewsByRecipeId,
+  getReviews,
   deleteReviewById,
 };
