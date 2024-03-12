@@ -5,6 +5,12 @@ const ArgumentError = require("../errors/ArgumentError");
 
 // ==================================================
 
+/**
+ * This function takes in the properties of the new review to be Posted to the DB
+ * 
+ * @param {Object} receivedData This is the data regarding the posting of a review
+ * @returns the object that is posted
+ */
 async function createNewReview(receivedData) {
   logger.info("CreateNewReview method called");
   //validate data before posting a new review
@@ -83,6 +89,7 @@ async function getReviews(requestQueryParams) {
  * @returns gets the deleted review and then returns it
  */
 async function deleteReview(receivedData) {
+  logger.info("ReviewsService.deleteReview called");
   //if there was no recipeId to make a composite key then return a Argument Error
   if (receivedData.recipeId === undefined || !receivedData.recipeId) {
     throw new ArgumentError("Recipe Id must be defined in Request Body");
