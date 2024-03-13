@@ -1,5 +1,6 @@
 //imports
 const express = require("express");
+const cors = require("cors");
 const { logger } = require("./src/util/logger");
 
 //Routers
@@ -15,6 +16,9 @@ const PORT = 4000;
 app.listen(PORT, () => {
   logger.info(`Started the server on Port ${PORT}`);
 });
+
+// enable cors
+app.use(cors());
 
 //middleware to change body requests to json
 app.use(express.json());
