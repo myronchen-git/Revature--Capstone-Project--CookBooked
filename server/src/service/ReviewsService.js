@@ -68,9 +68,9 @@ async function getReviews(requestQueryParams) {
     PROPS.recipeId = requestQueryParams.recipeId;
 
     if (requestQueryParams.ExclusiveStartKey) {
-      const { recipeId, reviewId } = requestQueryParams.ExclusiveStartKey;
-      if (recipeId && reviewId) {
-        PROPS.ExclusiveStartKey = { recipeId, reviewId };
+      const { recipeId, reviewId, createdAt } = requestQueryParams.ExclusiveStartKey;
+      if (recipeId && reviewId && createdAt) {
+        PROPS.ExclusiveStartKey = { recipeId, reviewId, createdAt };
       }
     }
 

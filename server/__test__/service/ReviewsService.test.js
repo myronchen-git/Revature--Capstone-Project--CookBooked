@@ -57,7 +57,7 @@ describe("getReviews", () => {
         // Arrange
         const REQUEST_QUERY_PARAMS = {
           recipeId: RECIPE_ID1,
-          ExclusiveStartKey: { recipeId: RECIPE_ID1, reviewId: REVIEW_ID1 },
+          ExclusiveStartKey: { recipeId: RECIPE_ID1, reviewId: REVIEW_ID1, createdAt: CREATED_AT1 },
           Limit: LIMIT,
         };
         const EXPECTED_PASSED_PROPS = structuredClone(REQUEST_QUERY_PARAMS);
@@ -97,6 +97,7 @@ describe("getReviews", () => {
           ExclusiveStartKey: {
             recipeId: RECIPE_ID1,
             reviewId: REVIEW_ID1,
+            createdAt: CREATED_AT1,
           },
           Limit: MAX_LIMIT,
         };
@@ -134,6 +135,7 @@ describe("getReviews", () => {
         ExclusiveStartKey: {
           recipeId: RECIPE_ID1,
           reviewId: REVIEW_ID1,
+          createdAt: CREATED_AT1,
         },
         Limit: MAX_LIMIT,
       };
