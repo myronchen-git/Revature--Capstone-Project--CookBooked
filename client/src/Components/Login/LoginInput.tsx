@@ -6,7 +6,7 @@ function LoginInput(props: any) {
 
     function handleSubmit(event: any) {
         event.preventDefault();
-        props.updateUser({username, password}); // redux?
+        props.updateUser({username, password});
     }
 
   return (

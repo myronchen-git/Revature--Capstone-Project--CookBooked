@@ -7,7 +7,7 @@ const ArgumentError = require("../errors/ArgumentError");
 
 /**
  * This function takes in the properties of the new review to be Posted to the DB
- * 
+ *
  * @param {Object} receivedData This is the data regarding the posting of a review
  * @returns the object that is posted
  */
@@ -24,6 +24,7 @@ async function createNewReview(receivedData) {
       rating: receivedData.rating, //passed in by user
       content: receivedData.content, //passed in by user
       createdAt: Date.now(),
+      isRecent: 1,
     };
     //create the new post
     const data = await reviewsDao.postReview(review);

@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../../store/slices/userSlice';
 import LoginInput from './LoginInput';
 import axios from 'axios';
 
-const URL = ``;
+const URL = `http://localhost:4000/accounts`;
 
 function LoginContainer() {
-    const [user, setUser] = useState({} as any);
+    let dispatch = useDispatch();
 
     async function updateUser(user: any) {
         try {
             let response: any = await getUser(user);
-            setUser(response.data);
+            dispatch(setUser(response.data))
         } catch (err) {
             console.error(err)
         }
@@ -23,7 +25,7 @@ function LoginContainer() {
                 username: user.username,
                 password: user.password
             });
-
+            console.log(response);
             return response;
         } catch (err) {
             console.log(err);
@@ -33,7 +35,6 @@ function LoginContainer() {
   return (
     <>
         <LoginInput updateUser={updateUser}/>
-        <p>{user.username}</p>
     </>
   )
 }

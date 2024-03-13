@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
+import userReducer from './slices/userSlice';
 
 
-const store = configureStore({
+export const store = configureStore({
     reducer: {
-
+        user: userReducer,
     }
 })
 
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch; // needed when working with async actions
