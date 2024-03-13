@@ -1,5 +1,6 @@
 const { getReviews } = require("../../src/service/ReviewsService");
 const ReviewsDAO = require("../../src/repository/ReviewsDAO");
+const ArgumentError = require("../../src/errors/ArgumentError");
 
 // --------------------------------------------------
 
@@ -75,6 +76,29 @@ describe("getReviews", () => {
         expect(RESULT).toEqual(EXPECTED_RESULT);
         expect(getReviewsSpy).toHaveBeenCalledTimes(1);
         expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+      }
+    );
+
+    test(
+      "Giving recipe ID and ExclusiveStartKey, but ExclusiveStartKey has too few properties, " +
+        "should throw an error.",
+      async () => {
+        // Arrange
+        const REQUEST_QUERY_PARAMS = {
+          recipeId: RECIPE_ID1,
+          ExclusiveStartKey: {
+            createdAt: CREATED_AT1,
+          },
+        };
+
+        // Act
+        async function runFunc() {
+          await getReviews(REQUEST_QUERY_PARAMS);
+        }
+
+        // Assert
+        expect(runFunc).rejects.toThrow(ArgumentError);
+        expect(getReviewsSpy).not.toHaveBeenCalled();
       }
     );
 
@@ -218,8 +242,8 @@ describe("getReviews", () => {
     );
 
     test(
-      "Giving author and ExclusiveStartKey, but ExclusiveStartKey has too few properties, should not pass the " +
-        "ExclusiveStartKey to the DAO.",
+      "Giving author and ExclusiveStartKey, but ExclusiveStartKey has too few properties, " +
+        "should throw an error.",
       async () => {
         // Arrange
         const REQUEST_QUERY_PARAMS = {
@@ -229,24 +253,15 @@ describe("getReviews", () => {
             createdAt: CREATED_AT1,
           },
         };
-        const EXPECTED_PASSED_PROPS = {
-          author: AUTHOR1,
-          Limit: MAX_LIMIT,
-        };
-        const EXPECTED_RESULT = {
-          items: [{ recipeId: RECIPE_ID1, reviewId: REVIEW_ID2, author: AUTHOR2 }],
-          LastEvaluatedKey: {},
-        };
-
-        getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
         // Act
-        const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+        async function runFunc() {
+          await getReviews(REQUEST_QUERY_PARAMS);
+        }
 
         // Assert
-        expect(RESULT).toEqual(EXPECTED_RESULT);
-        expect(getReviewsSpy).toHaveBeenCalledTimes(1);
-        expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+        expect(runFunc).rejects.toThrow(ArgumentError);
+        expect(getReviewsSpy).not.toHaveBeenCalled();
       }
     );
   });
@@ -319,7 +334,7 @@ describe("getReviews", () => {
 
     test(
       "Only giving ExclusiveStartKey, but ExclusiveStartKey has too few properties, " +
-        "should not pass ExclusiveStartKey to the DAO.",
+        "should throw an error.",
       async () => {
         // Arrange
         const REQUEST_QUERY_PARAMS = {
@@ -328,23 +343,15 @@ describe("getReviews", () => {
             reviewId: REVIEW_ID1,
           },
         };
-        const EXPECTED_PASSED_PROPS = {
-          Limit: MAX_LIMIT,
-        };
-        const EXPECTED_RESULT = {
-          items: [{ recipeId: RECIPE_ID1, reviewId: REVIEW_ID2, author: AUTHOR1 }],
-          LastEvaluatedKey: {},
-        };
-
-        getReviewsSpy.mockReturnValueOnce(structuredClone(EXPECTED_RESULT));
 
         // Act
-        const RESULT = await getReviews(REQUEST_QUERY_PARAMS);
+        async function runFunc() {
+          await getReviews(REQUEST_QUERY_PARAMS);
+        }
 
         // Assert
-        expect(RESULT).toEqual(EXPECTED_RESULT);
-        expect(getReviewsSpy).toHaveBeenCalledTimes(1);
-        expect(getReviewsSpy).toHaveBeenCalledWith(EXPECTED_PASSED_PROPS);
+        expect(runFunc).rejects.toThrow(ArgumentError);
+        expect(getReviewsSpy).not.toHaveBeenCalled();
       }
     );
 

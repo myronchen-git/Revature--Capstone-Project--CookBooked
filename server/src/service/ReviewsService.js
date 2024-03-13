@@ -43,6 +43,7 @@ async function createNewReview(receivedData) {
  * May contain Object ExclusiveStartKey and Number Limit.
  * @returns {{items, LastEvaluatedKey}} An Object containing an Array of Review Objects and LastEvaluatedKey.
  * LastEvaluatedKey may be empty.
+ * @throws {ArgumentError} If user input is invalid.
  */
 async function getReviews(requestQueryParams) {
   logger.info(`ReviewsService.getReviews(${JSON.stringify(requestQueryParams)})`);
@@ -57,13 +58,14 @@ async function getReviews(requestQueryParams) {
   if (Limit === undefined) {
     PROPS.Limit = MAX_LIMIT;
   } else if (Limit <= 0 || Limit > MAX_LIMIT) {
+    logger.error(`ReviewsService.getReviews: Limit is out of range.  Limit is ${Limit}.`);
     throw new ArgumentError("Argument 'Limit' is outside of allowed range.  Range is 1 to 50.");
   } else {
     PROPS.Limit = Limit;
   }
 
   let reviewsData;
-  // For querying base table
+  // For querying recipeId-createdAt-index
   if (requestQueryParams.recipeId) {
     PROPS.recipeId = requestQueryParams.recipeId;
 
@@ -71,6 +73,17 @@ async function getReviews(requestQueryParams) {
       const { recipeId, reviewId, createdAt } = requestQueryParams.ExclusiveStartKey;
       if (recipeId && reviewId && createdAt) {
         PROPS.ExclusiveStartKey = { recipeId, reviewId, createdAt };
+      } else {
+        logger.error(
+          `ReviewsService.getReviews: Missing ExclusiveStartKey props for getting reviews by recipe ID.  ` +
+            `Need recipeId, reviewId, createdAt, but ExclusiveStartKey is ${JSON.stringify(
+              requestQueryParams.ExclusiveStartKey
+            )}.`
+        );
+        throw new ArgumentError(
+          "ExclusiveStartKey is missing required properties for querying by recipe ID.  " +
+            "It needs recipeId, reviewId, createdAt."
+        );
       }
     }
 
@@ -82,15 +95,37 @@ async function getReviews(requestQueryParams) {
       const { author, createdAt, recipeId, reviewId } = requestQueryParams.ExclusiveStartKey;
       if (author && createdAt && recipeId && reviewId) {
         PROPS.ExclusiveStartKey = { author, createdAt, recipeId, reviewId };
+      } else {
+        logger.error(
+          `ReviewsService.getReviews: Missing ExclusiveStartKey props for getting reviews by author.  ` +
+            `Need author, createdAt, recipeId, reviewId, but ExclusiveStartKey is ${JSON.stringify(
+              requestQueryParams.ExclusiveStartKey
+            )}.`
+        );
+        throw new ArgumentError(
+          "ExclusiveStartKey is missing required properties for querying by author.  " +
+            "It needs author, createdAt, recipeId, reviewId."
+        );
       }
     }
 
-    // For scanning createdAt-index table
+    // For querying isRecent-createdAt-index
   } else {
     if (requestQueryParams.ExclusiveStartKey) {
       const { recipeId, reviewId, createdAt } = requestQueryParams.ExclusiveStartKey;
       if (recipeId && reviewId && createdAt) {
         PROPS.ExclusiveStartKey = { recipeId, reviewId, isRecent: 1, createdAt };
+      } else {
+        logger.error(
+          `ReviewsService.getReviews: Missing ExclusiveStartKey props for getting recent reviews.  ` +
+            `Need recipeId, reviewId, createdAt, but ExclusiveStartKey is ${JSON.stringify(
+              requestQueryParams.ExclusiveStartKey
+            )}.`
+        );
+        throw new ArgumentError(
+          "ExclusiveStartKey is missing required properties for querying recent reviews.  " +
+            "It needs recipeId, reviewId, createdAt."
+        );
       }
     }
   }
