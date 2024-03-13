@@ -1,0 +1,7 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.dropdown-hover :hover {
+  background-color: rgb(224, 208, 137);
+}
