@@ -47,8 +47,8 @@ async function createNewReview(receivedData) {
 async function getReviews(requestQueryParams) {
   logger.info(`ReviewsService.getReviews(${JSON.stringify(requestQueryParams)})`);
 
-  // max limit of 100 is arbitrary
-  const MAX_LIMIT = 100;
+  // max limit of 50 is arbitrary
+  const MAX_LIMIT = 50;
 
   const PROPS = {};
 
@@ -57,7 +57,7 @@ async function getReviews(requestQueryParams) {
   if (Limit === undefined) {
     PROPS.Limit = MAX_LIMIT;
   } else if (Limit <= 0 || Limit > MAX_LIMIT) {
-    throw new ArgumentError("Argument 'Limit' is outside of allowed range.  Range is 1 to 100.");
+    throw new ArgumentError("Argument 'Limit' is outside of allowed range.  Range is 1 to 50.");
   } else {
     PROPS.Limit = Limit;
   }
