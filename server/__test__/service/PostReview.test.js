@@ -6,7 +6,7 @@ describe('Test to see if Review is Posted', () => {
      * Tests for createNewReview function
      */
 
-    //test to see success of the 
+    //test to see success of the
     test('Successfully Posted Review', async() => {
         //test object
         const testSuccess = {
@@ -14,7 +14,8 @@ describe('Test to see if Review is Posted', () => {
             username: "John",
             imageUrl: "Doe.png",
             rating: "5",
-            content: "Test Success"
+            content: "Test Success",
+            isRecent: 1,
         }
 
         jest.spyOn(reviewsDao, 'postReview').mockReturnValueOnce({
@@ -47,4 +48,4 @@ describe('Test to see if Review is Posted', () => {
 
         expect(reviewService.createNewReview(testSuccess)).rejects.toThrow();
     })
-})  
+})
