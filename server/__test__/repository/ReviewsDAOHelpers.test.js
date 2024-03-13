@@ -19,6 +19,7 @@ const REVIEW_ID = "5678";
 const AUTHOR = "author";
 const LIMIT = 10;
 const REVIEWS_TABLENAME = process.env.REVIEWS_TABLENAME;
+const RECIPE_ID_INDEX_NAME = process.env.REVIEWS_TABLE_RECIPEID_INDEXNAME;
 const AUTHOR_INDEX_NAME = process.env.REVIEWS_TABLE_AUTHOR_INDEXNAME;
 const IS_RECENT_INDEX_NAME = process.env.REVIEWS_TABLE_ISRECENT_INDEXNAME;
 
@@ -43,8 +44,10 @@ describe("commandForGetReviewsFactory", () => {
       const EXPECTED_RESULT_OBJECT_TYPE = QC;
       const EXPECTED_COMMAND_ARG = {
         TableName: REVIEWS_TABLENAME,
+        IndexName: RECIPE_ID_INDEX_NAME,
         KeyConditionExpression: "recipeId = :recipeId",
         ExpressionAttributeValues: { ":recipeId": RECIPE_ID },
+        ScanIndexForward: false,
       };
 
       // Act
@@ -69,9 +72,11 @@ describe("commandForGetReviewsFactory", () => {
       const EXPECTED_RESULT_OBJECT_TYPE = QC;
       const EXPECTED_COMMAND_ARG = {
         TableName: REVIEWS_TABLENAME,
+        IndexName: RECIPE_ID_INDEX_NAME,
         ExclusiveStartKey: { recipeId: RECIPE_ID, reviewId: REVIEW_ID },
         KeyConditionExpression: "recipeId = :recipeId",
         ExpressionAttributeValues: { ":recipeId": RECIPE_ID },
+        ScanIndexForward: false,
       };
 
       // Act
@@ -93,9 +98,11 @@ describe("commandForGetReviewsFactory", () => {
     const EXPECTED_RESULT_OBJECT_TYPE = QC;
     const EXPECTED_COMMAND_ARG = {
       TableName: REVIEWS_TABLENAME,
+      IndexName: RECIPE_ID_INDEX_NAME,
       KeyConditionExpression: "recipeId = :recipeId",
       ExpressionAttributeValues: { ":recipeId": RECIPE_ID },
       Limit: LIMIT,
+      ScanIndexForward: false,
     };
 
     // Act
@@ -120,10 +127,12 @@ describe("commandForGetReviewsFactory", () => {
       const EXPECTED_RESULT_OBJECT_TYPE = QC;
       const EXPECTED_COMMAND_ARG = {
         TableName: REVIEWS_TABLENAME,
+        IndexName: RECIPE_ID_INDEX_NAME,
         ExclusiveStartKey: { recipeId: RECIPE_ID, reviewId: REVIEW_ID },
         KeyConditionExpression: "recipeId = :recipeId",
         ExpressionAttributeValues: { ":recipeId": RECIPE_ID },
         Limit: LIMIT,
+        ScanIndexForward: false,
       };
 
       // Act

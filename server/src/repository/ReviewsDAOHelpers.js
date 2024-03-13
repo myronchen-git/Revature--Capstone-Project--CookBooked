@@ -3,6 +3,7 @@ const env = require("dotenv").config();
 const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
 
 const TableName = process.env.REVIEWS_TABLENAME;
+const RecipeIdIndexName = process.env.REVIEWS_TABLE_RECIPEID_INDEXNAME;
 const AuthorIndexName = process.env.REVIEWS_TABLE_AUTHOR_INDEXNAME;
 const IsRecentIndexName = process.env.REVIEWS_TABLE_ISRECENT_INDEXNAME;
 
@@ -27,8 +28,10 @@ function commandForGetReviewsFactory({ recipeId, author, ExclusiveStartKey, Limi
   if (recipeId) {
     params = {
       TableName,
+      IndexName: RecipeIdIndexName,
       KeyConditionExpression: "recipeId = :recipeId",
       ExpressionAttributeValues: { ":recipeId": recipeId },
+      ScanIndexForward: false,
     };
   } else if (author) {
     params = {
