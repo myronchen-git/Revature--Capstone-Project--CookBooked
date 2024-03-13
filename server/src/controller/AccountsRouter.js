@@ -24,7 +24,7 @@ router.post('/auth', async (req, res) => {
         const {username, password} = body;
         const data = await accountsService.login(username, password);
         const token = generateToken(data.Item);
-        res.status(201).json({message: 'Login successful', token});
+        res.status(201).json({username: data.Item.username, token});
 
     } catch (err) {
         res.status(400).json({message: err.message});
