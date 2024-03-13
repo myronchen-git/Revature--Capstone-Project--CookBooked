@@ -11,7 +11,7 @@ const AUTHOR1 = "author1";
 const AUTHOR2 = "author2";
 const CREATED_AT1 = 3333;
 const LIMIT = 20;
-const MAX_LIMIT = 100;
+const MAX_LIMIT = 50;
 
 // ==================================================
 
@@ -401,7 +401,7 @@ describe("getReviews", () => {
       expect(getReviewsSpy).not.toHaveBeenCalled();
     });
 
-    test("Giving a Limit of more than 100 should throw an error.", () => {
+    test("Giving a Limit of more than 50 should throw an error.", () => {
       // Arrange
       const REQUEST_QUERY_PARAMS = { recipeId: RECIPE_ID1, Limit: 101 };
 
