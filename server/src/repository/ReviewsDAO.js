@@ -10,7 +10,7 @@ const {
   DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
-const { buildQueryParamsForGetReviewsByRecipeId } = require("./ReviewsDAOHelpers");
+const { buildQueryParamsForGetReviews } = require("./ReviewsDAOHelpers");
 
 const dotenv = require("dotenv");
 const path = require("path");
@@ -57,17 +57,17 @@ async function postReview(Item) {
 }
 
 /**
- * Retrieves reviews belonging to a recipe ID.
+ * Retrieves reviews belonging to a recipe ID or author.
  *
- * @param {Object} param0 An Object containing String recipeId, Object ExclusiveStartKey, Number Limit.
+ * @param {Object} props An Object containing String recipeId, author, Object ExclusiveStartKey, Number Limit.
  * These are the properties that are going to be passed into the QueryCommand.
- * @returns {{items, LastEvaluatedKey}} An Object containing Array of Review Objects and LastEvaluatedKey.  LastEvaluatedKey may be empty.
- * {items, LastEvaluatedKey}.
+ * @returns {{items, LastEvaluatedKey}} An Object containing Array of Review Objects and LastEvaluatedKey.
+ * LastEvaluatedKey may be empty. {items, LastEvaluatedKey}.
  */
 async function getReviews(props) {
   logger.info(`ReviewsDAO.getReviews(${JSON.stringify(props)})`);
 
-  const COMMAND = new QueryCommand(buildQueryParamsForGetReviewsByRecipeId(props));
+  const COMMAND = new QueryCommand(buildQueryParamsForGetReviews(props));
 
   let data;
   try {
