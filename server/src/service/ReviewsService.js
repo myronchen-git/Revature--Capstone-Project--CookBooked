@@ -43,7 +43,6 @@ async function createNewReview(receivedData) {
  * May contain Object ExclusiveStartKey and Number Limit.
  * @returns {{items, LastEvaluatedKey}} An Object containing an Array of Review Objects and LastEvaluatedKey.
  * LastEvaluatedKey may be empty.
- * @throws Currently, an Error if props argument does not contain String recipeId.
  */
 async function getReviews(requestQueryParams) {
   logger.info(`ReviewsService.getReviews(${JSON.stringify(requestQueryParams)})`);
@@ -85,12 +84,15 @@ async function getReviews(requestQueryParams) {
         PROPS.ExclusiveStartKey = { author, createdAt, recipeId, reviewId };
       }
     }
+
+    // For scanning createdAt-index table
   } else {
-    // TODO
-    // query author-createdAt-index
-    // scan createdAt-index
-    logger.error("Getting reviews by other query parameters are not yet supported.");
-    throw new Error("Getting reviews by other query parameters are not yet supported.");
+    if (requestQueryParams.ExclusiveStartKey) {
+      const { recipeId, reviewId, createdAt } = requestQueryParams.ExclusiveStartKey;
+      if (recipeId && reviewId && createdAt) {
+        PROPS.ExclusiveStartKey = { recipeId, reviewId, isRecent: 1, createdAt };
+      }
+    }
   }
 
   reviewsData = await reviewsDao.getReviews(PROPS);
@@ -108,29 +110,27 @@ async function getReviews(requestQueryParams) {
  */
 async function deleteReview(receivedData) {
   logger.info("ReviewsService.deleteReview called");
-    //if there is no recipeId then throw an argument error
-    if(!receivedData.recipeId) {
-        throw new ArgumentError("Recipe Id must be defined in Request Body");
+  //if there is no recipeId then throw an argument error
+  if (!receivedData.recipeId) {
+    throw new ArgumentError("Recipe Id must be defined in Request Body");
+  }
+  try {
+    //next check if the user matches the author of the title or not admin
+    const item = await reviewsDao.getOneReviewById(receivedData);
+    if (!item) {
+      throw new Error("No Review has this ID");
+    } else if (receivedData.username === item.author || receivedData.isAdmin) {
+      //will return the deleted item from the DB or will be caught in try catch
+      await reviewsDao.deleteReviewById(receivedData);
+      logger.info("Successfully Deleted Review");
+      return item;
+    } else {
+      throw new ArgumentError("Cannot Delete Another Users Post");
     }
-    try {
-        //next check if the user matches the author of the title or not admin
-        const item = await reviewsDao.getOneReviewById(receivedData);
-        if(!item) {
-            throw new Error("No Review has this ID");
-        }
-        else if(receivedData.username === item.author || receivedData.isAdmin) {
-            //will return the deleted item from the DB or will be caught in try catch
-            await reviewsDao.deleteReviewById(receivedData);
-            logger.info("Successfully Deleted Review")
-            return item;
-        } else {
-            throw new ArgumentError("Cannot Delete Another Users Post");
-        }
-
-    } catch(err) {
-      logger.error("Error Deleting Review")
-      throw Error(err);
-    }
+  } catch (err) {
+    logger.error("Error Deleting Review");
+    throw Error(err);
+  }
 }
 
 // ==================================================
