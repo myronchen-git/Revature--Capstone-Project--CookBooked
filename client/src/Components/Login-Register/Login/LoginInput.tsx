@@ -10,11 +10,14 @@ function LoginInput(props: any) {
     }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
+      <p>Login:</p>
+      <form onSubmit={handleSubmit}>
         <input type="text" placeholder="username" onChange={(e) => setUsername(e.target.value)}/><br/>
         <input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)}/><br/><br/>
         <button type="submit">Submit</button>
-    </form>
+      </form>
+    </>
   )
 }
 
