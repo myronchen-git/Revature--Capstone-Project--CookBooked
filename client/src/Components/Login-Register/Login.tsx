@@ -1,8 +1,10 @@
 import React from 'react'
-import LoginContainer from './LoginContainer'
+import LoginContainer from './Login/LoginContainer'
 import { AppDispatch, RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import ErrorView from '../Error/ErrorView';
+import RegisterContainer from './Register/RegisterContainer';
+import './Login.css';
 
 function Login() {
   let username = useSelector((state: RootState) => state.user.username);
@@ -10,8 +12,14 @@ function Login() {
 
   return (
     <>
-      {!username && <LoginContainer />}
-      {username && <p>Welcome, {username}</p>}<br></br>
+      <div className="login">
+        {!username && <LoginContainer />}
+        {username && <p>Welcome, {username}</p>}<br></br>
+      </div>
+      <div className='register'>
+        {!username && <RegisterContainer />}
+      </div>
+    
     </>
   )
 }

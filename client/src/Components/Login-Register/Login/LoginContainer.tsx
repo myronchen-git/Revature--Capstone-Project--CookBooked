@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../../store/slices/userSlice';
+import { setUser } from '../../../store/slices/userSlice';
 import LoginInput from './LoginInput';
 import axios from 'axios';
 
@@ -25,7 +25,7 @@ function LoginContainer() {
                 username: user.username,
                 password: user.password
             });
-            console.log(response);
+            // console.log(response);
             return response;
         } catch (err) {
             console.log(err);
@@ -33,7 +33,7 @@ function LoginContainer() {
     }
 
   return (
-    <>
+    <>    
         <LoginInput updateUser={updateUser}/>
     </>
   )
