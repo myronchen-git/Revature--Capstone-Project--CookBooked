@@ -32,6 +32,16 @@ router.post('/auth', async (req, res) => {
 });
 
 // READ
+// Retrieve profile information by username
+router.get('/', async (req, res) => {
+    try {
+        const data = await accountsService.getProfileInfo(req.body);
+        res.status(200).json({aboutMe: data.aboutMe, imageUrl: data.imageUrl})
+    } catch (err) {
+        res.status(400).json({message: err.message});
+    }
+
+})
 
 // UPDATE
 // Update admin privileges (must be admin to access this feature)
