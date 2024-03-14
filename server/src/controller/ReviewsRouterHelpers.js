@@ -1,5 +1,6 @@
 const { logger } = require("../util/logger");
 const uuid = require("uuid");
+const ArgumentError = require("../errors/ArgumentError");
 
 // ==================================================
 
@@ -12,6 +13,7 @@ const uuid = require("uuid");
  * @returns {Object} An Object that may contain recipeId, author, ExclusiveStartKey, or Limit,
  * but in their valid data types.  If ExclusiveStartKey exists, then it contains either recipeId & reviewId or
  * recipeId, reviewId, author, & createdAt.
+ * @throws {ArgumentError} If user input is invalid.
  */
 function sanitizeGetReviewsQueryParams(requestQueryParams) {
   logger.info(
@@ -30,40 +32,59 @@ function sanitizeGetReviewsQueryParams(requestQueryParams) {
   }
 
   if (ExclusiveStartKey) {
-    const START_KEY = JSON.parse(ExclusiveStartKey);
+    let startKey;
+    try {
+      startKey = JSON.parse(ExclusiveStartKey);
+    } catch (err) {
+      logger.error(
+        `ReviewsRouterHelpers.sanitizeGetReviewsQueryParams: ExclusiveStartKey is not in proper JSON.\n` +
+          `ExclusiveStartKey = ${ExclusiveStartKey}.\n` +
+          `${err}`
+      );
+      throw new ArgumentError("ExclusiveStartKey is not in proper JSON.");
+    }
 
-    if (START_KEY.recipeId && START_KEY.reviewId) {
-      const CONVERTED_RECIPE_ID = String(START_KEY.recipeId);
-      const CONVERTED_REVIEW_ID = convertUuid(START_KEY.reviewId);
+    if (startKey.recipeId && startKey.reviewId) {
+      const CONVERTED_RECIPE_ID = String(startKey.recipeId);
+      const CONVERTED_REVIEW_ID = convertUuid(startKey.reviewId);
 
-      if (CONVERTED_RECIPE_ID && CONVERTED_REVIEW_ID) {
-        QUERY_PARAMS.ExclusiveStartKey = {
-          recipeId: CONVERTED_RECIPE_ID,
-          reviewId: CONVERTED_REVIEW_ID,
-        };
+      QUERY_PARAMS.ExclusiveStartKey = {
+        recipeId: CONVERTED_RECIPE_ID,
+        reviewId: CONVERTED_REVIEW_ID,
+      };
 
-        if (START_KEY.author && START_KEY.createdAt) {
-          const CONVERTED_AUTHOR = String(START_KEY.author).toLowerCase().trim();
-          const CONVERTED_CREATED_AT = convertNumber(START_KEY.createdAt);
+      if (startKey.author && startKey.createdAt) {
+        const CONVERTED_AUTHOR = String(startKey.author).toLowerCase().trim();
+        const CONVERTED_CREATED_AT = convertNumber(startKey.createdAt);
 
-          if (CONVERTED_AUTHOR && CONVERTED_CREATED_AT) {
-            QUERY_PARAMS.ExclusiveStartKey.author = CONVERTED_AUTHOR;
-            QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
-          }
-        } else if (START_KEY.createdAt) {
-          const CONVERTED_CREATED_AT = convertNumber(START_KEY.createdAt);
+        QUERY_PARAMS.ExclusiveStartKey.author = CONVERTED_AUTHOR;
+        QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
+      } else if (startKey.createdAt) {
+        const CONVERTED_CREATED_AT = convertNumber(startKey.createdAt);
 
-          if (CONVERTED_CREATED_AT) {
-            QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
-          }
-        }
+        QUERY_PARAMS.ExclusiveStartKey.createdAt = CONVERTED_CREATED_AT;
+      } else if (startKey.author) {
+        logger.error(
+          `ReviewsRouterHelpers.sanitizeGetReviewsQueryParams: ` +
+            `ExclusiveStartKey needs author-createdAt pair.\n` +
+            `ExclusiveStartKey = ${ExclusiveStartKey}.`
+        );
+        throw new ArgumentError(
+          "An ExclusiveStartKey with author needs to have the createdAt parameter."
+        );
       }
+    } else {
+      logger.error(
+        `ReviewsRouterHelpers.sanitizeGetReviewsQueryParams: ` +
+          `ExclusiveStartKey is missing required recipeId & reviewId.\n` +
+          `ExclusiveStartKey = ${ExclusiveStartKey}.`
+      );
+      throw new ArgumentError("ExclusiveStartKey is missing required recipeId & reviewId.");
     }
   }
 
-  const CONVERTED_LIMIT = convertNumber(Limit);
-  if (CONVERTED_LIMIT) {
-    QUERY_PARAMS.Limit = CONVERTED_LIMIT;
+  if (Limit) {
+    QUERY_PARAMS.Limit = convertNumber(Limit);
   }
 
   logger.info(
@@ -73,9 +94,10 @@ function sanitizeGetReviewsQueryParams(requestQueryParams) {
 }
 
 /**
- * Takes any value that can be a UUID and converts it to a valid UUID String, or returns null.
+ * Takes any value that can be a UUID and converts it to a valid UUID String.
  * @param {*} recipeId A value that can be a UUID.
- * @returns A UUID String or null.
+ * @returns A UUID String.
+ * @throws {ArgumentError} If the UUID is not valid.
  */
 function convertUuid(Uuid) {
   if (Uuid) {
@@ -86,18 +108,23 @@ function convertUuid(Uuid) {
     }
   }
 
-  return null;
+  logger.error(`ReviewsRouterHelpers.convertUuid: ${Uuid} is not a valid UUID.`);
+  throw new ArgumentError(`${Uuid} is not a valid UUID.`);
 }
 
 /**
  * Takes any value that may be a number and converts it to an integer Number, rounding it to the nearest integer.
- * Else, returns null.
  *
  * @param {*} n A value that can be a number.
- * @returns An integer Number or null.
+ * @throws {ArgumentError} If value is not a number.
  */
 function convertNumber(n) {
-  return !isNaN(n) ? Math.round(Number(n)) : null;
+  if (!isNaN(n)) {
+    return Math.round(Number(n));
+  }
+
+  logger.error(`ReviewsRouterHelpers.convertNumber: ${n} is not a valid number.`);
+  throw new ArgumentError(`${n} is not a valid number.`);
 }
 
 // ==================================================

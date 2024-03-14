@@ -2,6 +2,7 @@ const {
   sanitizeGetReviewsQueryParams,
   convertUuid,
 } = require("../../src/controller/ReviewsRouterHelpers");
+const ArgumentError = require("../../src/errors/ArgumentError");
 
 // --------------------------------------------------
 
@@ -148,41 +149,35 @@ describe("sanitizeGetReviewsQueryParams", () => {
     expect(RESULT).toStrictEqual(EXPECTED_RESULT);
   });
 
-  test(
-    "Giving an ExclusiveStartKey without a recipeId " +
-      "should return an Object without ExclusiveStartKey.",
-    () => {
-      // Arrange
-      const REQUEST_QUERY_PARAMS = {
-        ExclusiveStartKey: JSON.stringify({ reviewId: UUID }),
-      };
-      const EXPECTED_RESULT = {};
+  test("Giving an ExclusiveStartKey without a recipeId should throw an error.", () => {
+    // Arrange
+    const REQUEST_QUERY_PARAMS = {
+      ExclusiveStartKey: JSON.stringify({ reviewId: UUID }),
+    };
 
-      // Act
-      const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
-
-      // Assert
-      expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+    // Act
+    function runFunc() {
+      sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
     }
-  );
 
-  test(
-    "Giving an ExclusiveStartKey without a valid reviewId " +
-      "should return an Object without ExclusiveStartKey.",
-    () => {
-      // Arrange
-      const REQUEST_QUERY_PARAMS = {
-        ExclusiveStartKey: JSON.stringify({ recipeId: "77777", reviewId: "8399" }),
-      };
-      const EXPECTED_RESULT = {};
+    // Assert
+    expect(runFunc).toThrow(ArgumentError);
+  });
 
-      // Act
-      const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+  test("Giving an ExclusiveStartKey without a valid reviewId should throw an error.", () => {
+    // Arrange
+    const REQUEST_QUERY_PARAMS = {
+      ExclusiveStartKey: JSON.stringify({ recipeId: "77777", reviewId: "8399" }),
+    };
 
-      // Assert
-      expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+    // Act
+    function runFunc() {
+      sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
     }
-  );
+
+    // Assert
+    expect(runFunc).toThrow(ArgumentError);
+  });
 
   test(
     "Giving an ExclusiveStartKey with recipe ID, review ID, and createdAt " +
@@ -207,32 +202,27 @@ describe("sanitizeGetReviewsQueryParams", () => {
     }
   );
 
-  test(
-    "Giving an ExclusiveStartKey with recipe ID, review ID, and author " +
-      "should return an Object with only recipe ID and review ID.",
-    () => {
-      // Arrange
-      const REQUEST_QUERY_PARAMS = {
-        ExclusiveStartKey: JSON.stringify({
-          ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
-          author: "user99",
-        }),
-      };
-      const EXPECTED_RESULT = {
-        ExclusiveStartKey: EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
-      };
+  test("Giving an ExclusiveStartKey with recipe ID, review ID, and author should throw an error.", () => {
+    // Arrange
+    const REQUEST_QUERY_PARAMS = {
+      ExclusiveStartKey: JSON.stringify({
+        ...EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
+        author: "user99",
+      }),
+    };
 
-      // Act
-      const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
-
-      // Assert
-      expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+    // Act
+    function runFunc() {
+      sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
     }
-  );
+
+    // Assert
+    expect(runFunc).toThrow(ArgumentError);
+  });
 
   test(
-    "Giving an ExclusiveStartKey with recipe ID, review ID, author, but with invalid createdAt " +
-      "should return an Object with only recipe ID and review ID.",
+    "Giving an ExclusiveStartKey with recipe ID, review ID, author, " +
+      "but with invalid createdAt should throw an error.",
     () => {
       // Arrange
       const REQUEST_QUERY_PARAMS = {
@@ -242,21 +232,20 @@ describe("sanitizeGetReviewsQueryParams", () => {
           createdAt: "abcd",
         }),
       };
-      const EXPECTED_RESULT = {
-        ExclusiveStartKey: EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
-      };
 
       // Act
-      const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+      function runFunc() {
+        sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+      }
 
       // Assert
-      expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+      expect(runFunc).toThrow(ArgumentError);
     }
   );
 
   test(
-    "Giving an ExclusiveStartKey with recipe ID, review ID, but with invalid createdAt " +
-      "should return an Object with only recipe ID and review ID.",
+    "Giving an ExclusiveStartKey with recipe ID, review ID, but with " +
+      "invalid createdAt should throw an error.",
     () => {
       // Arrange
       const REQUEST_QUERY_PARAMS = {
@@ -265,30 +254,45 @@ describe("sanitizeGetReviewsQueryParams", () => {
           createdAt: "abcd",
         }),
       };
-      const EXPECTED_RESULT = {
-        ExclusiveStartKey: EXCLUSIVE_START_KEY_FOR_BASE_TABLE,
-      };
 
       // Act
-      const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+      function runFunc() {
+        sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+      }
 
       // Assert
-      expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+      expect(runFunc).toThrow(ArgumentError);
     }
   );
 
-  test("Giving an invalid Limit should return an Object without Limit.", () => {
+  test("Giving an unparsable ExclusiveStartKey should throw an error.", () => {
+    // Arrange
+    const REQUEST_QUERY_PARAMS = {
+      ExclusiveStartKey: "{ recipeId }",
+    };
+
+    // Act
+    function runFunc() {
+      sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+    }
+
+    // Assert
+    expect(runFunc).toThrow(ArgumentError);
+  });
+
+  test("Giving an invalid Limit should throw an error.", () => {
     // Arrange
     const REQUEST_QUERY_PARAMS = {
       Limit: "abc",
     };
-    const EXPECTED_RESULT = {};
 
     // Act
-    const RESULT = sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+    function runFunc() {
+      sanitizeGetReviewsQueryParams(REQUEST_QUERY_PARAMS);
+    }
 
     // Assert
-    expect(RESULT).toStrictEqual(EXPECTED_RESULT);
+    expect(runFunc).toThrow(ArgumentError);
   });
 });
 
@@ -305,14 +309,16 @@ describe("convertUuid", () => {
     expect(RESULT).toBe(UUID);
   });
 
-  test("Giving an invalid UUID returns null.", () => {
+  test("Giving an invalid UUID throws an error.", () => {
     // Arrange
     const UUID = "1234567890";
 
     // Act
-    const RESULT = convertUuid(UUID);
+    function runFunc() {
+      convertUuid(UUID);
+    }
 
     // Assert
-    expect(RESULT).toBe(null);
+    expect(runFunc).toThrow(ArgumentError);
   });
 });
