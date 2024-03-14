@@ -24,4 +24,4 @@ function DropDown(props: any) {
   )
 }
 
-export default DropDown
+export default React.memo(DropDown);

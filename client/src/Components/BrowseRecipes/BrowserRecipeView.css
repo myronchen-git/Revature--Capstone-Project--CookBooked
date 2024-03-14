@@ -1,0 +1,6 @@
+.img-container {
+  height: 100%;
+  width: 75%;
+  border: 6px solid black;
+  border-radius: 2%;
+}
