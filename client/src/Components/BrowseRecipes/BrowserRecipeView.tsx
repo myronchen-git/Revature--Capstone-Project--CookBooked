@@ -68,19 +68,16 @@ function BrowserRecipeView(props: any) {
                 recipes.map((recipe, idx) => {
                     return(
                         <div className='col-sm-8 col-md-3 mx-5 gy-5 m-5'>
-                          <div className='row bg-danger rounded'>
-                            <div className='col-12 d-flex justify-content-end'>
-                              <p>{recipe.idMeal}</p>
-                            </div>
+                          <div className='row background-card-color rounded p-4'>
                             <div className='col-12 d-flex justify-content-center'>
                               <div className='img-container'>
                                 <img src={recipe.strMealThumb} alt={altText(recipe.strMeal)} className='img-fluid'></img>
                               </div>
                             </div>
-                            <div className='col-10 text-sm text-md text-lg d-flex justify-content-center m-4 text-wrap'>
+                            <div className='col-10 text-danger text-decoration-underline text-sm text-md text-lg d-flex justify-content-center m-4 text-wrap'>
                               <h3>{recipe.strMeal}</h3>
                             </div>
-                            <div className='col-12 text-sm text-md text-lg d-flex justify-content-center mb-4'>
+                            <div className='col-12 text-danger text-sm text-md text-lg d-flex justify-content-center'>
                               <h5>Click Card For More</h5>
                             </div>
                           </div>

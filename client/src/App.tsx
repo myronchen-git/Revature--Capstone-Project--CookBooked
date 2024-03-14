@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Navbar from './Components/Navbar/Navbar';
-import { Routes, Route } from 'react-router';
+import { Routes, Route } from 'react-router-dom';
 import Wall from './Components/Wall/Wall';
 import Login from './Components/Login-Register/Login';
 import Account from './Components/Account/Account';
@@ -12,7 +12,7 @@ import Review from './Components/Review/Review';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" id='background-img' style={{height: '100vh', overflowY: 'auto'}}>
       <Navbar />
       <Routes>
         <Route path='/' element={<Wall />}></Route>
