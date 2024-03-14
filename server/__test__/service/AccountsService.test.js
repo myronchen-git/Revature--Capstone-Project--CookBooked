@@ -5,7 +5,8 @@ const {
     containsSpecialCharacters,
     login,
     toggleAdmin,
-    updateProfile
+    updateProfile,
+    getProfileInfo
 } = require('../../src/service/AccountsService');
 const accountsDao = require('../../src/repository/AccountsDAO');
 const encryption = require('../../src/util/encryption');
@@ -208,4 +209,26 @@ describe('updateProfile Tests', () => {
         expect(updateProfileSpy).toHaveBeenCalledWith(username, 'imageUrl', body.imageUrl);
     })
 
+})
+
+describe('getProfileInfo Tests', () => {
+
+    test('return info successfully, no error thrown', async () => {
+        const daoSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({Item: {aboutMe: 'test', imageUrl: 'some/path.png'}});
+
+        const result = await getProfileInfo('test');
+
+        expect(result).toStrictEqual({aboutMe: 'test', imageUrl: 'some/path.png'});
+        expect(daoSpy).toHaveBeenCalled();
+        expect(daoSpy).not.toThrow();
+    });
+
+    test('item not found, throw error', async () => {
+        const daoSpy = jest.spyOn(accountsDao, 'getAccountByUsername').mockReturnValueOnce({});
+
+        expect(async () => {
+            await getProfileInfo('test')
+        }).rejects.toThrow();
+        expect(daoSpy).toHaveBeenCalled();
+    });  
 })
