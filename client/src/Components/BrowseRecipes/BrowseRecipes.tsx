@@ -38,17 +38,17 @@ function BrowseRecipes() {
   return (
     <>
       <div className='container-fluid'>
-        <div className='row justify-content-end pt-4 background-card-color px-3'>
+        <div className='row justify-content-end pt-4 bg-light px-3'>
           <div className='col-md-8 ml-auto'>
             <div className='d-flex justify-content-end align-items-center me-lg-5 me-sm-3'>
-              <h4 className='me-3 text-danger'>Filter: </h4>
+              <h4 className='me-3'>Filter: </h4>
               <DropDown selectedItem={selectedItem} selectItemHandler={selectItemFromDropdown} categories={categories} />
             </div>
           </div>
         </div>
-        <div className='row justify-content-center p-4 background-card-color px-3'>
-          <div className='col-2 d-flex justify-content-center'>
-            <h2 className='text-danger text-decoration-underline'>{selectedItem} Recipes</h2>
+        <div className='row justify-content-center p-4 bg-light px-3'>
+          <div className='col-10 d-flex justify-content-center'>
+            <h2 className='text-decoration-underline'>{selectedItem} Recipes</h2>
           </div>
         </div>
         <div className='row d-flex justify-content-center px-3'>

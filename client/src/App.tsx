@@ -19,7 +19,7 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/account' element={<Account />}></Route>
         <Route path='/browse' element={<BrowseRecipes />}></Route>
-        <Route path='/recipe' element={<Recipe />}></Route>
+        <Route path='/recipe/:recipeId' element={<Recipe />}></Route>
         <Route path='/review' element={<Review />}></Route>
       </Routes>
     </div>
