@@ -1,9 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-interface ErrorState {
-    message: string;
-    isError: boolean;
-};
+import { ErrorState } from "../../types/types";
 
 const initialState: ErrorState = {
     message: '',
