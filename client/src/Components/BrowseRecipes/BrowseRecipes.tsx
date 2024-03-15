@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import DropDown from '../Util/DropDown'
 import RecipeView from './BrowserRecipeView';
+import './BrowserRecipeView.css'
 
 function BrowseRecipes() {
   //state to hold the dropdown menu selected Item
@@ -36,26 +37,21 @@ function BrowseRecipes() {
 
   return (
     <>
-      <div className='container-fluid mt-4'>
-        <div className='row justify-content-center my-3 pb-4 border-bottom'>
-          <div className='col-md-10 col-sm-12'>
-            <h1 className='m-3'>Browse Recipes</h1>
-          </div>
-        </div>
-        <div className='row justify-content-end mt-4'>
+      <div className='container-fluid'>
+        <div className='row justify-content-end pt-4 bg-light px-3'>
           <div className='col-md-8 ml-auto'>
-            <div className='d-flex justify-content-end align-items-center me-5'>
+            <div className='d-flex justify-content-end align-items-center me-lg-5 me-sm-3'>
               <h4 className='me-3'>Filter: </h4>
               <DropDown selectedItem={selectedItem} selectItemHandler={selectItemFromDropdown} categories={categories} />
             </div>
           </div>
         </div>
-        <div className='row justify-content-center my-5'>
-          <div className='col-2 d-flex justify-content-center'>
+        <div className='row justify-content-center p-4 bg-light px-3'>
+          <div className='col-10 d-flex justify-content-center'>
             <h2 className='text-decoration-underline'>{selectedItem} Recipes</h2>
           </div>
         </div>
-        <div className='row d-flex justify-content-center align-items-stretch px-3'>
+        <div className='row d-flex justify-content-center px-3'>
             <RecipeView selectedItem={selectedItem} categories={categories} />
         </div>
       </div>

@@ -140,6 +140,28 @@ async function updateProfile(username, body) {
 }
 
 /**
+ * getProfileInfo will call DAO function to retrieve user item given a username
+ * 
+ * @param {Object} body 
+ * @returns an object containing the aboutMe and imageUrl attributes of the retrieved item
+ */
+async function getProfileInfo(body) {
+    logger.info(`getProfileInfo function called from AccountsService.js with param body: ${body}`);
+    try {
+        const username = body.username;
+        const data = await accountsDao.getAccountByUsername(username);
+
+        if (data.Item) {
+            return {aboutMe: data.Item.aboutMe, imageUrl: data.Item.imageUrl};
+        } else {
+            throw Error('User does not exist');
+        }
+    } catch (err) {
+        throw Error('Failed to retrieve data')
+    }
+}
+
+/**
  * containsSpecialCharacters will check string input against whitelist of allowed characters
  * 
  * @param {String} string to be compared against whitelist
@@ -166,5 +188,6 @@ module.exports = {
     login,
     containsSpecialCharacters,
     toggleAdmin,
-    updateProfile
+    updateProfile,
+    getProfileInfo
 }

@@ -5,7 +5,7 @@ function DropDown(props: any) {
   return (
     <>
         <div className="dropdown-center">
-            <button className="btn btn-danger dropdown-toggle p-md-3 p-sm-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button className="btn btn-secondary dropdown-toggle p-md-3 p-sm-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {props.selectedItem}
             </button>
             <ul className="dropdown-menu">
