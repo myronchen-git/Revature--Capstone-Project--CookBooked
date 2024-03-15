@@ -145,5 +145,5 @@ module.exports = {
   postReview,
   getReviews,
   deleteReviewById,
-  getOneReviewById,
+  getOneReviewById
 };

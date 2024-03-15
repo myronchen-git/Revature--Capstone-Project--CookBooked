@@ -168,10 +168,35 @@ async function deleteReview(receivedData) {
   }
 }
 
+/**
+ * function gets one review from the DB
+ * 
+ * @param {Object} receivedData contains the recipeId and the reviewId
+ * @returns the review
+ */
+async function getOneReview(receivedData) {
+  logger.info("ReviewsService.deleteReview called");
+  //if there is no recipeId or reviewId then throw an argument error
+  if (!receivedData.recipeId || !receivedData.reviewId) {
+    throw new ArgumentError("Recipe Id or Review Id must be defined in Parameters");
+  }
+  try {
+    const item = await reviewsDao.getOneReviewById(receivedData);
+    if (!item) {
+      throw new Error("No Review has this ID");
+    } else {
+      return item;
+    }
+  } catch(err) {
+    throw err;
+  }
+}
+
 // ==================================================
 
 module.exports = {
   createNewReview,
   getReviews,
   deleteReview,
+  getOneReview
 };
