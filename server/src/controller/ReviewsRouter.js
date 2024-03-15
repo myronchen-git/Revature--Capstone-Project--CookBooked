@@ -69,11 +69,12 @@ router.get("/recipe/:recipeId/review/:reviewId", async (req,res) => {
 })
 
 // DELETE
-router.delete("/:reviewId", authenticateToken, async (req, res) => {
+router.delete("/recipe/:recipeId/review/:reviewId", authenticateToken, async (req, res) => {
   //either throws an error or returns the review deleted review
   try {
     //create a body that combines the recipeId with the reviewId (add username and isAdmin as well)
-    const body = req.body;
+    const body = {};
+    body.recipeId = req.params.recipeId;
     body.reviewId = req.params.reviewId;
     body.username = req.user.username;
     body.isAdmin = req.user.isAdmin;

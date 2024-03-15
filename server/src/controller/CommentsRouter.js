@@ -43,10 +43,11 @@ router.get("/review/:reviewId/comments", async (req,res) => {
 
 // DELETE
 // Delete an Individual Comment
-router.delete("/:commentId", authenticateToken, async (req, res) => {
+router.delete("/review/:reviewId/comments/:commentId", authenticateToken, async (req, res) => {
     try {
         //create a body that combines the reviewId with the commentId (add username and isAdmin as well)
-        const body = req.body;
+        const body = {};
+        body.reviewId = req.params.reviewId;
         body.commentId = req.params.commentId;
         body.username = req.user.username;
         body.isAdmin = req.user.isAdmin;
