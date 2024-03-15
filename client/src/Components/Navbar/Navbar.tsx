@@ -24,7 +24,7 @@ function Navbar() {
               <Link className="nav-link" to="/login">Login</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/account">Account</Link>
+              <Link className="nav-link" to="/profile">Profile</Link>
             </li>
           </ul>
           <form className="d-flex me-4" role="search">

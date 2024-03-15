@@ -33,9 +33,9 @@ router.post('/auth', async (req, res) => {
 
 // READ
 // Retrieve profile information by username
-router.get('/', async (req, res) => {
+router.get('/:username', async (req, res) => {
     try {
-        const data = await accountsService.getProfileInfo(req.body);
+        const data = await accountsService.getProfileInfo(req.params);
         res.status(200).json({aboutMe: data.aboutMe, imageUrl: data.imageUrl})
     } catch (err) {
         res.status(400).json({message: err.message});
