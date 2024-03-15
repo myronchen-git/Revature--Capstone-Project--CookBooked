@@ -50,7 +50,23 @@ router.get("/", async (req, res) => {
   }
 });
 
-// UPDATE
+router.get("/recipe/:recipeId/review/:reviewId", async (req,res) => {
+  try {
+    const body = {};
+    body.reviewId = req.params.reviewId;
+    body.recipeId = req.params.recipeId;
+    const data = await reviewsService.getOneReview(body);
+    res.status(200).json({
+      message: "Retrived Review Successfully",
+      ReviewPost: data,
+    });
+  } catch(err) {
+    res.status(500).json({
+      message: `Error Trying This Request`,
+      error_message: err.message,
+    });
+  }
+})
 
 // DELETE
 router.delete("/:reviewId", authenticateToken, async (req, res) => {
