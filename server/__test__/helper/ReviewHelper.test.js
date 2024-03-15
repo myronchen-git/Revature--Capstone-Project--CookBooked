@@ -6,6 +6,7 @@ describe('Test to check Review Helper Functions', () => {
      */
 
     const RECIPE_ID = "4";
+    const RECIPE_NAME = "Test"
     const USERNAME = "John";
     const IMAGE_URL = "https://thumbs.dreamstime.com/b/heart-shape-variou…d-concept-isolated-white-background-140287808.jpg";
     const RATING = 5;
@@ -16,6 +17,7 @@ describe('Test to check Review Helper Functions', () => {
         //test object
         const testSuccess = {
             recipeId: RECIPE_ID,
+            recipeName: RECIPE_NAME,
             username: USERNAME,
             imageUrl: IMAGE_URL,
             rating: RATING,
@@ -30,8 +32,18 @@ describe('Test to check Review Helper Functions', () => {
     //test to see if function Fails with empty values
     test('Failure of Validate Data (Empty Values)', () => {
         //test fail object
-        const testFailNoRecipe = {
+        const testFailNoRecipeId = {
             recipeId: '',
+            recipeName: RECIPE_NAME,
+            username: USERNAME,
+            imageUrl: IMAGE_URL,
+            rating: RATING,
+            content: CONTENT
+        }
+
+        const testFailNoRecipeName = {
+            recipeId: RECIPE_ID,
+            recipeName: "",
             username: USERNAME,
             imageUrl: IMAGE_URL,
             rating: RATING,
@@ -40,6 +52,7 @@ describe('Test to check Review Helper Functions', () => {
 
         const testFailNoUN = {
             recipeId: RECIPE_ID,
+            recipeName: RECIPE_NAME,
             username: "",
             imageUrl: IMAGE_URL,
             rating: RATING,
@@ -48,6 +61,7 @@ describe('Test to check Review Helper Functions', () => {
 
         const testFailNoImg = {
             recipeId: RECIPE_ID,
+            recipeName: RECIPE_NAME,
             username: USERNAME,
             imageUrl: "",
             rating: RATING,
@@ -56,6 +70,7 @@ describe('Test to check Review Helper Functions', () => {
         
         const testFailNoRating = {
             recipeId: RECIPE_ID,
+            recipeName: RECIPE_NAME,
             username: USERNAME,
             imageUrl: IMAGE_URL,
             rating: "",
@@ -64,13 +79,15 @@ describe('Test to check Review Helper Functions', () => {
         
         const testFailNoContent = {
             recipeId: RECIPE_ID,
+            recipeName: RECIPE_NAME,
             username: USERNAME,
             imageUrl: IMAGE_URL,
             rating: RATING,
             content: ""
         }
 
-        expect(() => reviewHelper.validateNewReview(testFailNoRecipe)).toThrow("Invalid request to the server");
+        expect(() => reviewHelper.validateNewReview(testFailNoRecipeId)).toThrow("Invalid request to the server");
+        expect(() => reviewHelper.validateNewReview(testFailNoRecipeName)).toThrow("Invalid request to the server");
         expect(() => reviewHelper.validateNewReview(testFailNoUN)).toThrow("Invalid request to the server");
         expect(() => reviewHelper.validateNewReview(testFailNoImg)).toThrow("Invalid URL");
         expect(() => reviewHelper.validateNewReview(testFailNoRating)).toThrow("Rating is not a number");
