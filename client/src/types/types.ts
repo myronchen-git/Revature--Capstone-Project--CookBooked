@@ -6,6 +6,7 @@ export interface UserState {
 export interface Review {
   recipeId: string;
   reviewId: string;
+  recipeName: string;
   author: string;
   imageUrl: string;
   rating: number;
