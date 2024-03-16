@@ -21,7 +21,7 @@ function App() {
         <Route path='/profile' element={<Profile />}></Route>
         <Route path='/browse' element={<BrowseRecipes />}></Route>
         <Route path='/recipe/:recipeId' element={<Recipe />}></Route>
-        <Route path='/review' element={<Review />}></Route>
+        <Route path='/recipe/:recipeId/review/:reviewId' element={<Review />}></Route>
       </Routes>
     </div>
   );
