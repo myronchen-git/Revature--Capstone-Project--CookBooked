@@ -12,7 +12,7 @@ router.post("/", authenticateToken, validationMiddleware, async (req, res) => {
         const data = await commentsService.createNewComment(req.body);
         res.status(201).json({
             message: 'Created Comment Successfully',
-            ReviewPost: data
+            CommentPost: data
         });
     } catch(err) {
         res.status(500).json({
@@ -29,7 +29,7 @@ router.get("/review/:reviewId/comments", async (req,res) => {
         const data = await commentsService.getCommentsByReviewId(req.params.reviewId);
         res.status(200).json({
             message: 'Retrieved Comments By ReviewID',
-            ReviewPost: data
+            CommentPost: data
         });
     } catch(err) {
         res.status(500).json({
@@ -54,7 +54,7 @@ router.delete("/review/:reviewId/comments/:commentId", authenticateToken, async 
         const data = await commentsService.deleteComment(body);
         res.status(200).json({
             message: "Deleted Comment Successfully",
-            ReviewPost: data,
+            CommentPost: data,
           });
     } catch(err) {
         res.status(500).json({

@@ -13,6 +13,7 @@ const { commandForGetReviewsFactory } = require("./ReviewsDAOHelpers");
 const dotenv = require("dotenv");
 const path = require("path");
 const { stat } = require("fs");
+const { deleteCommentsUnderReview } = require("./CommentsDAO");
 const envPath = path.resolve("./.env");
 dotenv.config({ path: envPath });
 
@@ -105,6 +106,11 @@ async function deleteReviewById(receivedData) {
       throw new Error("Status Code not OK");
     } else {
       // delete the comments under this review as well
+      try {
+        await deleteCommentsUnderReview(receivedData.reviewId)
+      } catch (err) {
+        logger.error("No comments or Error Deleting Comments for Review")
+      }
     }
   } catch (err) {
     logger.error(err);

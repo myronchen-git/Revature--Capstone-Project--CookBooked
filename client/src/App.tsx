@@ -5,7 +5,6 @@ import Navbar from './Components/Navbar/Navbar';
 import { Routes, Route } from 'react-router-dom';
 import Wall from './Components/Wall/Wall';
 import Login from './Components/Login-Register/Login';
-import Account from './Components/Account/Account';
 import BrowseRecipes from './Components/BrowseRecipes/BrowseRecipes';
 import Recipe from './Components/Recipe/Recipe';
 import Review from './Components/Review/Review';
@@ -21,7 +20,7 @@ function App() {
         <Route path='/profile' element={<Profile />}></Route>
         <Route path='/browse' element={<BrowseRecipes />}></Route>
         <Route path='/recipe/:recipeId' element={<Recipe />}></Route>
-        <Route path='/review' element={<Review />}></Route>
+        <Route path='/recipe/:recipeId/review/:reviewId' element={<Review />}></Route>
       </Routes>
     </div>
   );

@@ -5,17 +5,18 @@ const { URL } = require('url');
 function validateNewReview(submittedReview) {
     logger.info(`validateNewReview(${JSON.stringify(submittedReview)})`);
 
-    let { recipeId, username, imageUrl, rating, content } = submittedReview;
+    let { recipeId, recipeName, username, imageUrl, rating, content } = submittedReview;
 
     //sanitize the following inputs to make sure they are of right format
     imageUrl = sanitizeImage(imageUrl);
     rating = sanitizeRating(rating);
     content = isString(content);
     recipeId = isString(recipeId);
+    recipeName = isString(recipeName);
     
     //check if all values are correct
-    if(recipeId && username && imageUrl && rating && content) {
-        const validatedReview = { recipeId, username, imageUrl, rating, content };
+    if(recipeId && username && imageUrl && rating && content && recipeName) {
+        const validatedReview = { recipeId, recipeName, username, imageUrl, rating, content };
         logger.info(`Validated Review ${JSON.stringify(validatedReview)}`);
         return validatedReview;
     } else {

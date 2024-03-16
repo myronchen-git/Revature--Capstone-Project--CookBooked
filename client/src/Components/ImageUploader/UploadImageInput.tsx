@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import AWS, { S3 } from 'aws-sdk';
 import { useSelector } from 'react-redux';
-import './EditProfile.css';
-import { RootState } from '../../../store/store';
+import './ImageUploader.css';
+import { RootState } from '../../store/store';
 
 
 /**

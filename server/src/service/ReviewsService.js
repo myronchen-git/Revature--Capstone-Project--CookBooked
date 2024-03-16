@@ -18,6 +18,7 @@ async function createNewReview(receivedData) {
     //create new review
     const review = {
       recipeId: receivedData.recipeId, //recipeId passed from MealDB API
+      recipeName: receivedData.recipeName, //recipeName from MealDB API
       reviewId: uuid.v4(),
       author: receivedData.username, //username acquired from JWT
       imageUrl: receivedData.imageUrl, //passed in by user
