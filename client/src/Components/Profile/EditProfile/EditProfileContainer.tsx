@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import EditProfileInput from './EditProfileInput'
-import UploadImageInput from './UploadImageInput'
+import UploadImageInput from '../../ImageUploader/UploadImageInput'
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
@@ -46,7 +46,7 @@ function EditProfileContainer(props: any) {
             <div>
                 {/* show conditionally? */}
                 <EditProfileInput aboutMe={props.aboutMe} setShowEditProfile={setShowEditProfile} updateProfile={updateProfile} />
-                <UploadImageInput />
+                <UploadImageInput tableName="accounts" updateDatabase={updateProfile}/>
             </div>
         }
     </>

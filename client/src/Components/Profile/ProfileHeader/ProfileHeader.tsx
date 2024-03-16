@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import ProfilePicture from './ProfilePicture';
 import EditProfileInput from '../EditProfile/EditProfileInput';
-import UploadImageInput from '../EditProfile/UploadImageInput';
+import UploadImageInput from '../../ImageUploader/UploadImageInput';
 import EditProfileContainer from '../EditProfile/EditProfileContainer';
 
 const URL = `http://localhost:4000/accounts`
