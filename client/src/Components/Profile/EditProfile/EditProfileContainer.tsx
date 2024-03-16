@@ -46,7 +46,7 @@ function EditProfileContainer(props: any) {
             <div>
                 {/* show conditionally? */}
                 <EditProfileInput aboutMe={props.aboutMe} setShowEditProfile={setShowEditProfile} updateProfile={updateProfile} />
-                <UploadImageInput />
+                <UploadImageInput tableName="accounts" updateDatabase={updateProfile}/>
             </div>
         }
     </>
