@@ -20,7 +20,6 @@ function RecipeView(props: any) {
         counter++;
       } else if(key === `strMeasure${counter}` && props.recipeInfo[0][key].trim() !== "") {
         ingredientsList[idx].measure = props.recipeInfo[0][key];
-        console.log(ingredientsList);
         idx++;
         counter++;
       } else {
@@ -31,7 +30,7 @@ function RecipeView(props: any) {
   }, [])
 
   return (
-    <div className='container-fluid bg-light px-5'>
+    <div className='container-fluid bg-light px-5 mb-5'>
         <div className='row py-5'>
             <div className='col'>
                 <h1 className='text-decoration-underline'>{props.recipeInfo[0].strMeal}</h1>
@@ -53,7 +52,6 @@ function RecipeView(props: any) {
                   <div className='row p-3'>
                     {
                       ingredList.map((ingredient: any) => {
-                        console.log(true);
                         if(ingredient.measure === undefined) {
                           return (
                             <div className='col-12 d-flex justify-content-center p-2'>
