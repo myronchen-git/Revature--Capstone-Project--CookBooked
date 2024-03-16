@@ -1,0 +1,12 @@
+.review-card {
+  border: 0.25em solid;
+}
+
+.review-card__image {
+  height: 15em;
+  width: 15em;
+}
+
+.review-card__content {
+  display: block;
+}
