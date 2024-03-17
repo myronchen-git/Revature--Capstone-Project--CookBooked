@@ -1,15 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import LoginContainer from './Login/LoginContainer'
 import { AppDispatch, RootState } from '../../store/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ErrorView from '../Error/ErrorView';
 import RegisterContainer from './Register/RegisterContainer';
 import './Login.css';
 import Logout from './Logout/Logout';
+import { useLocalStorage } from './useLocalStorage';
+import { setUser } from '../../store/slices/userSlice';
 
 function Login() {
   let username = useSelector((state: RootState) => state.user.username);
-  // let token = useSelector((state: RootState) => state.user.token);
+  let dispatch = useDispatch();
+  const { getItem } = useLocalStorage('user');
+
+  useEffect(() => {
+    let user = getItem();
+    if (user) {
+      dispatch(setUser(user))
+    }
+  }, [])
 
   return (
     <>

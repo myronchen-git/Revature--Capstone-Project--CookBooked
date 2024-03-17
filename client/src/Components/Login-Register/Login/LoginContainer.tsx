@@ -3,16 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../../store/slices/userSlice';
 import LoginInput from './LoginInput';
 import axios from 'axios';
+import { useLocalStorage } from '../useLocalStorage';
 
 const URL = `http://localhost:4000/accounts`;
 
 function LoginContainer() {
     let dispatch = useDispatch();
+    const { setItem } = useLocalStorage('user');
 
     async function updateUser(user: any) {
         try {
             let response: any = await getUser(user);
             dispatch(setUser(response.data))
+            setItem(response.data);
         } catch (err) {
             console.error(err)
         }
