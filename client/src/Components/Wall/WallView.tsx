@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Review } from "../../types/types";
+import ReviewsList from "../Util/ReviewsList/ReviewsList";
 import ReviewCardController from "../ReviewCard/ReviewCardController";
 
 // ==================================================
@@ -26,19 +27,8 @@ function WallView({
         <h1>CookBooked</h1>
       </header>
       <main>
-        <section>
-          <h2>Recent Reviews</h2>
-          {reviews.map((review) => {
-            return (
-              <ReviewCardController
-                key={review.reviewId}
-                review={review}
-                shortVersion={true}
-                onRemoveReview={removeReviewHandler}
-              />
-            );
-          })}
-        </section>
+        <h2>Recent Reviews</h2>
+        <ReviewsList reviews={reviews} onRemoveReview={removeReviewHandler} />
       </main>
     </>
   );
