@@ -30,17 +30,21 @@ function CommentCardView({
   displayDeleteError: boolean;
 }) {
   return (
-    <article className="comment-card">
-      <div className="comment-card__header">
-        <Link to={`/profile/${comment.author}`}>
-          <b>{comment.author}</b>
-          <img className="profile__picture" src="" alt="Profile Picture" /> {/* TODO */}
-        </Link>
+    <article className="comment-card container">
+      <div className="comment-card__header row">
+        <div className="comment-card__profile col">
+          <Link to={`/profile/${comment.author}`}>
+            <b>{comment.author}</b>
+            <img className="profile__picture" src="" alt="Profile Picture" /> {/* TODO */}
+          </Link>
+        </div>
       </div>
-      <div className="comment-card__body">{comment.content}</div>
-      <div className="comment-card__footer">
-        <div>{new Date(comment.createdAt).toLocaleString()}</div>
-        <div>
+      <div className="comment-card__body row">
+        <p>{comment.content}</p>
+      </div>
+      <div className="comment-card__footer row container">
+        <div className="comment-card__date col">{new Date(comment.createdAt).toLocaleString()}</div>
+        <div className="comment-card__delete col">
           {displayDeleteError && <span>! Try again later.</span>}
           {displayDelete && <DeleteButton onClick={deleteHandler} />}
         </div>

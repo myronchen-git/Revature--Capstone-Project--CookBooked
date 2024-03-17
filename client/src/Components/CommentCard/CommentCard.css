@@ -1,3 +1,50 @@
 .comment-card {
+  background-color: rgba(255, 255, 255, 0.95);
+
   border: 0.25em solid;
+  border-radius: 2em;
+
+  margin: 0 0 1em 0;
+  padding: 2em;
+}
+
+.comment-card p {
+  margin: 0;
+}
+
+.comment-card__header,
+.comment-card__body,
+.comment-card__footer {
+  padding: 0.5em;
+}
+
+.comment-card__header {
+  justify-content: end;
+}
+
+.comment-card__body {
+  text-align: left;
+}
+
+.comment-card__profile > a {
+  display: flex;
+  align-items: baseline;
+  justify-content: end;
+}
+
+.comment-card__profile * {
+  text-decoration: none;
+  color: inherit;
+}
+
+.comment-card .profile__picture {
+  margin: 1em;
+}
+
+.comment-card__date {
+  text-align: left;
+}
+
+.comment-card__delete {
+  text-align: right;
 }
