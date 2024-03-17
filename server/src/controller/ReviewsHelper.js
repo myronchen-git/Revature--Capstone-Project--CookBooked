@@ -36,26 +36,15 @@ function validateNewReview(submittedReview) {
  * @returns the image back or throws an error
  */
 function sanitizeImage(imageUrl) {
+    logger.log("ReviewsHelper.sanitizeImage() called")
     //throws an error if the image is invalid extension
-    if(isImage(imageUrl)) {
-        logger.info('Valid Image Extension');
-        return imageUrl;
-    } else {
-        throw new Error('Please Enter a Valid Image');
-    }
-}
-
-/**
- * Function to validate an image url
- */
-function isImage(url) {
-    //extract the url using the URL module (check for valid URL)
-    const receivedUrl = new URL(url);
-    //check if it ends with .png, .jpg, .jpeg (Can constrain to these since they are the most common images extensions)
-    if(receivedUrl.pathname.endsWith('.png') || receivedUrl.pathname.endsWith('.jpg') || receivedUrl.pathname.endsWith('.jpeg')) {
-        return true;
-    } else {
-        return false;
+    try {
+        const url = new URL(imageUrl);
+        logger.log("Image verified")
+        return url.href;
+    } catch (error) {
+        logger.error("Invalid URL")
+        throw new Error("Invalid URL");
     }
 }
 
@@ -66,14 +55,18 @@ function isImage(url) {
  * @returns the rating back or throws an error
  */
 function sanitizeRating(rating) {
+    logger.log("ReviewsHelper.sanitizeRating() called")
     //check if the rating is a Integer
     if(Number.isInteger(rating)) {
         if(!(rating >= 1 && rating <= 5)) {
+            logger.error("Rating unverified")
             throw new Error('Rating is outside range of 1-5');
         } else {
+            logger.log("Rating verified")
             return rating;
         }
     } else {
+        logger.error("Rating is not a number")
         throw new Error('Rating is not a number');
     }
 }
@@ -82,15 +75,19 @@ function sanitizeRating(rating) {
  * Check if content is of type string
  */
 function isString(str) {
+    logger.log(`ReviewsHelper.isString called on ${str}`);
     if(typeof str === 'string') {
+        logger.log(`${str} is a String`)
         return str;
     } else {
+        logger.error(`${str} is not a String`)
         throw new Error(`${str} must be of type String`);
     }
 }
 
 // Validation Middleware
 function validationMiddleware(req, res, next) {
+    logger.log("Validating POST Request Input")
     try {
         if(req.path === '/') {
             if(req.method === 'POST') {
@@ -110,7 +107,6 @@ module.exports = {
     validateNewReview,
     sanitizeImage,
     sanitizeRating,
-    isImage,
     isString,
     validationMiddleware
 }

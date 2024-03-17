@@ -8,7 +8,7 @@ describe('Test to check Review Helper Functions', () => {
     const RECIPE_ID = "4";
     const RECIPE_NAME = "Test"
     const USERNAME = "John";
-    const IMAGE_URL = "https://thumbs.dreamstime.com/b/heart-shape-variou…d-concept-isolated-white-background-140287808.jpg";
+    const IMAGE_URL = "https://test-image-bucket-rev.s3.us-west-1.amazonaws.com/test_username-testimage3.jpg";
     const RATING = 5;
     const CONTENT = "Test Success"
 
@@ -96,24 +96,18 @@ describe('Test to check Review Helper Functions', () => {
 
     //test to see if function contains correct image file
     test('Sanatize Image Function Success', () => {
-        const testCorrectExtensionPng = 'https://png.pngtree.com/png-clipart/20221001/ourmi…ee-fast-food-big-ham-burger-png-image_6244235.png';
-        const testCorrectExtensionJpg = 'https://thumbs.dreamstime.com/b/heart-shape-variou…d-concept-isolated-white-background-140287808.jpg';
-        const testCorrectExtensionJpeg = 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg';
+        const testCorrectExtensionPng = 'https://test-image-bucket-rev.s3.us-west-1.amazonaws.com/test_username-testimage3.jpg';
 
         const result = reviewHelper.sanitizeImage(testCorrectExtensionPng);
-        const result2 = reviewHelper.sanitizeImage(testCorrectExtensionJpg);
-        const result3 = reviewHelper.sanitizeImage(testCorrectExtensionJpeg)
 
         expect(result).toBe(testCorrectExtensionPng);
-        expect(result2).toBe(testCorrectExtensionJpg);
-        expect(result3).toBe(testCorrectExtensionJpeg);
     })
 
     //test to see if function fails with incorrect image file
     test('Sanatize Image Function (Incorrect Image Extension)', () => {
-        const testFailureinExtension = 'https://cdn3.vox-cdn.com/uploads/chorus_asset/file/704658/tumblr_m6oolzvXsJ1qfvx4yo1_500.0.gif'
+        const testFailureinExtension = 'test'
 
-        expect(() => reviewHelper.sanitizeImage(testFailureinExtension)).toThrow('Please Enter a Valid Image');
+        expect(() => reviewHelper.sanitizeImage(testFailureinExtension)).toThrow();
     })
 
     //test to see if function succeeds with value within range
