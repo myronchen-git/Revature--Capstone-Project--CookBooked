@@ -7,7 +7,7 @@ import Wall from './Components/Wall/Wall';
 import Login from './Components/Login-Register/Login';
 import BrowseRecipes from './Components/BrowseRecipes/BrowseRecipes';
 import Recipe from './Components/Recipe/Recipe';
-import Review from './Components/Review/Review';
+import ReviewPage from './Components/Review/ReviewPage';
 import Profile from './Components/Profile/Profile';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         <Route path='/profile' element={<Profile />}></Route>
         <Route path='/browse' element={<BrowseRecipes />}></Route>
         <Route path='/recipe/:recipeId' element={<Recipe />}></Route>
-        <Route path='/recipe/:recipeId/review/:reviewId' element={<Review />}></Route>
+        <Route path='/recipe/:recipeId/review/:reviewId' element={<ReviewPage />}></Route>
       </Routes>
     </div>
   );
