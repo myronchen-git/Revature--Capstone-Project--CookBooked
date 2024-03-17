@@ -29,6 +29,7 @@ function PostComment(props: any) {
                 .then((resp) => {
                     setDisplaySuccess(true);
                     setIsOpen(!isOpen);
+                    props.onAddComment(resp.data.CommentPost);
                 })
                 .catch((err) => {
                     setDisplayError(true);
@@ -52,7 +53,7 @@ function PostComment(props: any) {
             <div>
                 {
                     //if isOpen is false then show the button to open form
-                    (!isOpen && 
+                    (!isOpen &&
                         <div className='container fluid mb-4 p-4'>
                             <div className='row'>
                                 <div className='col-12 d-flex justify-content-center'>
@@ -64,7 +65,7 @@ function PostComment(props: any) {
                 }
                 {
                     //if isOpen is true then show the form
-                    (isOpen && 
+                    (isOpen &&
                         <div className='container fluid mb-4 bg-light p-4 rounded'>
                             <div className='row'>
                                 <div className='col-12 d-flex justify-content-start'>
