@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import ErrorView from '../Error/ErrorView';
 import RegisterContainer from './Register/RegisterContainer';
 import './Login.css';
+import Logout from './Logout/Logout';
 
 function Login() {
   let username = useSelector((state: RootState) => state.user.username);
@@ -18,6 +19,9 @@ function Login() {
       </div>
       <div className='register'>
         {!username && <RegisterContainer />}
+      </div>
+      <div className='logout'>
+        {username && <Logout />}
       </div>
     
     </>
