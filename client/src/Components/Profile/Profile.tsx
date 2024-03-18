@@ -12,15 +12,12 @@ function Profile() {
     // let token = useSelector((state: RootState) => state.user.token)
 
   return (
-    <>
+    <div className="profile">
       <div className="profileHeader">
         <ProfileHeader username={username}/>
         <ProfileReviewsView username={username} />
       </div>
-    
-    
-    
-    </>
+    </div>
   )
 }
 

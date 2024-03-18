@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import './EditProfile.css';
 
 function EditProfileInput(props: any) {
     const [aboutMeInput, setAboutMeInput] = useState("");
@@ -12,14 +13,13 @@ function EditProfileInput(props: any) {
 
 
   return (
-    <>
-        <p>Edit Profile:</p><br></br>
+    <div className="editContainer">
         <form onSubmit={handleSubmit}>
             <label htmlFor="aboutMe">About Me</label><br></br>
             <textarea id="aboutMe" name="aboutMe" defaultValue={props.aboutMe} readOnly={false} rows={4} cols={50} onChange={(e) => setAboutMeInput(e.target.value)}></textarea><br></br>      
             <button type="submit">Submit</button>
         </form>
-    </>
+    </div>
   )
 }
 

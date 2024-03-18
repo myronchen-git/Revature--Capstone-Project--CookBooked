@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import EditProfileInput from './EditProfileInput'
 import UploadImageInput from '../../ImageUploader/UploadImageInput'
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
+import './EditProfile.css'
 
 const URL = `http://localhost:4000/accounts`
 
@@ -41,7 +42,7 @@ function EditProfileContainer(props: any) {
 
   return (
     <> 
-        <button onClick={toggleShowEditProfile}>Edit Profile</button>
+        <button className="editButton" onClick={toggleShowEditProfile}>Edit Profile</button>
         {showEditProfile &&
             <div>
                 {/* show conditionally? */}

@@ -1,12 +1,13 @@
 import React from 'react'
+import './ProfileHeader.css';
 
 function AboutMe(props: any) {
 
 
   return (
-    <>
-        <p>{props.aboutMe}</p>
-    </>
+    <div className="aboutMeContainer">
+        <p className="aboutMe">{props.aboutMe}</p>
+    </div>
   )
 }
 
