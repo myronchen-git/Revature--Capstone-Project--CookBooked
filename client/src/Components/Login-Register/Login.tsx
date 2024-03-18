@@ -22,7 +22,7 @@ function Login() {
   }, [])
 
   return (
-    <>
+    <div className="loginPageContainer">
       <div className="login">
         {!username && <LoginContainer />}
         {username && <p>Welcome, {username}</p>}<br></br>
@@ -34,7 +34,7 @@ function Login() {
         {username && <Logout />}
       </div>
     
-    </>
+    </div>
   )
 }
 

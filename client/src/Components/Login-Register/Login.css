@@ -12,3 +12,15 @@
     padding: 10px;
     border-radius: 5px;
 }
+
+.loginPageContainer {
+    background-color: white;
+    max-width: 1300px;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 5px solid;
+    border-right: 5px solid;
+    border-left: 5px solid;
+    border-radius: 0px 0px 20px 20px;
+}

@@ -63,7 +63,7 @@ function ProfileReviewsView(props: any) {
 
   return (
     <>
-        <div className='container-fluid bg-light mb-4'>
+        <div className='container-fluid mb-4'>
             <div className='row'>
                 <div className='col'>
                     {
