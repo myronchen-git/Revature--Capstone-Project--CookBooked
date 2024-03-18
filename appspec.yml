@@ -2,15 +2,15 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/CookBooked
+    destination: /home/ubuntu/CookBooked/server
     overwrite: true
 file_exists_behavior: OVERWRITE
 hooks:
   AfterInstall:
-    - location: server/scripts/after_install.sh
+    - location: scripts/after_install.sh
       timeout: 300
       runas: root
   ApplicationStart:
-    - location: server/scripts/application_start.sh
+    - location: scripts/application_start.sh
       timeout: 300
       runas: root
