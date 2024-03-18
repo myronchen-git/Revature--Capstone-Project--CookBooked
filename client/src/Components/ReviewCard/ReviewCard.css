@@ -15,6 +15,8 @@
 .review-card__image {
   height: 15em;
   width: 15em;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .review-card__main {
