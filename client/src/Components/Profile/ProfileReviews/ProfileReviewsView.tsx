@@ -12,7 +12,7 @@ function ProfileReviewsView(props: any) {
 
     useEffect(() => {
         fetchReviews();
-    }, [])
+    }, [props.username])
 
     useEffect(() => {
         setLoading(false);
