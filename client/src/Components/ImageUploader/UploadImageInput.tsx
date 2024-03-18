@@ -22,7 +22,8 @@ function UploadImageInput(props: any) {
         setFile(file);
     }
 
-    async function uploadFile() {
+    async function uploadFile(e: any) {
+        e.preventDefault();
         const S3_BUCKET = String(process.env.REACT_APP_S3_BUCKET); // CHANGE THIS
         const REGION = process.env.REACT_APP_REGION; // CHANGE THIS
 
@@ -67,6 +68,9 @@ function UploadImageInput(props: any) {
         switch(tableName) {
             case "accounts":
                 props.updateDatabase("imageUrl", imageUrl);
+                break;
+            case "reviews" :
+                props.retrieveUrl(imageUrl);
                 break;
             default:
                 throw Error('Unable to send image URL to database');

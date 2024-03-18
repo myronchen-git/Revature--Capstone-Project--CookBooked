@@ -4,3 +4,7 @@ button {
     border-radius: 5px;
     border: 1px solid grey;
 }
+
+.editProfileContainer {
+    padding-bottom: 10px;
+}

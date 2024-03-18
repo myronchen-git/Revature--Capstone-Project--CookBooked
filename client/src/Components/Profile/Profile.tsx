@@ -26,9 +26,9 @@ function Profile() {
     }, [target])
 
   return (
-    <>
+    <div className="profile">
       {getProfileContent()}
-    </>
+    </div>
   )
 }
 

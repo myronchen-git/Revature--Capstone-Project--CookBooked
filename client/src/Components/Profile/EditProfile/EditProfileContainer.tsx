@@ -41,7 +41,7 @@ function EditProfileContainer(props: any) {
 
 
   return (
-    <> 
+    <div className="editProfileContainer"> 
         <button className="editButton" onClick={toggleShowEditProfile}>Edit Profile</button>
         {showEditProfile &&
             <div>
@@ -50,7 +50,7 @@ function EditProfileContainer(props: any) {
                 <UploadImageInput tableName="accounts" updateDatabase={updateProfile}/>
             </div>
         }
-    </>
+    </div>
   )
 }
 
