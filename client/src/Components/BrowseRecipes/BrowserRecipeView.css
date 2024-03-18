@@ -4,3 +4,7 @@
   border: 6px solid black;
   border-radius: 2%;
 }
+
+.border-card {
+  border: 5px solid black;
+}

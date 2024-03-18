@@ -74,7 +74,7 @@ function BrowserRecipeView(props: any) {
                     return(
                         <div className='col-sm-8 col-md-3 mx-5 gy-5 m-5'>
                           <Link to={recipeRoute(recipe.idMeal)}>
-                            <div className='row bg-light rounded p-4'>
+                            <div className='row bg-light rounded p-4 border-card'>
                               <div className='col-12 d-flex justify-content-center'>
                                 <div className='img-container'>
                                   <img src={recipe.strMealThumb} alt={altText(recipe.strMeal)} className='img-fluid'></img>

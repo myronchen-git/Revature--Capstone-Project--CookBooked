@@ -30,7 +30,7 @@ function RecipeView(props: any) {
   }, [])
 
   return (
-    <div className='container rounded bg-light px-5 mb-5'>
+    <div className='container rounded bg-light px-5 mb-5 border-card'>
         <div className='row py-5'>
             <div className='col'>
                 <h1 className='text-decoration-underline'>{props.recipeInfo[0].strMeal}</h1>
