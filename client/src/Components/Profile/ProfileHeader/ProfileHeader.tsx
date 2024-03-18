@@ -13,7 +13,7 @@ const URL = `http://localhost:4000/accounts`
 function ProfileHeader(props: any) {
   let username = useSelector((state: RootState) => state.user.username);
   const [aboutMe, setAboutMe] = useState("About me...");
-  const [imageUrl, setImageUrl] = useState("default.png");
+  const [imageUrl, setImageUrl] = useState("https://test-image-bucket-rev.s3.us-west-1.amazonaws.com/default.webp");
 
   async function getProfileInfo(username: string) {
     try {
