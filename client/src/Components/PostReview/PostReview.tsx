@@ -53,6 +53,10 @@ function PostReview(props: any) {
                         setDisplaySuccess(true);
                         setIsOpen(!isOpen);
                         props.onAddReview(resp.data.ReviewPost);
+                        //clear states on success
+                        setReviewBody("");
+                        setImageUrl("");
+                        setRating(0);
                     }
                 })
                 .catch((err) => {
