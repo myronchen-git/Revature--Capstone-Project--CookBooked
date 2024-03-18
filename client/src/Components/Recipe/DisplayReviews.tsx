@@ -95,7 +95,7 @@ function DisplayReviews(props: any) {
   return (
     <>
         <PostReview recipeId={props.recipeId} recipeName={props.recipeName} onAddReview={addReviewHandler} />
-        <div className='container-fluid mb-4'>
+        <div className='container mb-4'>
             <div className='row'>
                 <div className='col'>
                     {
