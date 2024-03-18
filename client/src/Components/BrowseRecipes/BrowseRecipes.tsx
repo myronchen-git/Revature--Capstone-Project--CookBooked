@@ -37,7 +37,7 @@ function BrowseRecipes() {
 
   return (
     <>
-      <div className='container-fluid'>
+      <div className='container-fluid rounded'>
         <div className='row justify-content-end pt-4 bg-light px-3'>
           <div className='col-md-8 ml-auto'>
             <div className='d-flex justify-content-end align-items-center me-lg-5 me-sm-3'>
