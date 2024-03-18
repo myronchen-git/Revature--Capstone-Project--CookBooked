@@ -1,10 +1,11 @@
 import React from 'react'
+import './ProfileHeader.css';
 
 function ProfilePicture(props: any) {
 
   return (
     <>
-      <img className="profilePicture" src={props.imageUrl} width="100" height="100"/>
+      <img className="profilePicture" src={props.imageUrl} />
     </>
   )
 }
