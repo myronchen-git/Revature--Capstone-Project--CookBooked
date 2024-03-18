@@ -1,12 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './ProfileHeader.css';
 
 function ProfilePicture(props: any) {
 
-  return (
-    <div className="pictureContainer">
+  useEffect(() => {
+    getProfilePicture();
+  }, [props.imageUrl])
+
+  function getProfilePicture() {
+    return (
       <img className="profilePicture" src={props.imageUrl} />
-    </div>
+    )
+  }
+
+  return (
+    <>
+      {getProfilePicture()}
+    </>
   )
 }
 
