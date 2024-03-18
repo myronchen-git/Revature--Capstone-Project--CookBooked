@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Wall />}></Route>
         <Route path='/login' element={<Login />}></Route>
-        <Route path='/profile' element={<Profile />}></Route>
+        <Route path='/profile/:target' element={<Profile />}></Route>
         <Route path='/browse' element={<BrowseRecipes />}></Route>
         <Route path='/recipe/:recipeId' element={<Recipe />}></Route>
         <Route path='/recipe/:recipeId/review/:reviewId' element={<ReviewPage />}></Route>

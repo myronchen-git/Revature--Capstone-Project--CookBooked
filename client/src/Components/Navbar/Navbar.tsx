@@ -1,8 +1,12 @@
 import React from 'react'
 import logo from '../../Images/cookbook-logo.jpg'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
 
 function Navbar() {
+  let redux_username = useSelector((state: RootState) => state.user.username)
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary shadow">
       <div className="container-fluid">
@@ -23,14 +27,16 @@ function Navbar() {
             <li className="nav-item">
               <Link className="nav-link" to="/login">Login</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/profile">Profile</Link>
+            {redux_username &&
+              <li className="nav-item">
+              <Link className="nav-link" to={`/profile/${redux_username}`}>Profile</Link>
             </li>
+            }
           </ul>
-          <form className="d-flex me-4" role="search">
+          {/* <form className="d-flex me-4" role="search">
             <input className="form-control me-2 border-dark" type="search" placeholder="Search" aria-label="Search"></input>
           <button className="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      </form> */}
     </div>
   </div>
 </nav>
