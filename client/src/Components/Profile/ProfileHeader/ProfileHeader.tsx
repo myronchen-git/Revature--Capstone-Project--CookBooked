@@ -36,7 +36,6 @@ function ProfileHeader(props: any) {
     if (props.username == redux_username) {
       return (
         <div>
-          <p>{props.username}'s Profile</p>
           <ProfilePicture imageUrl={imageUrl}/>
           <h2 className="title">{props.username}</h2>
           <AboutMe aboutMe={aboutMe} />
@@ -46,8 +45,8 @@ function ProfileHeader(props: any) {
     } else {
       return (
         <div>
-          <p>{props.username}'s Profile</p>
           <ProfilePicture imageUrl={imageUrl}/>
+          <h2 className="title">{props.username}</h2>
           <AboutMe aboutMe={aboutMe} />
         </div>
       )

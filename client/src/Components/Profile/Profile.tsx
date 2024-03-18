@@ -14,8 +14,10 @@ function Profile() {
 
     function getProfileContent() {
       return (
-        <div className="profileHeader">
-          <ProfileHeader username={target}/>
+        <div>
+          <div className="profileHeader">
+            <ProfileHeader username={target}/>
+          </div>
           <ProfileReviewsView username={target} />
         </div>
       )
