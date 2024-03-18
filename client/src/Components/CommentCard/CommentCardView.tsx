@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Comment } from "../../types/types";
 import DeleteButton from "../Util/DeleteButton/DeleteButton";
+import ProfilePicture from "../Profile/ProfileHeader/ProfilePicture";
 import "./CommentCard.css";
 
 // ==================================================
@@ -16,6 +17,7 @@ import "./CommentCard.css";
  * {boolean} displayDelete: true to display the delete button.
  * {Function} onDelete: a function for deleting this comment.
  * {boolean} displayDeleteError: true to display an error for when an API request for comment deletion is unsuccessful.
+ * {string} profilePictureUrl: URL for the comment author's profile picture.
  * @returns JSX component for viewing the comment.
  */
 function CommentCardView({
@@ -23,11 +25,13 @@ function CommentCardView({
   displayDelete = false,
   onDelete: deleteHandler,
   displayDeleteError = false,
+  profilePictureUrl,
 }: {
   comment: Comment;
   displayDelete: boolean;
   onDelete: any;
   displayDeleteError: boolean;
+  profilePictureUrl: string;
 }) {
   return (
     <article className="comment-card container">
@@ -35,7 +39,7 @@ function CommentCardView({
         <div className="comment-card__profile col">
           <Link to={`/profile/${comment.author}`}>
             <b>{comment.author}</b>
-            <img className="profile__picture" src="" alt="Profile Picture" /> {/* TODO */}
+            <ProfilePicture className="profile__picture" imageUrl={profilePictureUrl} />
           </Link>
         </div>
       </div>
