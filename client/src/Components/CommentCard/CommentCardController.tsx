@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -28,9 +28,12 @@ function CommentCardController({
   comment: Comment;
   onRemoveComment: any;
 }) {
-  const username = useSelector((state: RootState) => state.user.username);
-  const authToken = useSelector((state: RootState) => state.user.token);
+  const username: string = useSelector((state: RootState) => state.user.username);
+  const authToken: string = useSelector((state: RootState) => state.user.token);
   const [displayDeleteError, setDisplayDeleteError] = useState(false);
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
+
+  useEffect(getProfilePictureUrl, []);
 
   /**
    * Deletes the comment that this component belongs to.
@@ -54,12 +57,42 @@ function CommentCardController({
       });
   }
 
+  /**
+   * Fetches the profile picture.
+   */
+  function getProfilePictureUrl(): void {
+    console.log(`Getting profile picture URL for user ${comment.author}.`);
+    axios
+      .get(`${serverBaseUrl}/accounts/${comment.author}`)
+      .then((response) => {
+        console.log("response.data = " + JSON.stringify(response.data));
+        setProfilePictureUrl(response.data?.imageUrl || "");
+      })
+      .catch((err) => {
+        if (err.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else if (err.request) {
+          // The request was made but no response was received
+          console.log(err.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", err.message);
+        }
+        console.log(err.config);
+      });
+  }
+
   return (
     <CommentCardView
       comment={comment}
       displayDelete={comment.author === username}
       onDelete={deleteComment}
       displayDeleteError={displayDeleteError}
+      profilePictureUrl={profilePictureUrl}
     />
   );
 }

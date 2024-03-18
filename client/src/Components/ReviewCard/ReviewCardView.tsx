@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Review } from "../../types/types";
 import DeleteButton from "../Util/DeleteButton/DeleteButton";
+import ProfilePicture from "../Profile/ProfileHeader/ProfilePicture";
 import "./ReviewCard.css";
 
 // ==================================================
@@ -18,6 +19,7 @@ import "./ReviewCard.css";
  * the related review's webpage.
  * {boolean} displayDelete: true to display the delete button.
  * {Function} onDelete: a function for deleting this review.
+ * {string} profilePictureUrl: URL for the review author's profile picture.
  * @returns JSX component for viewing the review.
  */
 function ReviewCardView({
@@ -26,12 +28,14 @@ function ReviewCardView({
   shortVersion,
   displayDelete = false,
   onDelete: deleteHandler,
+  profilePictureUrl,
 }: {
   review: Review;
   reviewContent: string;
   shortVersion: boolean;
   displayDelete: boolean;
   onDelete: any;
+  profilePictureUrl: string;
 }) {
   return (
     <article className="review-card container-fluid">
@@ -48,7 +52,7 @@ function ReviewCardView({
             <div className="review-card__profile col">
               <Link to={`/profile/${review.author}`}>
                 <b>{review.author}</b>
-                <img className="profile__picture" src="" alt="Profile Picture" /> {/* TODO */}
+                <ProfilePicture className="profile__picture" imageUrl={profilePictureUrl} />
               </Link>
             </div>
           </div>

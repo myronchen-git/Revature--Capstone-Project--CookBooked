@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -32,8 +32,11 @@ function ReviewCardController({
   shortVersion: boolean;
   onRemoveReview: any;
 }) {
-  const username = useSelector((state: RootState) => state.user.username);
-  const authToken = useSelector((state: RootState) => state.user.token);
+  const username: string = useSelector((state: RootState) => state.user.username);
+  const authToken: string = useSelector((state: RootState) => state.user.token);
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
+
+  useEffect(getProfilePictureUrl, []);
 
   /**
    * Creates the shortened or full length version of the review content.
@@ -68,6 +71,36 @@ function ReviewCardController({
       .catch((err) => {});
   }
 
+  /**
+   * Fetches the profile picture.
+   */
+  function getProfilePictureUrl(): void {
+    console.log(`Getting profile picture URL for user ${review.author}.`);
+
+    axios
+      .get(`${serverBaseUrl}/accounts/${review.author}`)
+      .then((response) => {
+        console.log("response.data = " + JSON.stringify(response.data));
+        setProfilePictureUrl(response.data?.imageUrl || "");
+      })
+      .catch((err) => {
+        if (err.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else if (err.request) {
+          // The request was made but no response was received
+          console.log(err.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", err.message);
+        }
+        console.log(err.config);
+      });
+  }
+
   return (
     <ReviewCardView
       review={review}
@@ -75,6 +108,7 @@ function ReviewCardController({
       shortVersion={shortVersion}
       displayDelete={review.author === username}
       onDelete={deleteReview}
+      profilePictureUrl={profilePictureUrl}
     />
   );
 }
