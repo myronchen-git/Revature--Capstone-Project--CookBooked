@@ -34,33 +34,45 @@ function ReviewCardView({
   onDelete: any;
 }) {
   return (
-    <article className="review-card">
-      <img className="review-card__image" src={review.imageUrl} alt={review.recipeName} />
-      <div className="review-card__main">
-        <div className="review-card__header">
-          <div>
-            <p>{review.recipeName}</p>
-            <p>rating: {review.rating}</p> {/* placeholder */}
-          </div>
-          <div>
-            <Link to={`/profile/${review.author}`}>
-              <b>{review.author}</b>
-              <img className="profile__picture" src="" alt="Profile Picture" /> {/* TODO */}
-            </Link>
-          </div>
+    <article className="review-card container-fluid">
+      <div className="row">
+        <div className="col-12 col-xl-4">
+          <img className="review-card__image" src={review.imageUrl} alt={review.recipeName} />
         </div>
-        <div className="review-card__body">
+        <div className="review-card__main col-12 col-xl-8 container-fluid">
+          <div className="review-card__header row">
+            <div className="review-card__header__review-info col">
+              <h3>{review.recipeName}</h3>
+              <p>rating: {review.rating}</p> {/* placeholder */}
+            </div>
+            <div className="review-card__profile col">
+              <Link to={`/profile/${review.author}`}>
+                <b>{review.author}</b>
+                <img className="profile__picture" src="" alt="Profile Picture" /> {/* TODO */}
+              </Link>
+            </div>
+          </div>
           {shortVersion ? (
-            <Link to={`/recipe/${review.recipeId}/review/${review.reviewId}`}>
-              <span className="review-card__content">{reviewContent}</span>
-            </Link>
+            <div className="review-card__body--linked row">
+              <Link to={`/recipe/${review.recipeId}/review/${review.reviewId}`}>
+                <span className="review-card__content">{reviewContent}</span>
+              </Link>
+            </div>
           ) : (
-            <p>{reviewContent}</p>
+            <div className="review-card__body--not-linked row">
+              <p>{reviewContent}</p>
+            </div>
           )}
-        </div>
-        <div className="review-card__footer">
-          <div>{new Date(review.createdAt).toLocaleString()}</div>
-          <div>{displayDelete && <DeleteButton onClick={deleteHandler} />}</div>
+          <div className="review-card__footer row container-fluid">
+            <div className="row">
+              <div className="review-card__date col">
+                {new Date(review.createdAt).toLocaleString()}
+              </div>
+              <div className="review-card__delete col">
+                {displayDelete && <DeleteButton onClick={deleteHandler} />}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </article>
