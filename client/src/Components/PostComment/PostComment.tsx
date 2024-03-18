@@ -30,6 +30,7 @@ function PostComment(props: any) {
                     setDisplaySuccess(true);
                     setIsOpen(!isOpen);
                     props.onAddComment(resp.data.CommentPost);
+                    setCommentBody("");
                 })
                 .catch((err) => {
                     setDisplayError(true);
