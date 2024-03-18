@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import axios from 'axios';
+import './PostReview.css'
+import UploadImageInput from '../ImageUploader/UploadImageInput';
 
 // --------------------------------------------------
 
@@ -14,6 +16,10 @@ function PostReview(props: any) {
     let token = useSelector((state: RootState) => state.user.token);
     const [isOpen, setIsOpen] = useState(false);
     const [reviewBody, setReviewBody] = useState("");
+    const [rating, setRating] = useState(0);
+    const [imageUrl, setImageUrl] = useState("");
+    const [displayCheckImage, setDisplayCheckImage] = useState(false);
+    const [displayCheckRating, setDisplayCheckRating] = useState(false);
     const [displayCheck, setDisplayCheck] = useState(false);
     const [displayError, setDisplayError] = useState(false);
     const [displaySuccess, setDisplaySuccess] = useState(false);
@@ -25,9 +31,18 @@ function PostReview(props: any) {
     }
 
     function submitReview(event: any) {
-        if(reviewBody) {
+        if(!reviewBody) {
             event.preventDefault();
-            const data = { recipeId: props.recipeId, recipeName: props.recipeName, content: reviewBody};
+            setDisplayCheck(true);
+        } else if(rating === 0) {
+            event.preventDefault();
+            setDisplayCheckRating(true);
+        } else if(!imageUrl) {
+            event.preventDefault();
+            setDisplayCheckImage(true);
+        } else {
+            event.preventDefault();
+            const data = { recipeId: props.recipeId, recipeName: props.recipeName, rating, imageUrl, content: reviewBody};
             axios.post(`${serverBaseUrl}/`, data,{
                 headers: {'Authorization': `Bearer ${token}`},
                 })
@@ -43,9 +58,6 @@ function PostReview(props: any) {
                 .catch((err) => {
                     setDisplayError(true);
                 })
-        } else {
-            setDisplayCheck(true);
-            event.preventDefault();
         }
     }
 
@@ -53,6 +65,17 @@ function PostReview(props: any) {
         //setDisplayCheck if display error is currently there
         setDisplayCheck(false);
         setReviewBody(value);
+    }
+
+    function onChangeRating(event: any) {
+        const newRating = parseInt(event.target.value);
+        setRating(newRating);
+        setDisplayCheckRating(false);
+    }
+
+    function onChangeImage(url: string) {
+        setImageUrl(url);
+        setDisplayCheckImage(false);
     }
 
 
@@ -89,18 +112,67 @@ function PostReview(props: any) {
                                         </div>
                                         <div className="col-12 mb-3">
                                             <textarea className="form-control border-dark shadow" id="validationTextarea" placeholder="Your Comment" rows={5} cols={50} onChange={(e) => onChangeReviewBodyText(e.target.value)} required></textarea>
-                                            {
-                                                displayCheck && (
-                                                    <h5 className='text-danger'>Please enter in Review body</h5>
-                                                )
-                                            }
                                         </div>
+                                        {
+                                            displayCheck && (
+                                                <div className='col-12'>
+                                                    <h5 className='text-danger'>Please Enter a Review Body</h5>
+                                                </div>
+                                            )
+                                        }
+                                        <div className="col-12 d-flex justify-content-start">
+                                            <label htmlFor="validationTextarea" className="form-label me-3">Rating: </label>
+                                        </div>
+                                        <div className="col-12 mb-3 d-flex justify-content-start">
+                                            <div className='col-2'>
+                                                <input type="radio" className="btn-check" name="options" id="option1" value="1" onChange={onChangeRating} autoComplete="off"></input>
+                                                <label className="btn btn-secondary" htmlFor="option1">1 Star</label>
+                                            </div>
+                                            <div className='col-2'>
+                                                <input type="radio" className="btn-check" name="options" id="option2" value="2" onChange={onChangeRating} autoComplete="off"></input>
+                                                <label className="btn btn-secondary" htmlFor="option2">2 Star</label>
+                                            </div>
+                                            <div className='col-2'>
+                                                <input type="radio" className="btn-check" name="options" id="option3" value="3" onChange={onChangeRating} autoComplete="off"></input>
+                                                <label className="btn btn-secondary" htmlFor="option3">3 Star</label>
+                                            </div>
+                                            <div className='col-2'>
+                                                <input type="radio" className="btn-check" name="options" id="option4" value="4" onChange={onChangeRating} autoComplete="off"></input>
+                                                <label className="btn btn-secondary" htmlFor="option4">4 Star</label>
+                                            </div>
+                                            <div className='col-2'>
+                                                <input type="radio" className="btn-check" name="options" id="option5" value="5" onChange={onChangeRating} autoComplete="off"></input>
+                                                <label className="btn btn-secondary" htmlFor="option5">5 Star</label>
+                                            </div>                                       
+                                        </div> 
+                                        {
+                                            displayCheckRating && (
+                                                <div className='col-12'>
+                                                    <h5 className='text-danger'>Please Select a Rating</h5>
+                                                </div>
+                                            )
+                                        }
+                                        <div className="col-12 d-flex justify-content-start">
+                                            <label htmlFor="validationTextarea" className="form-label me-3">Image: </label>
+                                        </div>
+                                        <div className="col-12 d-flex justify-content-start">
+                                            <UploadImageInput tableName="reviews" retrieveUrl={onChangeImage}/>
+                                        </div>
+                                        {
+                                            displayCheckImage && (
+                                                <div className='col-12'>
+                                                    <h5 className='text-danger'>Please Enter an Image</h5>
+                                                </div>
+                                            )
+                                        }
                                         <div className="col-12">
                                             <button className="btn btn-success" type="submit" onClick={submitReview}>Submit Review</button>
                                         </div>
                                         {
                                             displayError && (
-                                                <h5 className='text-danger'>Error Posting Review</h5>
+                                                <div className='col-12'>
+                                                    <h5 className='text-danger'>Error Posting Review</h5>
+                                                </div>
                                             )
                                         }
                                     </form>

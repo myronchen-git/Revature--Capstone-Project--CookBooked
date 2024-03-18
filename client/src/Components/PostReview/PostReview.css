@@ -1,0 +1,4 @@
+.btn-check:focus ~ .btn {
+  background-color: yellow;
+  color: black;
+}
