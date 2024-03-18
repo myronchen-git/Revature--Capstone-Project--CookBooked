@@ -8,20 +8,24 @@ function validateNewReview(submittedReview) {
     let { recipeId, recipeName, username, imageUrl, rating, content } = submittedReview;
 
     //sanitize the following inputs to make sure they are of right format
-    imageUrl = sanitizeImage(imageUrl);
-    rating = sanitizeRating(rating);
-    content = isString(content);
-    recipeId = isString(recipeId);
-    recipeName = isString(recipeName);
+    try {
+        imageUrl = sanitizeImage(imageUrl);
+        rating = sanitizeRating(rating);
+        content = isString(content);
+        recipeId = isString(recipeId);
+        recipeName = isString(recipeName);
 
-    //check if all values are correct
-    if(recipeId && username && imageUrl && rating && content && recipeName) {
-        const validatedReview = { recipeId, recipeName, username, imageUrl, rating, content };
-        logger.info(`Validated Review ${JSON.stringify(validatedReview)}`);
-        return validatedReview;
-    } else {
-        logger.error(`Invalid request body parameters in ${JSON.stringify(submittedReview)}`);
-        throw new Error("Invalid request to the server");
+        //check if all values are correct
+        if(recipeId && username && imageUrl && rating && content && recipeName) {
+            const validatedReview = { recipeId, recipeName, username, imageUrl, rating, content };
+            logger.info(`Validated Review ${JSON.stringify(validatedReview)}`);
+            return validatedReview;
+        } else {
+            logger.error(`Invalid request body parameters in ${JSON.stringify(submittedReview)}`);
+            throw new Error("Invalid request to the server");
+        }
+    } catch(err) {
+        throw Error(err);
     }
 }
 

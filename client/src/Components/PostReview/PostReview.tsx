@@ -1,0 +1,146 @@
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import axios from 'axios';
+
+// --------------------------------------------------
+
+const serverBaseUrl = "http://localhost:4000/reviews";
+
+// ==================================================
+
+function PostReview(props: any) {
+    let username = useSelector((state: RootState) => state.user.username);
+    let token = useSelector((state: RootState) => state.user.token);
+    const [isOpen, setIsOpen] = useState(false);
+    const [reviewBody, setReviewBody] = useState("");
+    const [displayCheck, setDisplayCheck] = useState(false);
+    const [displayError, setDisplayError] = useState(false);
+    const [displaySuccess, setDisplaySuccess] = useState(false);
+    
+    //Add post review in here as well so it is before each review display
+    function openForm() {
+        setIsOpen(!isOpen);
+        setDisplayCheck(false);
+    }
+
+    function submitReview(event: any) {
+        if(reviewBody) {
+            event.preventDefault();
+            const data = { recipeId: props.recipeId, recipeName: props.recipeName, content: reviewBody};
+            axios.post(`${serverBaseUrl}/`, data,{
+                headers: {'Authorization': `Bearer ${token}`},
+                })
+                .then((resp) => {
+                    if(resp.data.message === 'Error: Invalid URL') {
+                        setDisplayError(true);
+                    } else {
+                        setDisplaySuccess(true);
+                        setIsOpen(!isOpen);
+                        props.onAddReview(resp.data.ReviewPost);
+                    }
+                })
+                .catch((err) => {
+                    setDisplayError(true);
+                })
+        } else {
+            setDisplayCheck(true);
+            event.preventDefault();
+        }
+    }
+
+    function onChangeReviewBodyText(value: string) {
+        //setDisplayCheck if display error is currently there
+        setDisplayCheck(false);
+        setReviewBody(value);
+    }
+
+
+    function showPostReview() {
+        if(username) {
+            return (
+            <div>
+                {
+                    //if isOpen is false then show the button to open form
+                    (!isOpen &&
+                        <div className='container fluid mb-4 p-4'>
+                            <div className='row'>
+                                <div className='col-12 d-flex justify-content-center'>
+                                    <button type="button" className="btn btn-success btn-lg" onClick={openForm}>Post a Review</button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    //if isOpen is true then show the form
+                    (isOpen &&
+                        <div className='container fluid mb-4 bg-light p-4 rounded'>
+                            <div className='row'>
+                                <div className='col-12 d-flex justify-content-start'>
+                                    <button type="button" className="btn btn-danger" onClick={openForm}>Close</button>
+                                </div>
+                            </div>
+                            <div className='row my-4'>
+                                <div className='col-12 d-flex justify-content-center'>
+                                    <form className="row g-3 needs-validation">
+                                        <div className="col-12 d-flex justify-content-start">
+                                            <label htmlFor="validationTextarea" className="form-label me-3">Review: </label>
+                                        </div>
+                                        <div className="col-12 mb-3">
+                                            <textarea className="form-control border-dark shadow" id="validationTextarea" placeholder="Your Comment" rows={5} cols={50} onChange={(e) => onChangeReviewBodyText(e.target.value)} required></textarea>
+                                            {
+                                                displayCheck && (
+                                                    <h5 className='text-danger'>Please enter in Review body</h5>
+                                                )
+                                            }
+                                        </div>
+                                        <div className="col-12">
+                                            <button className="btn btn-success" type="submit" onClick={submitReview}>Submit Review</button>
+                                        </div>
+                                        {
+                                            displayError && (
+                                                <h5 className='text-danger'>Error Posting Review</h5>
+                                            )
+                                        }
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    displaySuccess && (
+                        <div className='container fluid mb-4 p-4 bg-success'>
+                            <div className='row'>
+                                <div className='col-12 d-flex justify-content-center'>
+                                    <h3 className='text-light'>Successfully Posted Review</h3>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+            )
+        } else {
+            return (
+                <></>
+            )
+        }
+    }
+
+    //useEffect will clear out the success message
+    useEffect(() => {
+        setTimeout(() => {
+            setDisplaySuccess(false);
+        }, 5000)
+    }, [displaySuccess]);
+
+  return (
+    <div>
+        {showPostReview()}
+    </div>
+  )
+}
+
+export default PostReview
