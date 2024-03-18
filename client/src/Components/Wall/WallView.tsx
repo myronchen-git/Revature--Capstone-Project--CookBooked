@@ -2,7 +2,7 @@ import React from "react";
 
 import { Review } from "../../types/types";
 import ReviewsList from "../Util/ReviewsList/ReviewsList";
-import ReviewCardController from "../ReviewCard/ReviewCardController";
+import "./Wall.css";
 
 // ==================================================
 
@@ -23,12 +23,18 @@ function WallView({
 }) {
   return (
     <>
-      <header>
-        <h1>CookBooked</h1>
+      <header className="wall-header">
+        <h1 className="app-title">CookBooked</h1>
       </header>
       <main>
-        <h2>Recent Reviews</h2>
-        <ReviewsList reviews={reviews} onRemoveReview={removeReviewHandler} />
+        <h2 className="recent-reviews-title">Recent Reviews</h2>
+        <div className="container-xl">
+          <div className="row justify-content-center justify-content-xl-start">
+            <div className="col-10">
+              <ReviewsList reviews={reviews} onRemoveReview={removeReviewHandler} />
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );

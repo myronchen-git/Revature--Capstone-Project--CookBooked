@@ -1,0 +1,34 @@
+@font-face {
+  font-family: JosefinSans;
+  src: url(../../fonts/JosefinSans-VariableFont_wght.ttf);
+}
+
+.wall-header {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.app-title,
+.recent-reviews-title {
+  color: white;
+  margin: 0;
+}
+
+.app-title {
+  padding: 10rem 10vw;
+  font-size: 10vw;
+  font-family: JosefinSans;
+}
+
+.recent-reviews-title {
+  padding: 2rem;
+  text-align: left;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+  font-size: 2.5vw;
+}
+
+@media (max-width: 900px) {
+  .recent-reviews-title {
+    font-size: 1.5rem;
+  }
+}
