@@ -29,12 +29,12 @@ function DisplayReviews(props: any) {
      * Retrieves the reviews under an associated recipeId
      */
     function fetchReviews() {
-      console.log(`Fetching review under recipe ${props.reviewId}.`);
+      console.log(`Fetching review under recipe ${props.recipeId}.`);
   
       axios
-        .get(`${serverBaseUrl}/reviews?recipeId=${props.reviewId}`)
+        .get(`${serverBaseUrl}/reviews?recipeId=${props.recipeId}`)
         .then((response) => {
-          setReviewsData(response.data?.ReviewPost);
+          setReviewsData(response.data?.ReviewPosts.items);
         })
         .catch((err) => {
           if (err.response) {
@@ -95,7 +95,7 @@ function DisplayReviews(props: any) {
   return (
     <>
         <PostReview recipeId={props.recipeId} recipeName={props.recipeName} onAddReview={addReviewHandler} />
-        <div className='container-fluid bg-light mb-4'>
+        <div className='container-fluid mb-4'>
             <div className='row'>
                 <div className='col'>
                     {
