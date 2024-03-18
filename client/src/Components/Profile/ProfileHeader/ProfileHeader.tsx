@@ -4,9 +4,8 @@ import AboutMe from './AboutMe';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import ProfilePicture from './ProfilePicture';
-import EditProfileInput from '../EditProfile/EditProfileInput';
-import UploadImageInput from '../../ImageUploader/UploadImageInput';
 import EditProfileContainer from '../EditProfile/EditProfileContainer';
+import './ProfileHeader';
 
 const URL = `http://localhost:4000/accounts`
 
@@ -39,6 +38,7 @@ function ProfileHeader(props: any) {
         <div>
           <p>{props.username}'s Profile</p>
           <ProfilePicture imageUrl={imageUrl}/>
+          <h2 className="title">{props.username}</h2>
           <AboutMe aboutMe={aboutMe} />
           <EditProfileContainer aboutMe={aboutMe} setAboutMe={setAboutMe} setImageUrl={setImageUrl} />  
         </div>

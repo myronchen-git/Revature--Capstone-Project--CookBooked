@@ -1,3 +1,9 @@
 .profileHeader {
     background-color: white;
+    padding-top: 10px;
+}
+
+.profile {
+    margin: auto;
+    max-width: 1300px;
 }
