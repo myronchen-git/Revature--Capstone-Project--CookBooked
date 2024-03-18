@@ -54,11 +54,6 @@
   justify-content: end;
 }
 
-/* .review-card__profile * {
-  text-decoration: none;
-  color: inherit;
-} */
-
 .review-card .profile__picture {
   margin: 1em;
 }
