@@ -4,7 +4,7 @@ phases:
     runtime-versions:
       nodejs: 14
     commands:
-      - cd /home/ubuntu/CookBooked/server
+      - cd ./server
       - npm install
 artifacts:
   files:
