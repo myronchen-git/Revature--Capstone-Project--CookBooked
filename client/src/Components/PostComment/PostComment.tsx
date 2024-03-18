@@ -125,7 +125,7 @@ function PostComment(props: any) {
     useEffect(() => {
         setTimeout(() => {
             setDisplaySuccess(false);
-        }, 5000)
+        }, 3000)
     }, [displaySuccess])
 
 
