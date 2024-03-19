@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { serverUrl } from '../Util/constants'; 
 
 import { RootState } from "../../store/store";
 import { Comment } from "../../types/types";
 import CommentCardView from "./CommentCardView";
-
-// --------------------------------------------------
-
-const serverBaseUrl = "http://localhost:4000";
 
 // ==================================================
 
@@ -43,7 +40,7 @@ function CommentCardController({
 
     axios
       .delete(
-        `${serverBaseUrl}/comments/review/${comment.reviewId}/comments/${comment.commentId}`,
+        `${serverUrl}/comments/review/${comment.reviewId}/comments/${comment.commentId}`,
         {
           headers: { Authorization: `Bearer ${authToken}` },
         }
@@ -63,7 +60,7 @@ function CommentCardController({
   function getProfilePictureUrl(): void {
     console.log(`Getting profile picture URL for user ${comment.author}.`);
     axios
-      .get(`${serverBaseUrl}/accounts/${comment.author}`)
+      .get(`${serverUrl}/accounts/${comment.author}`)
       .then((response) => {
         console.log("response.data = " + JSON.stringify(response.data));
         setProfilePictureUrl(response.data?.imageUrl || "");

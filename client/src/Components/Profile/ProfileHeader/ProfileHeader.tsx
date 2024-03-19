@@ -6,8 +6,8 @@ import { RootState } from '../../../store/store';
 import ProfilePicture from './ProfilePicture';
 import EditProfileContainer from '../EditProfile/EditProfileContainer';
 import './ProfileHeader';
+import { serverUrl } from '../../Util/constants'; 
 
-const URL = `http://localhost:4000/accounts`
 
 function ProfileHeader(props: any) {
   let redux_username = useSelector((state: RootState) => state.user.username);
@@ -16,7 +16,7 @@ function ProfileHeader(props: any) {
 
   async function getProfileInfo(username: string) {
     try {
-      let response = await axios.get(`${URL}/${username}`);
+      let response = await axios.get(`${serverUrl}/${username}`);
       if (response.data.aboutMe) {
         setAboutMe(response.data.aboutMe);
       }

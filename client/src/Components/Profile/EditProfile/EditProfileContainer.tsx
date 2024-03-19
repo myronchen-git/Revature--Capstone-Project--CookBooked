@@ -5,8 +5,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import './EditProfile.css'
-
-const URL = `http://localhost:4000/accounts`
+import { serverUrl } from '../../Util/constants'; 
 
 function EditProfileContainer(props: any) {
     const [showEditProfile, setShowEditProfile] = useState(false);
@@ -30,7 +29,7 @@ function EditProfileContainer(props: any) {
             }
 
             console.log(data);
-            let response = await axios.put(`${URL}/profile`, data, {
+            let response = await axios.put(`${serverUrl}/profile`, data, {
                 headers: {'Authorization': `Bearer ${token}`},
             })
             console.log(response)           
