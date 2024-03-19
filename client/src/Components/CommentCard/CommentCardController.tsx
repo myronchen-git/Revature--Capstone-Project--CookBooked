@@ -57,11 +57,9 @@ function CommentCardController({
    * Fetches the profile picture.
    */
   function getProfilePictureUrl(): void {
-    console.log(`Getting profile picture URL for user ${comment.author}.`);
     axios
       .get(`${serverUrl}/accounts/${comment.author}`)
       .then((response) => {
-        console.log("response.data = " + JSON.stringify(response.data));
         setProfilePictureUrl(response.data?.imageUrl || profilePictureUrl);
       })
       .catch((err) => {
