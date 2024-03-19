@@ -31,7 +31,9 @@ function ReviewCardController({
 }) {
   const username: string = useSelector((state: RootState) => state.user.username);
   const authToken: string = useSelector((state: RootState) => state.user.token);
-  const [profilePictureUrl, setProfilePictureUrl] = useState("");
+  const [profilePictureUrl, setProfilePictureUrl] = useState(
+    "https://test-image-bucket-rev.s3.us-west-1.amazonaws.com/default.webp"
+  );
 
   useEffect(getProfilePictureUrl, []);
 
