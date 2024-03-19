@@ -10,7 +10,10 @@ dotenv.config({path: envPath});
 
 const client = new DynamoDBClient({
     region: process.env.REGION,
-    credentials: fromIni({profile: "cb_account"})
+    credentials: {
+      secretAccessKey: process.env.SECRET_ACCESS_KEY_ID,
+      accessKeyId: process.env.ACCESS_KEY_ID
+  }
 });
 
 const documentClient = DynamoDBDocumentClient.from(client);
