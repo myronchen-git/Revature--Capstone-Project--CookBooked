@@ -2,12 +2,12 @@ version: 0.2
 env:
   variables:
     REGION: "us-west-1"
-    ACCOUNTS_TABLENAME="CookBooked-Accounts"
-    COMMENTS_TABLENAME="CookBooked-Comments"
-    REVIEWS_TABLENAME="CookBooked-Reviews"
-    REVIEWS_TABLE_AUTHOR_INDEXNAME="author-createdAt-index"
-    REVIEWS_TABLE_ISRECENT_INDEXNAME="isRecent-createdAt-index"
-    JWT_SECRET_KEY="CookBookedSecret"
+    ACCOUNTS_TABLENAME: "CookBooked-Accounts"
+    COMMENTS_TABLENAME: "CookBooked-Comments"
+    REVIEWS_TABLENAME: "CookBooked-Reviews"
+    REVIEWS_TABLE_AUTHOR_INDEXNAME: "author-createdAt-index"
+    REVIEWS_TABLE_ISRECENT_INDEXNAME: "isRecent-createdAt-index"
+    JWT_SECRET_KEY: "CookBookedSecret"
 phases:
   install:
     runtime-versions:
