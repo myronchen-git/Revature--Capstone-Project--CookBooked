@@ -8,9 +8,11 @@ phases:
       - npm install -g create-react-app
   pre_build:
     commands:
+      - cd ./client
       - npm install
   build:
     commands:
+      - cd ./client
       - npm run build
 artifacts:
   base-directory: build/
