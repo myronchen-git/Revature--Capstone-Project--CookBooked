@@ -74,12 +74,9 @@ function ReviewCardController({
    * Fetches the profile picture.
    */
   function getProfilePictureUrl(): void {
-    console.log(`Getting profile picture URL for user ${review.author}.`);
-
     axios
       .get(`${serverUrl}/accounts/${review.author}`)
       .then((response) => {
-        console.log("response.data = " + JSON.stringify(response.data));
         setProfilePictureUrl(response.data?.imageUrl || profilePictureUrl);
       })
       .catch((err) => {

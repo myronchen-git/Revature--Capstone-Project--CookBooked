@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { serverUrl } from '../Util/constants'; 
+import { serverUrl } from "../Util/constants";
 
 import { Review } from "../../types/types";
 import WallView from "./WallView";
@@ -34,7 +34,7 @@ function Wall() {
    * Retrieves recent reviews.
    */
   function fetchReviews() {
-    console.log("Fetching reviews");
+    console.log("Fetching recent reviews.");
 
     axios
       .get(serverUrl + "/reviews")
@@ -65,7 +65,7 @@ function Wall() {
    * @param reviewId the review ID belonging to the review to remove.
    */
   function removeReviewHandler(reviewId: string) {
-    console.log(`Wall.removeReviewHandler(${reviewId})`);
+    console.log(`Removing review ${reviewId} from recent reviews list.`);
 
     const currentReviewsData = { ...reviewsData };
     const currentReviewsList = [...currentReviewsData.items];
