@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { serverUrl } from '../Util/constants'; 
+import { serverUrl } from "../Util/constants";
 
 import { RootState } from "../../store/store";
 import { Review } from "../../types/types";
@@ -80,7 +80,7 @@ function ReviewCardController({
       .get(`${serverUrl}/accounts/${review.author}`)
       .then((response) => {
         console.log("response.data = " + JSON.stringify(response.data));
-        setProfilePictureUrl(response.data?.imageUrl || "");
+        setProfilePictureUrl(response.data?.imageUrl || profilePictureUrl);
       })
       .catch((err) => {
         if (err.response) {

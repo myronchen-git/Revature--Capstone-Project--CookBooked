@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { serverUrl } from '../Util/constants'; 
+import { serverUrl } from "../Util/constants";
 
 import { RootState } from "../../store/store";
 import { Comment } from "../../types/types";
@@ -41,12 +41,9 @@ function CommentCardController({
     console.log(`Deleting comment ${comment.commentId} by ${comment.author}.`);
 
     axios
-      .delete(
-        `${serverUrl}/comments/review/${comment.reviewId}/comments/${comment.commentId}`,
-        {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }
-      )
+      .delete(`${serverUrl}/comments/review/${comment.reviewId}/comments/${comment.commentId}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      })
       .then((response) => {
         removeCommentHandler(comment.commentId);
         setDisplayDeleteError(false);
@@ -65,7 +62,7 @@ function CommentCardController({
       .get(`${serverUrl}/accounts/${comment.author}`)
       .then((response) => {
         console.log("response.data = " + JSON.stringify(response.data));
-        setProfilePictureUrl(response.data?.imageUrl || "");
+        setProfilePictureUrl(response.data?.imageUrl || profilePictureUrl);
       })
       .catch((err) => {
         if (err.response) {
