@@ -3,10 +3,7 @@ import { Review } from '../../types/types';
 import axios from 'axios';
 import PostReview from '../PostReview/PostReview';
 import ReviewsList from '../Util/ReviewsList/ReviewsList';
-
-// --------------------------------------------------
-
-const serverBaseUrl = "http://localhost:4000";
+import { serverUrl } from '../Util/constants'; 
 
 // ==================================================
 
@@ -32,7 +29,7 @@ function DisplayReviews(props: any) {
       console.log(`Fetching review under recipe ${props.recipeId}.`);
   
       axios
-        .get(`${serverBaseUrl}/reviews?recipeId=${props.recipeId}`)
+        .get(`${serverUrl}/reviews?recipeId=${props.recipeId}`)
         .then((response) => {
           setReviewsData(response.data?.ReviewPosts.items);
         })

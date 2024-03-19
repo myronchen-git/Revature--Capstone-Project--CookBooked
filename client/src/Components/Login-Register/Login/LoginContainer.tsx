@@ -5,8 +5,7 @@ import LoginInput from './LoginInput';
 import axios from 'axios';
 import { useLocalStorage } from '../useLocalStorage';
 import ErrorView from '../../Error/ErrorView';
-
-const URL = `http://localhost:4000/accounts`;
+import { serverUrl } from '../../Util/constants'; 
 
 function LoginContainer() {
     let dispatch = useDispatch();
@@ -28,11 +27,10 @@ function LoginContainer() {
     async function getUser(user:any) {
         try {
             // axios request here
-            let response = await axios.post(`${URL}/auth`, {
+            let response = await axios.post(`${serverUrl}/accounts/auth`, {
                 username: user.username,
                 password: user.password
             });
-            // console.log(response);
             return response;
         } catch (err) {
             console.log(err);

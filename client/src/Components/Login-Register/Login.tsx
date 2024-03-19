@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import LoginContainer from './Login/LoginContainer'
 import { AppDispatch, RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import ErrorView from '../Error/ErrorView';
 import RegisterContainer from './Register/RegisterContainer';
 import './Login.css';
 import Logout from './Logout/Logout';

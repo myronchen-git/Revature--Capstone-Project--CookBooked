@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { serverUrl } from '../Util/constants'; 
 
 function PostComment(props: any) {
     let username = useSelector((state: RootState) => state.user.username);
@@ -12,8 +13,6 @@ function PostComment(props: any) {
     const [displayError, setDisplayError] = useState(false);
     const [displaySuccess, setDisplaySuccess] = useState(false);
 
-    const URL = `http://localhost:4000/comments`
-
     function openForm() {
         setIsOpen(!isOpen);
         setDisplayCheck(false);
@@ -23,7 +22,7 @@ function PostComment(props: any) {
         if(commentBody) {
             event.preventDefault();
             const data = { reviewId: props.reviewId, content: commentBody};
-            axios.post(`${URL}/`, data,{
+            axios.post(`${serverUrl}/`, data,{
                 headers: {'Authorization': `Bearer ${token}`},
                 })
                 .then((resp) => {

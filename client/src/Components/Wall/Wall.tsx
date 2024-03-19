@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { serverUrl } from '../Util/constants'; 
 
 import { Review } from "../../types/types";
 import WallView from "./WallView";
-
-// --------------------------------------------------
-
-const serverBaseUrl = "http://localhost:4000";
 
 // ==================================================
 
@@ -40,7 +37,7 @@ function Wall() {
     console.log("Fetching reviews");
 
     axios
-      .get(serverBaseUrl + "/reviews")
+      .get(serverUrl + "/reviews")
       .then((response) => {
         setReviewsData(response.data?.ReviewPosts);
       })

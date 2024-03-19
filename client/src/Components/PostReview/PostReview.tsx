@@ -4,10 +4,8 @@ import { RootState } from '../../store/store';
 import axios from 'axios';
 import './PostReview.css'
 import UploadImageInput from '../ImageUploader/UploadImageInput';
+import { serverUrl } from '../Util/constants'; 
 
-// --------------------------------------------------
-
-const serverBaseUrl = "http://localhost:4000/reviews";
 
 // ==================================================
 
@@ -43,7 +41,7 @@ function PostReview(props: any) {
         } else {
             event.preventDefault();
             const data = { recipeId: props.recipeId, recipeName: props.recipeName, rating, imageUrl, content: reviewBody};
-            axios.post(`${serverBaseUrl}/`, data,{
+            axios.post(`${serverUrl}/`, data,{
                 headers: {'Authorization': `Bearer ${token}`},
                 })
                 .then((resp) => {

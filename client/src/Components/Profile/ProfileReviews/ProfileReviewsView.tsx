@@ -3,8 +3,7 @@ import { Review } from '../../../types/types'
 import axios from 'axios';
 import ErrorView from '../../Error/ErrorView';
 import ReviewsList from '../../Util/ReviewsList/ReviewsList';
-
-const URL = `http://localhost:4000`
+import { serverUrl } from '../../Util/constants'; 
 
 function ProfileReviewsView(props: any) {
     const [reviewsData, setReviewsData] = useState([] as Review[]);
@@ -19,7 +18,7 @@ function ProfileReviewsView(props: any) {
     }, [reviewsData])
 
     function fetchReviews() {
-        axios.get(`${URL}/reviews?author=${props.username}`)
+        axios.get(`${serverUrl}/reviews?author=${props.username}`)
             .then((response) => {
                 setReviewsData(response.data?.ReviewPosts.items);
             })

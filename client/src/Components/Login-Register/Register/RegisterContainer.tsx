@@ -1,19 +1,17 @@
 import React, { useState } from 'react'
 import RegisterInput from './RegisterInput'
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ErrorView from '../../Error/ErrorView';
-
-const URL = `http://localhost:4000/accounts`;
+import { serverUrl } from '../../Util/constants'; 
 
 function RegisterContainer() {
-    let dispatch = useDispatch();
     const [success, setSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
 
     async function createUser(user: any) {
         try {
-            let response = await axios.post(URL, {
+            let response = await axios.post(`${serverUrl}}/accounts`, {
                 username: user.username,
                 password: user.password,
             });

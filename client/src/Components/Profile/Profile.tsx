@@ -6,8 +6,6 @@ import './Profile.css';
 import ProfileReviewsView from './ProfileReviews/ProfileReviewsView';
 import { useParams } from 'react-router-dom';
 
-// const URL = `http://localhost:3000/`
-
 function Profile() {
     const { target } = useParams();
     

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { serverUrl } from '../Util/constants'; 
 
 import { Review, Comment } from "../../types/types";
 import ReviewPageView from "./ReviewPageView";
-
-// --------------------------------------------------
-
-const serverBaseUrl = "http://localhost:4000";
 
 // ==================================================
 
@@ -33,7 +30,7 @@ function ReviewPage() {
     console.log(`Fetching review ${reviewId}.`);
 
     axios
-      .get(`${serverBaseUrl}/reviews/recipe/${recipeId}/review/${reviewId}`)
+      .get(`${serverUrl}/reviews/recipe/${recipeId}/review/${reviewId}`)
       .then((response) => {
         setReview(response.data?.ReviewPost);
       })
@@ -62,7 +59,7 @@ function ReviewPage() {
     console.log(`Fetching comments for review ${reviewId}.`);
 
     axios
-      .get(`${serverBaseUrl}/comments/review/${reviewId}/comments`)
+      .get(`${serverUrl}/comments/review/${reviewId}/comments`)
       .then((response) => {
         setCommentsData(response.data?.CommentPost);
       })

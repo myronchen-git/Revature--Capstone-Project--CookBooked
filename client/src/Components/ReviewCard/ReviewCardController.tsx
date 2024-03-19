@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { serverUrl } from '../Util/constants'; 
 
 import { RootState } from "../../store/store";
 import { Review } from "../../types/types";
 import ReviewCardView from "./ReviewCardView";
-
-// --------------------------------------------------
-
-const serverBaseUrl = "http://localhost:4000";
 
 // ==================================================
 
@@ -62,7 +59,7 @@ function ReviewCardController({
     console.log(`Deleting review ${review.reviewId} by ${review.author}.`);
 
     axios
-      .delete(`${serverBaseUrl}/reviews/recipe/${review.recipeId}/review/${review.reviewId}`, {
+      .delete(`${serverUrl}/reviews/recipe/${review.recipeId}/review/${review.reviewId}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       })
       .then((response) => {
@@ -78,7 +75,7 @@ function ReviewCardController({
     console.log(`Getting profile picture URL for user ${review.author}.`);
 
     axios
-      .get(`${serverBaseUrl}/accounts/${review.author}`)
+      .get(`${serverUrl}/accounts/${review.author}`)
       .then((response) => {
         console.log("response.data = " + JSON.stringify(response.data));
         setProfilePictureUrl(response.data?.imageUrl || "");
