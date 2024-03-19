@@ -11,7 +11,7 @@ const commentsRouter = require("./src/controller/CommentsRouter");
 
 //create the server on PORT 3000
 const app = express();
-const PORT = 4000;
+const PORT = 3000;
 
 app.listen(PORT, () => {
   logger.info(`Started the server on Port ${PORT}`);
