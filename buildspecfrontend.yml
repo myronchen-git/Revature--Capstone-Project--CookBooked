@@ -4,7 +4,6 @@ phases:
     runtime-versions:
       nodejs: 14
     commands:
-      - cd ./client
       - npm install -g create-react-app
   pre_build:
     commands:
