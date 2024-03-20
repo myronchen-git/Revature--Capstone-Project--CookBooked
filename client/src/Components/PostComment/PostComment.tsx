@@ -15,6 +15,7 @@ function PostComment(props: any) {
 
     function openForm() {
         setIsOpen(!isOpen);
+        setCommentBody("");
         setDisplayCheck(false);
     }
 

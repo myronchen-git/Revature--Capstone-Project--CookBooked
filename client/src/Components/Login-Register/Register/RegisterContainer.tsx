@@ -3,7 +3,7 @@ import RegisterInput from './RegisterInput'
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import ErrorView from '../../Error/ErrorView';
-import { serverUrl } from '../../Util/constants'; 
+import { serverUrl } from '../../Util/constants';
 
 function RegisterContainer() {
     const [success, setSuccess] = useState(false);
@@ -11,7 +11,7 @@ function RegisterContainer() {
 
     async function createUser(user: any) {
         try {
-            let response = await axios.post(`${serverUrl}}/accounts`, {
+            let response = await axios.post(`${serverUrl}/accounts`, {
                 username: user.username,
                 password: user.password,
             });
@@ -25,7 +25,7 @@ function RegisterContainer() {
             setIsError(true);
             console.log(err);
         }
-    }   
+    }
 
   return (
     <>
