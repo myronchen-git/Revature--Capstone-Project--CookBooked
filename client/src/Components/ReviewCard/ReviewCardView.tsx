@@ -46,7 +46,9 @@ function ReviewCardView({
         <div className="review-card__main col-12 col-xl-8 container-fluid">
           <div className="review-card__header row">
             <div className="review-card__header__review-info col">
-              <h3>{review.recipeName}</h3>
+              <h3 className="review-card__recipe-name">
+                <Link to={`/recipe/${review.recipeId}`}>{review.recipeName}</Link>
+              </h3>
               <p>rating: {review.rating}</p> {/* placeholder */}
             </div>
             <div className="review-card__profile col">
