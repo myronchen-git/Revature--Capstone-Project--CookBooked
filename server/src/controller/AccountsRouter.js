@@ -63,6 +63,7 @@ router.put('/admin', authenticateToken, async (req, res) => {
 // Update own user profile information
 router.put('/profile', authenticateToken, async (req, res) => {
     try {
+        console.log(req.body);
         if (req.body.aboutMe || req.body.imageUrl) {
             const username = req.user.username;
             const data = await accountsService.updateProfile(username, req.body);
