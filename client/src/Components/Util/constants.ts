@@ -1,4 +1,4 @@
-const serverUrl = 'http://13.57.32.111:3000';
+const serverUrl = 'http://13.57.32.111:4000';
 
 
 export { serverUrl };
