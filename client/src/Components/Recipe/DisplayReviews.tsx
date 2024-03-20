@@ -80,7 +80,9 @@ function DisplayReviews(props: any) {
     function checkErrorIfListEmpty() {
         if(!reviewsData || reviewsData.length === 0) {
             return (
+              <div className='container bg-light rounded p-4'>
                 <h4>No Reviews Under This Recipe</h4>
+              </div>
             )
         } else {
             return (
