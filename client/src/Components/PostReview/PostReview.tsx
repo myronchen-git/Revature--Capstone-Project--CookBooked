@@ -25,6 +25,9 @@ function PostReview(props: any) {
     //Add post review in here as well so it is before each review display
     function openForm() {
         setIsOpen(!isOpen);
+        setReviewBody("");
+        setRating(0);
+        setImageUrl("");
         setDisplayCheck(false);
     }
 
