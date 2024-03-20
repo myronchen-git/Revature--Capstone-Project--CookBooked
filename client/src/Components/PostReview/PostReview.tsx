@@ -41,7 +41,7 @@ function PostReview(props: any) {
         } else {
             event.preventDefault();
             const data = { recipeId: props.recipeId, recipeName: props.recipeName, rating, imageUrl, content: reviewBody};
-            axios.post(`${serverUrl}/`, data,{
+            axios.post(`${serverUrl}/reviews/`, data,{
                 headers: {'Authorization': `Bearer ${token}`},
                 })
                 .then((resp) => {

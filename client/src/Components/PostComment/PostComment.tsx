@@ -22,7 +22,7 @@ function PostComment(props: any) {
         if(commentBody) {
             event.preventDefault();
             const data = { reviewId: props.reviewId, content: commentBody};
-            axios.post(`${serverUrl}/`, data,{
+            axios.post(`${serverUrl}/comments/`, data,{
                 headers: {'Authorization': `Bearer ${token}`},
                 })
                 .then((resp) => {
