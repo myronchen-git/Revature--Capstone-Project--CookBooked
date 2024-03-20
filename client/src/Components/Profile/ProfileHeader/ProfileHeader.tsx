@@ -16,7 +16,7 @@ function ProfileHeader(props: any) {
 
   async function getProfileInfo(username: string) {
     try {
-      let response = await axios.get(`${serverUrl}/${username}`);
+      let response = await axios.get(`${serverUrl}/accounts/${username}`);
       if (response.data.aboutMe) {
         setAboutMe(response.data.aboutMe);
       }

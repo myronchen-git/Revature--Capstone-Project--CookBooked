@@ -29,7 +29,7 @@ function EditProfileContainer(props: any) {
             }
 
             console.log(data);
-            let response = await axios.put(`${serverUrl}/profile`, data, {
+            let response = await axios.put(`${serverUrl}/accounts/profile`, data, {
                 headers: {'Authorization': `Bearer ${token}`},
             })
             console.log(response)           
