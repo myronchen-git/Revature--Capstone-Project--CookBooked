@@ -23,7 +23,7 @@ function UploadImageInput(props: any) {
     }
 
     async function uploadFile(e: any) {
-        //e.preventDefault();
+        e.preventDefault();
         const S3_BUCKET = String(process.env.REACT_APP_S3_BUCKET); // CHANGE THIS
         const REGION = process.env.REACT_APP_REGION; // CHANGE THIS
 
