@@ -9,10 +9,13 @@ const {generateToken, authenticateToken} = require('../util/WebToken');
 // Request body should contain username, password, and isAdmin
 router.post('/', async (req, res) => {
     try {
-        let body = accountsHelpers.cleanUsernamePassword(req.body);
-        const data = body != null ? await accountsService.createNewAccount(body) : null; //
+        if (req.body.username && req.body.password) {
+            let body = accountsHelpers.cleanUsernamePassword(req.body);
+            const data = body != null ? await accountsService.createNewAccount(body) : null; //
 
-        res.status(201).json({message: 'Account created successfully', data});
+            res.status(201).json({message: 'Account created successfully', data});
+        } 
+        res.status(400).json({message: 'Account creation failed'});
     } catch (err) {
         res.status(400).json({message: err.message});
     }

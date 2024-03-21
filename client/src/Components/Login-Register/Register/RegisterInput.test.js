@@ -1,15 +1,15 @@
-import LoginInput from "./LoginInput";
 import { render } from "@testing-library/react";
+import RegisterInput from "./RegisterInput";
 
-describe('loginInput tests', () => {
+describe('registerInput Tests', () => {
 
     afterEach(() => {
         jest.resetAllMocks();
       });
-    
-    test('renders input fields', () => {
-        const updateUser = jest.fn()
-        const { getByPlaceholderText, getByText } = render(<LoginInput updateUser={updateUser}/>);
+
+      test('Component displays all fields correctly', () => {
+        const createUser = jest.fn()
+        const { getByPlaceholderText, getByText } = render(<RegisterInput createUser={createUser}/>);
 
         const usernameInput = getByPlaceholderText('username');
         const passwordInput = getByPlaceholderText('password');
@@ -18,7 +18,6 @@ describe('loginInput tests', () => {
         expect(usernameInput).toBeInTheDocument();
         expect(passwordInput).toBeInTheDocument();
         expect(submitButton).toBeInTheDocument();
-    })
+      })
 
-
-});
+})
