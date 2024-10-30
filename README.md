@@ -22,15 +22,13 @@ Welcome to CookBooked! This project aims to create a platform where users can ex
   - DynamoDB
   - Node.js
   - Express.js
-  - Hashing
-  - JWTs
+  - JSON Web Token
   - Jest
 
 #### Frontend
   - React
   - TypeScript
   - Jest
-  - CSS Framework
 
 #### DevOps
   - AWS EC2
